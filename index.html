@@ -296,9 +296,9 @@ body{
   body[data-view="dashboard"] main#view>.card:nth-child(4){grid-column:span 5}
   body[data-view="dashboard"] main#view>.card:nth-child(5){grid-column:span 7}
   body[data-view="dashboard"] main#view>.card:nth-child(6),body[data-view="dashboard"] main#view>.card:nth-child(7){grid-column:span 6}
-  body[data-view="leaderboard"] main#view,body[data-view="groups"] main#view,body[data-view="matches"] main#view,body[data-view="predictions"] main#view,body[data-view="consensus"] main#view,body[data-view="audit"] main#view,body[data-view="repair"] main#view,body[data-view="settings"] main#view{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;align-items:start}
-  body[data-view="leaderboard"] main#view>.card,body[data-view="matches"] main#view>.card:first-child,body[data-view="predictions"] main#view>.card:first-child,body[data-view="consensus"] main#view>.card:first-child,body[data-view="audit"] main#view>.card:first-child,body[data-view="repair"] main#view>.card:first-child,body[data-view="settings"] main#view>.card:first-child{grid-column:1/-1}
-  body[data-view="groups"] main#view>.card,body[data-view="matches"] main#view>details.acc,body[data-view="predictions"] main#view>details.acc,body[data-view="consensus"] main#view>.card{grid-column:span 6;margin:0}
+  body[data-view="leaderboard"] main#view,body[data-view="groups"] main#view,body[data-view="matches"] main#view,body[data-view="predictions"] main#view,body[data-view="consensus"] main#view,body[data-view="impact"] main#view,body[data-view="scenarios"] main#view,body[data-view="audit"] main#view,body[data-view="repair"] main#view,body[data-view="settings"] main#view{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;align-items:start}
+  body[data-view="leaderboard"] main#view>.card,body[data-view="matches"] main#view>.card:first-child,body[data-view="predictions"] main#view>.card:first-child,body[data-view="consensus"] main#view>.card:first-child,body[data-view="impact"] main#view>.card:first-child,body[data-view="scenarios"] main#view>.card:first-child,body[data-view="audit"] main#view>.card:first-child,body[data-view="repair"] main#view>.card:first-child,body[data-view="settings"] main#view>.card:first-child{grid-column:1/-1}
+  body[data-view="groups"] main#view>.card,body[data-view="matches"] main#view>details.acc,body[data-view="predictions"] main#view>details.acc,body[data-view="consensus"] main#view>.card,body[data-view="impact"] main#view>.card:not(:first-child),body[data-view="scenarios"] main#view>.card:not(:first-child){grid-column:span 6;margin:0}
   body[data-view="groups"] main#view>.card:first-child{grid-column:1/-1}
   body[data-view="audit"] main#view>.card:not(:first-child),body[data-view="repair"] main#view>.card:not(:first-child),body[data-view="settings"] main#view>.card:not(:first-child){grid-column:span 6;margin:0}
   .g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -324,6 +324,11 @@ body{
 .delta-card .side{border:1px solid var(--border);border-radius:14px;padding:10px;background:#fff}
 .delta-card .side b{display:block;font-size:16px;margin-bottom:3px}
 @media(min-width:860px){.impact-grid{grid-template-columns:1fr 1fr}.delta-card{grid-template-columns:1fr 1fr}}
+
+
+/* Admin button is intentionally always visible for login/logout access */
+#adminBtn{display:inline-flex!important;max-width:92px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:420px){.topbar .brand span:last-child{max-width:155px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#adminBtn{min-width:66px;padding:0 9px}.iconbtn{min-width:40px}}
 
 </style>
 </head>
@@ -405,7 +410,7 @@ const I18N={
     v_dashboard:"Dashboard", v_today:"Today's matches", v_matches:"All matches", v_groups:"Group tables",
     v_predictions:"All predictions", v_consensus:"Group leaders consensus", v_knockout:"Knockout bracket",
     v_leaderboard:"Leaderboard", v_player:"Player details", v_audit:"Prediction audit",
-    v_results:"Results editor", v_repair:"Data repair", v_settings:"Settings & API", v_ai:"AI Assistant",
+    v_results:"Results editor", v_repair:"Data repair", v_settings:"Settings & API", v_ai:"AI Assistant", v_impact:"Match impact", v_scenarios:"What can change",
     phase_group:"Group stage", phase_ko:"Knockout stage", phase_done:"Tournament complete", phase_pre:"Pre-tournament",
     leader:"Current leader", top3:"Top 3", players:"Players", entryFee:"Entry fee", prizePool:"Prize pool",
     paid:"Paid", unpaid:"Unpaid", completedMatches:"Group matches done", groupsDone:"Groups completed",
@@ -451,7 +456,7 @@ const I18N={
     v_dashboard:"لوحة التحكم", v_today:"مباريات اليوم", v_matches:"كل المباريات", v_groups:"جداول المجموعات",
     v_predictions:"كل التوقعات", v_consensus:"إجماع المجموعات", v_knockout:"خروج المغلوب",
     v_leaderboard:"الترتيب", v_player:"تفاصيل اللاعب", v_audit:"تدقيق التوقعات",
-    v_results:"تحرير النتائج", v_repair:"إصلاح البيانات", v_settings:"الإعدادات والـ API", v_ai:"المساعد الذكي",
+    v_results:"تحرير النتائج", v_repair:"إصلاح البيانات", v_settings:"الإعدادات والـ API", v_ai:"المساعد الذكي", v_impact:"تأثير المباريات", v_scenarios:"ما الذي قد يتغير",
     phase_group:"دور المجموعات", phase_ko:"الأدوار الإقصائية", phase_done:"انتهت البطولة", phase_pre:"قبل البطولة",
     leader:"المتصدر الحالي", top3:"الأوائل الثلاثة", players:"اللاعبون", entryFee:"رسوم الاشتراك", prizePool:"مجموع الجوائز",
     paid:"دفعوا", unpaid:"لم يدفعوا", completedMatches:"مباريات المجموعات المكتملة", groupsDone:"مجموعات مكتملة",
@@ -980,6 +985,8 @@ const MORE_ITEMS=[
   {id:'predictions',ic:'📝',key:'v_predictions'},
   {id:'consensus',ic:'👥',key:'v_consensus'},
   {id:'knockout',ic:'🎯',key:'v_knockout'},
+  {id:'impact',ic:'🔥',key:'v_impact'},
+  {id:'scenarios',ic:'⚡',key:'v_scenarios'},
   {id:'ai',ic:'🤖',key:'v_ai'}
 ];
 const ADMIN_ITEMS=[
@@ -998,11 +1005,13 @@ function renderNav(){
 }
 function openMore(){
   let items=MORE_ITEMS.slice();
+  let adminLogin = APP.isAdmin ? [] : [{id:'_adminLogin',ic:'🔒',key:'admin',adm:true,login:true}];
   let adm = APP.isAdmin ? ADMIN_ITEMS.map(i=>({...i,adm:true})) : [];
+  const allItems=items.concat(adminLogin,adm);
   $('sheet').innerHTML=`<div class="grab"></div>
     <h3 style="padding:0 8px 8px">${esc(t('nav_more'))}</h3>
-    ${items.concat(adm).map(i=>`<div class="menu-item ${i.adm?'adm':''}" onclick="go('${i.id}');closeSheet()">
-      <span class="ic">${i.ic}</span><span>${esc(t(i.key))}</span>${i.adm?`<span class="spacer" style="flex:1"></span><span class="tag adm">${esc(t('adminOnly'))}</span>`:''}</div>`).join('')}
+    ${allItems.map(i=>`<div class="menu-item ${i.adm?'adm':''}" onclick="${i.login?'openAdmin()':`go('${i.id}')`};closeSheet()">
+      <span class="ic">${i.ic}</span><span>${esc(t(i.key))}</span>${i.adm?`<span class="spacer" style="flex:1"></span><span class="tag adm">${esc(i.login?t('admin'):t('adminOnly'))}</span>`:''}</div>`).join('')}
     ${APP.isAdmin?`<div class="menu-item" onclick="logoutAdmin();closeSheet()"><span class="ic">🚪</span><span>${esc(t('logout'))}</span></div>`:''}`;
   $('sheetBg').classList.add('open');
 }
@@ -1014,7 +1023,12 @@ function go(view){ APP.view=view; closeSheet(); render(); window.scrollTo(0,0); 
 /* ---- top-level render ---- */
 function applyDir(){ document.documentElement.lang=LANG; document.documentElement.dir=LANG==='ar'?'rtl':'ltr';
   $('langBtn').textContent=LANG==='ar'?'EN':'ع'; $('brandTxt').textContent=t('brand');
-  $('adminBtn').classList.toggle('hide',!APP.isAdmin); }
+  const ab=$('adminBtn');
+  if(ab){
+    ab.classList.remove('hide');
+    ab.textContent=APP.isAdmin ? (t('admin')+' ✓') : t('admin');
+  }
+}
 
 function render(){
   applyDir();
@@ -1053,6 +1067,8 @@ function render(){
     results:viewResults,
     repair:viewRepair,
     settings:viewSettings,
+    impact:viewImpact,
+    scenarios:viewScenarios,
     ai:viewAI
   };
 
@@ -1158,6 +1174,8 @@ function viewDashboard(){
       <button class="btn ghost sm" onclick="go('matches')">⚽ ${esc(t('v_matches'))}</button>
       <button class="btn ghost sm" onclick="go('groups')">📊 ${esc(t('v_groups'))}</button>
       <button class="btn ghost sm" onclick="go('knockout')">🎯 ${esc(t('v_knockout'))}</button>
+      <button class="btn ghost sm" onclick="go('impact')">🔥 ${esc(t('v_impact'))}</button>
+      <button class="btn ghost sm" onclick="go('scenarios')">⚡ ${esc(t('v_scenarios'))}</button>
       <button class="btn ghost sm" onclick="go('ai')">🤖 ${esc(t('v_ai'))}</button>
     </div>
   </div>
@@ -1283,6 +1301,53 @@ function buildTodayImpactText(){
 }
 function shareTodayImpact(){ copyText(buildTodayImpactText()); }
 
+function scenarioForMatch(m){
+  const a=auditMatch(m.group,m.idx);
+  const home=[], away=[], noEdge=[];
+  a.rows.forEach(x=>{
+    if(x.edge.status==='ok'&&sameTeam(x.edge.edge,m.home)) home.push(x.name);
+    else if(x.edge.status==='ok'&&sameTeam(x.edge.edge,m.away)) away.push(x.name);
+    else noEdge.push(x.name);
+  });
+  return {match:m, home, away, noEdge};
+}
+function scenarioCard(m){
+  const sc=scenarioForMatch(m);
+  return `<div class="card"><div class="between"><h3>⚡ ${esc(canonTeam(m.home))} vs ${esc(canonTeam(m.away))}</h3><span class="chip">Group ${esc(m.group)}</span></div>
+    <div class="grid g2">
+      <div class="insight"><div class="title">${esc(tl('If','إذا فاز'))} ${esc(canonTeam(m.home))}</div><div class="impact-list"><span class="impact-pill good">+${SCORING.edgeCorrect} ${esc(t('pts'))}: ${sc.home.length}</span></div><div class="sub">${esc(sc.home.slice(0,12).join(', ')||t('none'))}${sc.home.length>12?'…':''}</div></div>
+      <div class="insight"><div class="title">${esc(tl('If','إذا فاز'))} ${esc(canonTeam(m.away))}</div><div class="impact-list"><span class="impact-pill gold">+${SCORING.edgeCorrect} ${esc(t('pts'))}: ${sc.away.length}</span></div><div class="sub">${esc(sc.away.slice(0,12).join(', ')||t('none'))}${sc.away.length>12?'…':''}</div></div>
+    </div>
+    ${sc.noEdge.length?`<div class="sub" style="margin-top:8px">${esc(t('noPred'))}: ${esc(sc.noEdge.slice(0,10).join(', '))}${sc.noEdge.length>10?'…':''}</div>`:''}
+  </div>`;
+}
+function viewScenarios(){
+  const today=(APP._today||[]).filter(m=>m.group&&m.idx!=null&&!matchResult(m.group,m.idx).complete);
+  const matches=(today.length?today:upcomingGroupMatches(12));
+  return `<div class="card"><div class="between"><h3>⚡ ${esc(t('v_scenarios'))}</h3><button class="btn ghost sm" onclick="shareTodayImpact()">${esc(t('share'))}</button></div>
+    <div class="sub">${esc(tl('Preview who gains points depending on upcoming match winners.','معاينة من سيكسب نقاطاً حسب الفائز في المباريات القادمة.'))}</div></div>`+
+    (matches.length?matches.map(scenarioCard).join(''):`<div class="card"><div class="state">${esc(t('noData'))}</div></div>`);
+}
+function impactSummaryCard(item){
+  const d=matchImpactData(item.group,item.idx), r=d.match;
+  const score=r.complete?`${r.hs}-${r.as}`:'vs';
+  return `<div class="card"><div class="between"><h3>🔥 ${esc(canonTeam(r.home))} ${score} ${esc(canonTeam(r.away))}</h3><span class="chip">${esc(item.key||matchKey(item.group,item.idx))}</span></div>
+    <div class="impact-list"><span class="impact-pill good">${esc(t('gotRight'))}: ${d.right.length}</span><span class="impact-pill bad">${esc(t('gotWrong'))}: ${d.missed.length}</span><span class="impact-pill gold">+${SCORING.edgeCorrect} ${esc(t('pts'))}</span></div>
+    <div class="grid g2" style="margin-top:10px">
+      <div class="insight"><div class="title">✅ ${esc(t('gotRight'))}</div><div class="sub">${esc(d.right.slice(0,16).map(x=>x.name).join(', ')||t('none'))}${d.right.length>16?'…':''}</div></div>
+      <div class="insight"><div class="title">❌ ${esc(t('gotWrong'))}</div><div class="sub">${esc(d.missed.slice(0,16).map(x=>x.name).join(', ')||t('none'))}${d.missed.length>16?'…':''}</div></div>
+    </div>
+    <div class="row" style="margin-top:8px;gap:8px"><button class="btn ghost sm" onclick="openMatchImpact('${item.group}',${item.idx})">${esc(t('whyPoints'))}</button><button class="btn ghost sm" onclick="shareMatch('${item.group}',${item.idx})">${esc(t('share'))}</button></div>
+  </div>`;
+}
+function viewImpact(){
+  const list=completedMatchesList().reverse();
+  return `<div class="card"><div class="between"><h3>🔥 ${esc(t('v_impact'))}</h3><button class="btn ghost sm" onclick="shareTodayImpact()">${esc(t('share'))}</button></div>
+    <div class="sub">${esc(tl('Every completed match with who gained points and who missed.','كل مباراة مكتملة مع من كسب النقاط ومن خسر الفرصة.'))}</div></div>`+
+    (list.length?list.slice(0,40).map(impactSummaryCard).join(''):`<div class="card"><div class="state">${esc(t('noData'))}</div></div>`);
+}
+
+
 /* ================= LEADERBOARD ================= */
 function viewLeaderboard(){
   const lb=buildLeaderboard();
@@ -1332,7 +1397,7 @@ function fullMatchCard(m){
   return `<div class="match"><div class="head"><span>${esc(m.group?('Group '+m.group+' · '+m.key):'')}</span>
       <span class="tag ${srcTag}">${esc(t(srcTxt))}</span></div>
     <div class="teams"><span>${esc(canonTeam(m.home))}</span><span class="sc num">${sc}</span><span>${esc(canonTeam(m.away))}</span></div>
-    ${impact}${complete?`<button class="btn ghost sm" style="margin-top:8px;width:100%" onclick="openMatchImpact('${m.group}',${m.idx})">${esc(t('matchImpact'))}</button>`:''}</div>`;
+    ${impact}${complete?`<button class="btn ghost sm" style="margin-top:8px;width:100%" onclick="openMatchImpact('${m.group}',${m.idx})">${esc(t('matchImpact'))}</button>`:(m.group&&m.idx!=null?`<button class="btn ghost sm" style="margin-top:8px;width:100%" onclick="go('scenarios')">⚡ ${esc(t('v_scenarios'))}</button>`:'')}</div>`;
 }
 
 /* ================= GROUP TABLES ================= */
@@ -1463,52 +1528,149 @@ function edgeLabel(e){
 }
 
 /* ================= PREDICTION AUDIT (admin) ================= */
+function rawGroupPred(playerData,group){
+  if(!playerData) return null;
+  const paths=['groupPreds','groups','predictions','groupPredictions'];
+  for(const k of paths){
+    if(playerData[k] && playerData[k][group]!=null) return {path:k+'.'+group,value:playerData[k][group]};
+  }
+  if(playerData[group]!=null) return {path:group,value:playerData[group]};
+  return {path:'missing',value:null};
+}
+function auditReasonText(reason){
+  const map={
+    edge_correct:'Correct predicted edge +'+SCORING.edgeCorrect,
+    edge_wrong:'Wrong predicted edge +0',
+    draw_no_edge:'Actual draw, no edge point',
+    missing_team:'Team missing from prediction',
+    no_pred:'No readable prediction',
+    equal_rank:'Equal rank / invalid prediction',
+    exact:'Exact position +'+SCORING.exactPosition,
+    in_group:'Team in group, wrong position +'+SCORING.teamInGroupWrongPos,
+    miss:'No ranking points',
+    pending:'Result pending'
+  };
+  return map[reason]||String(reason||'—');
+}
+function auditEdgeText(edge){
+  if(!edge) return '—';
+  if(edge.status==='ok') return `${canonTeam(edge.edge)} (#${edge.rh} vs #${edge.ra})`.replace('undefined','');
+  if(edge.status==='missing') return `${t('missingTeam')}: ${canonTeam(edge.missing||'')}`;
+  if(edge.status==='none') return t('noPred');
+  if(edge.status==='tie') return 'Equal rank';
+  return edge.status;
+}
+function auditPredictionLine(arr){
+  if(!arr||!arr.length) return `<span class="tag pend">${esc(t('noPred'))}</span>`;
+  return [1,2,3,4].map(i=>`<span class="chip"><span class="pos">${i}</span>${esc(canonTeam(arr[i-1]||'—'))}</span>`).join(' ');
+}
+function auditPlayerGroupDetail(name,group){
+  const p=getPlayer(name); const raw=rawGroupPred(p,group); const pred=playerGroupPred(p,group);
+  const issues=validateGroupPrediction(group,raw?raw.value:null);
+  const table=computeGroupTable(group); const complete=groupComplete(group);
+  const matches=RR.map((_,i)=>{
+    const r=matchResult(group,i); const e=predictedEdge(p,group,r.home,r.away);
+    let got=0,reason='pending';
+    if(r.complete){
+      if(r.outcome==='draw') reason='draw_no_edge';
+      else if(e.status==='ok'){
+        if(sameTeam(e.edge,r.winner)){ got=SCORING.edgeCorrect; reason='edge_correct'; }
+        else reason='edge_wrong';
+      }else if(e.status==='missing') reason='missing_team';
+      else if(e.status==='none') reason='no_pred';
+      else reason='equal_rank';
+    }
+    return {r,e,got,reason,idx:i};
+  });
+  const ranking=[0,1,2,3].map(pos=>{
+    const actual=table[pos]?table[pos].team:null; const picked=pred[pos]||null;
+    let got=0,reason=complete?'miss':'pending';
+    if(complete&&picked&&actual&&sameTeam(picked,actual)){got=SCORING.exactPosition;reason='exact';}
+    else if(complete&&picked&&table.some(row=>sameTeam(row.team,picked))){got=SCORING.teamInGroupWrongPos;reason='in_group';}
+    return {pos:pos+1,picked,actual,got,reason};
+  });
+  const issueHtml=issues.length?`<div class="banner warn">⚠ ${issues.map(x=>esc(t(x.type)||x.type)).join(' · ')} ${issues.some(x=>x.type==='missingPicks')?`<button class="btn ghost sm" onclick="openRepairPreview(${JSON.stringify(name)},'${group}')">${esc(t('preview'))}</button>`:''}</div>`:`<div class="banner ok">✅ Valid prediction shape</div>`;
+  return `<details class="acc"><summary>Group ${group} <span class="sub">${pred.length}/4 · ${matches.reduce((s,m)=>s+m.got,0)} match pts · ${ranking.reduce((s,r)=>s+r.got,0)} rank pts</span></summary><div class="body">
+    <div class="match"><div class="head"><span>Raw DB path: ${esc(raw.path)}</span><span class="tag pend">raw</span></div>
+      <div class="sub" style="word-break:break-word">${esc(JSON.stringify(raw.value))}</div>
+      <div style="margin-top:8px"><b>Normalized:</b><br>${auditPredictionLine(pred)}</div>
+      ${issueHtml}</div>
+    <div class="match"><div class="head"><span>Actual group table</span><span class="tag ${complete?'paid':'pend'}">${complete?'complete':esc(t('pending'))}</span></div>
+      ${table.map((row,i)=>`<div class="between" style="padding:4px 0;border-bottom:1px solid var(--soft)"><span><span class="pos">${i+1}</span> ${esc(row.team)}</span><b class="num">${row.Pts} pts · ${row.GD>0?'+':''}${row.GD}</b></div>`).join('')}</div>
+    <div class="match"><div class="head"><span>Match scoring</span><span class="tag adm">same logic as leaderboard</span></div>
+      ${matches.map(m=>`<div class="audit-line" style="padding:8px 0;border-bottom:1px solid var(--soft)">
+        <div class="between"><b>${esc(matchKey(group,m.idx))}: ${esc(m.r.home)} ${m.r.complete?m.r.hs+'-'+m.r.as:'vs'} ${esc(m.r.away)}</b><span>${m.got?'<span class="tag paid">+'+m.got+'</span>':'<span class="tag pend">+0</span>'}</span></div>
+        <div class="sub">${esc(t('predictedEdge'))}: ${esc(auditEdgeText(m.e))}</div>
+        <div class="sub">Reason: ${esc(auditReasonText(m.reason))}</div>
+      </div>`).join('')}</div>
+    <div class="match"><div class="head"><span>Ranking scoring 1–4</span><span class="tag ${complete?'paid':'pend'}">${complete?'complete':esc(t('pending'))}</span></div>
+      ${ranking.map(r=>`<div class="between" style="padding:7px 0;border-bottom:1px solid var(--soft)">
+        <span><span class="pos">${r.pos}</span> ${esc(r.picked||'—')} → actual ${esc(r.actual||'—')}</span>
+        <span>${r.got?'<span class="tag paid">+'+r.got+'</span>':'<span class="tag pend">+0</span>'} <span class="sub">${esc(auditReasonText(r.reason))}</span></span>
+      </div>`).join('')}</div>
+  </div></details>`;
+}
+function auditSelectedMatchPanel(){
+  const g=APP.sel.auditGroup||'A'; const idx=APP.sel.auditMatchIdx==null?0:Number(APP.sel.auditMatchIdx);
+  const a=auditMatch(g,idx); const r=a.match;
+  return `<div class="card"><div class="between"><h3>⚽ Match audit</h3><span class="chip">${esc(matchKey(g,idx))}</span></div>
+    <div class="grid g2"><div><label>Group</label><select onchange="APP.sel.auditGroup=this.value;APP.sel.auditMatchIdx=0;render()">${GROUP_KEYS.map(x=>`<option ${x===g?'selected':''}>${x}</option>`).join('')}</select></div>
+    <div><label>Match</label><select onchange="APP.sel.auditMatchIdx=this.value;render()">${RR.map((_,i)=>{const mt=matchResult(g,i);return `<option value="${i}" ${i===idx?'selected':''}>${matchKey(g,i)} · ${esc(mt.home)} vs ${esc(mt.away)}</option>`}).join('')}</select></div></div>
+    <div class="match"><div class="teams"><span>${esc(r.home)}</span><span class="sc num">${r.complete?r.hs+'-'+r.as:'vs'}</span><span>${esc(r.away)}</span></div>
+      <div class="edge">${esc(t('winner'))}: <b>${esc(r.complete?(r.outcome==='draw'?t('draw'):canonTeam(r.winner)):t('pending'))}</b></div></div>
+    ${a.rows.map(x=>`<div class="between" style="padding:8px 0;border-bottom:1px solid var(--soft)">
+      <span>${esc(x.name)}</span><span>${edgeLabel(x.edge)} ${x.got?'<span class="tag paid">+'+x.got+'</span>':'<span class="tag pend">+0</span>'}</span></div>`).join('')}
+    <button class="btn ghost sm" style="margin-top:10px" onclick="shareMatch('${g}',${idx})">${esc(t('share'))}</button>
+  </div>`;
+}
 function viewAudit(){
   const a=buildPredictionAudit();
   const name=APP.sel.auditPlayer||playerNames()[0];
+  const lb=buildLeaderboard(); const selected=lb.find(x=>x.name===name);
+  const issueCounts={}; a.quality.forEach(x=>issueCounts[x.issue.type]=(issueCounts[x.issue.type]||0)+1);
   return `<div class="card"><h3>🔎 ${esc(t('auditTitle'))}</h3>
     <div class="grid g3">
       ${statTile(playerNames().length,t('players'))}
       ${statTile(a.quality.length,t('dataQuality'))}
       ${statTile(a.totalsMatch?t('yes'):t('no'),t('totalMatches'))}
     </div>
-    <div class="row" style="margin-top:10px;gap:8px">
+    <div class="edge" style="margin-top:10px">Leaderboard and this audit both use <b>calcPlayerPoints()</b>. No separate scoring logic.</div>
+    <div class="row" style="margin-top:10px;gap:8px;flex-wrap:wrap">
       <button class="btn ghost sm" onclick="downloadText('audit.json',exportAudit('full'))">${esc(t('exportAudit'))}</button>
+      <button class="btn ghost sm" onclick="copyText(buildAuditSummaryText())">${esc(t('copy'))} summary</button>
     </div>
   </div>
 
   <div class="card"><h3>👤 ${esc(t('selectPlayer'))}</h3>
     <select onchange="APP.sel.auditPlayer=this.value;render()">${playerNames().map(n=>`<option ${n===name?'selected':''}>${esc(n)}</option>`).join('')}</select>
+    ${selected?`<div class="edge" style="margin-top:8px">#${selected.rank} · <b>${selected.total}</b> ${esc(t('pts'))}</div>`:''}
     ${name?auditPlayerCard(name):''}
   </div>
 
-  <div class="card"><h3>📐 ${esc(t('groupRankPts'))} ${esc(t('whyPoints'))}</h3>
-    ${GROUP_KEYS.map(g=>{ const ar=auditGroupRanking(g); if(!ar.complete) return '';
-      return `<details class="acc"><summary>Group ${g}</summary><div class="body">
-        ${ar.rows.map(row=>`<div style="margin:6px 0"><b>${esc(row.name)}:</b> ${row.cells.map(c=>`${c.pos}.${esc(c.pt||'—')}${c.got?'<span class="tag paid">+'+c.got+'</span>':''}`).join(' ')}</div>`).join('')}
-      </div></details>`; }).join('')||`<div class="sub">${esc(t('pending'))}</div>`}
-  </div>
+  ${auditSelectedMatchPanel()}
 
   <div class="card"><h3>⚠️ ${esc(t('dataQuality'))}</h3>
-    ${a.quality.length?a.quality.slice(0,60).map(q=>`<div class="match"><div class="head"><span>${esc(q.player)} · Group ${q.group}</span><span class="tag pend">${esc(t(q.issue.type))}</span></div>
-        <div class="sub">${esc(t('before'))}: ${esc(JSON.stringify(q.raw))}</div>
-        ${q.issue.type==='missingPicks'?`<button class="btn ghost sm" style="margin-top:6px" onclick="openRepairPreview('${esc(q.player).replace(/'/g,'')}','${q.group}')">${esc(t('preview'))}</button>`:''}</div>`).join('')
-      :`<div class="banner ok">✅ ${esc(t('yes'))}</div>`}
+    ${Object.keys(issueCounts).length?`<div class="grid g3">${Object.entries(issueCounts).map(([k,v])=>statTile(v,t(k)||k)).join('')}</div>`:`<div class="banner ok">✅ No data quality issues found</div>`}
+    ${a.quality.length?a.quality.slice(0,80).map(q=>`<div class="match"><div class="head"><span>${esc(q.player)} · Group ${q.group}</span><span class="tag pend">${esc(t(q.issue.type)||q.issue.type)}</span></div>
+        <div class="sub" style="word-break:break-word">${esc(t('before'))}: ${esc(JSON.stringify(q.raw))}</div>
+        ${q.issue.type==='missingPicks'?`<button class="btn ghost sm" style="margin-top:6px" onclick="openRepairPreview(${JSON.stringify(q.player)},'${q.group}')">${esc(t('preview'))}</button>`:''}</div>`).join(''):''}
   </div>`;
 }
 function auditPlayerCard(name){
   const ap=auditPlayer(name); const c=ap.calc;
+  const bd=[{n:t('groupMatchPts'),v:c.groupMatch},{n:t('groupRankPts'),v:c.groupRank},{n:t('koPts'),v:c.knockout},{n:t('champPts'),v:c.champ}];
   return `<div class="grid g2" style="margin-top:10px">
     ${statTile(c.groupMatch,t('groupMatchPts'))}${statTile(c.groupRank,t('groupRankPts'))}
     ${statTile(c.knockout,t('koPts'))}${statTile(c.champ,t('champPts'))}</div>
+  <div style="margin-top:10px">${barChart(bd)}</div>
   <div class="edge" style="margin-top:8px">Σ ${esc(t('points'))}: <b>${c.total}</b> (${c.groupMatch}+${c.groupRank}+${c.knockout}+${c.champ})</div>
-  <details class="acc" style="margin-top:8px"><summary>${esc(t('matchImpact'))}</summary><div class="body">
-    ${c.detail.matches.map(m=>`<div class="between" style="padding:5px 0;border-bottom:1px solid var(--soft)">
-      <span>${esc(m.key)} ${esc(m.home)} ${m.hs}-${m.as} ${esc(m.away)}</span>
-      <span>${m.got>0?'<span class="tag paid">+'+m.got+'</span>':'<span class="tag pend">'+esc(m.reason)+'</span>'}</span></div>`).join('')||`<div class="sub">${esc(t('noData'))}</div>`}
-  </div></details>`;
+  ${GROUP_KEYS.map(g=>auditPlayerGroupDetail(name,g)).join('')}`;
 }
-
+function buildAuditSummaryText(){
+  const a=buildPredictionAudit(); const lb=buildLeaderboard();
+  const top=lb.slice(0,5).map(r=>`${r.rank}. ${r.name} — ${r.total}`).join('\n');
+  return `Prediction Audit\nPlayers: ${playerNames().length}\nData issues: ${a.quality.length}\nTotals match: ${a.totalsMatch?'yes':'no'}\n\nTop leaderboard:\n${top}`;
+}
 /* ================= RESULTS EDITOR (admin) ================= */
 function viewResults(){
   const g=APP.sel.resGroup||'A';
@@ -1736,7 +1898,8 @@ function askAI(q){ if(!q||!q.trim()) return;
 
 /* ================= admin auth ================= */
 function adminHash(s){ let h=0; for(let i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))>>>0; } return h.toString(16); }
-const ADMIN_HASH='6b8b4567'; // change to adminHash('yourPassword') to set a new password
+const ADMIN_PASSWORD='admin2026';
+const ADMIN_HASH=adminHash(ADMIN_PASSWORD); // default admin password
 function openAdmin(){
   if(APP.isAdmin){ openMore(); return; }
   openSheet(`<h3 style="padding:0 8px">🔒 ${esc(t('pwPrompt'))}</h3>
@@ -1744,9 +1907,18 @@ function openAdmin(){
     <button class="btn" style="margin-top:10px" onclick="tryAdmin()">${esc(t('confirm'))}</button>`);
   setTimeout(()=>$('pwIn')?.focus(),100);
 }
-function tryAdmin(){ const v=$('pwIn').value;
-  if(adminHash(v)===ADMIN_HASH){ APP.isAdmin=true; sessionStorage.setItem(ADMIN_FLAG,'1'); closeSheet(); toast(t('admin')); render(); }
-  else toast(t('wrongPw')); }
+function tryAdmin(){
+  const v=String($('pwIn')?.value||'').trim();
+  if(v===ADMIN_PASSWORD || adminHash(v)===ADMIN_HASH){
+    APP.isAdmin=true;
+    sessionStorage.setItem(ADMIN_FLAG,'1');
+    closeSheet();
+    toast(t('admin'));
+    render();
+  }else{
+    toast(t('wrongPw'));
+  }
+}
 function logoutAdmin(){ APP.isAdmin=false; sessionStorage.removeItem(ADMIN_FLAG); render(); }
 
 /* ================= language ================= */
