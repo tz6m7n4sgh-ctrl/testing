@@ -151,8 +151,8 @@ h1,h2,h3,h4{margin:0;line-height:1.2}
   position:fixed;left:0;right:0;bottom:0;z-index:50;background:#fff;border-top:1px solid var(--border);
   display:flex;justify-content:space-around;padding:6px 4px calc(6px + env(safe-area-inset-bottom));
 }
-.botnav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;color:var(--muted);font-size:10.5px;font-weight:700;border-radius:12px;min-height:var(--tap)}
-.botnav button .ic{font-size:19px;line-height:1}
+.botnav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 1px;color:var(--muted);font-size:10px;font-weight:700;border-radius:12px;min-height:var(--tap);min-width:0}
+.botnav button .ic{font-size:18px;line-height:1}
 .botnav button.on{color:var(--grass-d)}
 .botnav button.on .ic{transform:translateY(-1px)}
 
@@ -179,6 +179,7 @@ h1,h2,h3,h4{margin:0;line-height:1.2}
 /* Match / impact cards */
 .match{border:1px solid var(--border);border-radius:var(--r-sm);padding:11px;margin:8px 0;background:#fff}
 .match .head{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted);margin-bottom:6px}
+.match-time{font-family:var(--num);font-weight:900;color:var(--pitch);background:var(--soft);border-radius:999px;padding:2px 8px;white-space:nowrap}
 .teams{display:flex;align-items:center;justify-content:center;gap:10px;font-weight:700}
 .teams .sc{font-family:var(--num);font-size:20px;font-weight:800;min-width:54px;text-align:center;background:var(--soft);border-radius:8px;padding:3px 8px}
 .edge{margin-top:8px;font-size:12.5px;background:var(--soft);border-radius:8px;padding:7px 9px}
@@ -235,6 +236,16 @@ details.acc .body{padding:0 12px 12px}
 .chips{display:flex;gap:7px;overflow-x:auto;padding:4px 0}
 .chips button{white-space:nowrap;background:var(--soft);border-radius:999px;padding:8px 13px;font-size:12.5px;font-weight:600;color:var(--ink)}
 .ai-ans{background:var(--soft);border-radius:12px;padding:13px;white-space:pre-wrap;font-size:13.5px;margin-top:10px;line-height:1.55}
+.voice-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.micbtn{min-height:46px;border-radius:14px;background:linear-gradient(135deg,#f7c948,#fff1b8);color:#4a3300;font-weight:900;padding:0 14px;display:inline-flex;align-items:center;gap:7px}
+.micbtn.listening{background:linear-gradient(135deg,#ef4444,#fb7185);color:#fff;animation:pulseMic 1s infinite}
+@keyframes pulseMic{0%{box-shadow:0 0 0 0 rgba(239,68,68,.35)}70%{box-shadow:0 0 0 12px rgba(239,68,68,0)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
+.scenario-ai-box{border:1px solid rgba(34,199,122,.25);background:linear-gradient(180deg,#ffffff,#f1fff7);border-radius:20px;padding:14px;margin:12px 0}
+.sim-table{display:grid;gap:8px;margin-top:10px}
+.sim-row{display:grid;grid-template-columns:34px minmax(0,1fr) auto auto;gap:8px;align-items:center;border:1px solid var(--border);background:#fff;border-radius:14px;padding:8px}
+.sim-row .delta.up{color:var(--good)}.sim-row .delta.down{color:var(--bad)}.sim-row .delta.same{color:var(--muted)}
+.sim-row .name{font-weight:900;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.scenario-chip{display:inline-flex;align-items:center;gap:6px;border-radius:999px;background:var(--soft);font-weight:800;font-size:12px;padding:6px 10px;margin:2px}
 .ai-src{font-size:11px;color:var(--muted);margin-top:8px;font-style:italic}
 
 /* RTL tweaks */
@@ -340,9 +351,9 @@ body{
   body[data-view="dashboard"] main#view>.card:nth-child(4){grid-column:span 5}
   body[data-view="dashboard"] main#view>.card:nth-child(5){grid-column:span 7}
   body[data-view="dashboard"] main#view>.card:nth-child(6),body[data-view="dashboard"] main#view>.card:nth-child(7){grid-column:span 6}
-  body[data-view="leaderboard"] main#view,body[data-view="groups"] main#view,body[data-view="matches"] main#view,body[data-view="predictions"] main#view,body[data-view="consensus"] main#view,body[data-view="impact"] main#view,body[data-view="scenarios"] main#view,body[data-view="audit"] main#view,body[data-view="repair"] main#view,body[data-view="settings"] main#view{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;align-items:start}
-  body[data-view="leaderboard"] main#view>.card,body[data-view="matches"] main#view>.card:first-child,body[data-view="predictions"] main#view>.card:first-child,body[data-view="consensus"] main#view>.card:first-child,body[data-view="impact"] main#view>.card:first-child,body[data-view="scenarios"] main#view>.card:first-child,body[data-view="audit"] main#view>.card:first-child,body[data-view="repair"] main#view>.card:first-child,body[data-view="settings"] main#view>.card:first-child{grid-column:1/-1}
-  body[data-view="groups"] main#view>.card,body[data-view="matches"] main#view>details.acc,body[data-view="predictions"] main#view>details.acc,body[data-view="consensus"] main#view>.card,body[data-view="impact"] main#view>.card:not(:first-child),body[data-view="scenarios"] main#view>.card:not(:first-child){grid-column:span 6;margin:0}
+  body[data-view="leaderboard"] main#view,body[data-view="groups"] main#view,body[data-view="matches"] main#view,body[data-view="predictions"] main#view,body[data-view="consensus"] main#view,body[data-view="impact"] main#view,body[data-view="scenarios"] main#view,body[data-view="help"] main#view,body[data-view="audit"] main#view,body[data-view="repair"] main#view,body[data-view="settings"] main#view{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;align-items:start}
+  body[data-view="leaderboard"] main#view>.card,body[data-view="matches"] main#view>.card:first-child,body[data-view="predictions"] main#view>.card:first-child,body[data-view="consensus"] main#view>.card:first-child,body[data-view="impact"] main#view>.card:first-child,body[data-view="scenarios"] main#view>.card:first-child,body[data-view="help"] main#view>.card:first-child,body[data-view="audit"] main#view>.card:first-child,body[data-view="repair"] main#view>.card:first-child,body[data-view="settings"] main#view>.card:first-child{grid-column:1/-1}
+  body[data-view="groups"] main#view>.card,body[data-view="matches"] main#view>details.acc,body[data-view="predictions"] main#view>details.acc,body[data-view="consensus"] main#view>.card,body[data-view="impact"] main#view>.card:not(:first-child),body[data-view="scenarios"] main#view>.card:not(:first-child),body[data-view="help"] main#view>.card:not(:first-child){grid-column:span 6;margin:0}
   body[data-view="groups"] main#view>.card:first-child{grid-column:1/-1}
   body[data-view="audit"] main#view>.card:not(:first-child),body[data-view="repair"] main#view>.card:not(:first-child),body[data-view="settings"] main#view>.card:not(:first-child){grid-column:span 6;margin:0}
   .g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
@@ -355,6 +366,102 @@ body{
   .topbar{border-radius:0 0 18px 18px}.phase{margin-top:8px;width:calc(100% - 20px)}.card{padding:15px;margin:12px 0;border-radius:20px}.stat .v{font-size:22px}
 }
 
+
+
+
+
+
+/* ===== v27 admin result entry + celebration ===== */
+.result-card{border:1px solid var(--border);background:linear-gradient(180deg,#fff,#f7fbf8);border-radius:20px;padding:13px;margin:10px 0}
+.result-card .teams{margin:8px 0}
+.result-score-row{display:grid;grid-template-columns:1fr 62px 62px 1fr;gap:8px;align-items:center}
+.result-team{text-align:center;font-weight:1000;min-width:0}
+.result-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.result-preview{border-radius:15px;background:var(--soft);padding:10px;margin-top:10px;font-size:12.5px}
+.result-preview .gain{display:inline-flex;align-items:center;gap:5px;background:#e9fbf1;color:var(--good);border-radius:999px;padding:4px 8px;font-weight:900;margin:3px}
+.quick-score{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;justify-content:center}
+.quick-score button{background:#fff;border:1px solid var(--border);border-radius:999px;padding:6px 9px;font-family:var(--num);font-weight:900}
+.celebration{background:
+  radial-gradient(circle at 20% 0%,rgba(247,201,72,.25),transparent 34%),
+  radial-gradient(circle at 90% 0%,rgba(34,199,122,.25),transparent 34%),
+  linear-gradient(135deg,#071510,#123c2c);color:#fff;border-color:rgba(255,255,255,.12)}
+.celebration .sub{color:#d7f5e6}.celebration .lb-row{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.16);color:#fff}
+.celebration .pts{color:#fff}.celebration .rank{color:#f7c948}
+@media(max-width:560px){.result-score-row{grid-template-columns:1fr 58px 58px 1fr}.result-actions .btn{width:100%}}
+/* ===== v26 help / points logic ===== */
+.workflow{display:grid;gap:10px;margin-top:12px}
+.workflow-step{display:grid;grid-template-columns:42px minmax(0,1fr);gap:10px;align-items:start;border:1px solid var(--border);background:linear-gradient(180deg,#fff,#f7fbf8);border-radius:18px;padding:12px}
+.workflow-step .numstep{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--pitch);color:#fff;font-family:var(--num);font-weight:1000}
+.workflow-step .stitle{font-weight:1000;margin-bottom:4px}
+.points-rule{display:flex;justify-content:space-between;gap:10px;border:1px solid var(--border);border-radius:15px;background:#fff;padding:10px;margin:8px 0}
+.points-rule b{font-family:var(--num);color:var(--grass-d);white-space:nowrap}
+.help-table{display:grid;gap:8px;margin-top:10px}
+.help-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:8px;align-items:center;border:1px solid var(--border);border-radius:14px;background:#fff;padding:9px}
+.help-row .why{font-size:12px;color:var(--muted);margin-top:2px}
+.help-row .pts{font-family:var(--num);font-weight:1000;color:var(--grass-d)}
+.help-row .tag{white-space:nowrap}
+.help-player-head{display:flex;align-items:center;gap:12px;min-width:0}
+.help-player-head .info{min-width:0}.help-player-head .name{font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:560px){.help-row{grid-template-columns:1fr}.points-rule{flex-direction:column}.workflow-step{grid-template-columns:1fr}.workflow-step .numstep{width:30px;height:30px}}
+/* ===== v25 profile picker ===== */
+.profile-picker-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(165px,1fr));gap:10px;margin-top:12px}
+.profile-pick-card{border:1px solid var(--border);background:linear-gradient(180deg,#fff,#f7fbf8);border-radius:18px;padding:12px;display:flex;align-items:center;gap:10px;text-align:start;box-shadow:0 4px 14px rgba(7,21,16,.04);cursor:pointer}
+.profile-pick-card:active{transform:translateY(1px)}
+.profile-pick-card.on{border-color:rgba(34,199,122,.65);background:linear-gradient(180deg,#f1fff7,#fff)}
+.profile-pick-card .info{min-width:0;flex:1}
+.profile-pick-card .name{font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.profile-pick-card .meta{font-family:var(--num);font-size:12px;color:var(--muted);font-weight:900;margin-top:3px}
+.profile-focus-note{display:flex;align-items:center;justify-content:space-between;gap:8px;background:var(--soft);border-radius:14px;padding:10px;margin-top:10px}
+@media(max-width:520px){.profile-picker-grid{grid-template-columns:1fr 1fr}.profile-pick-card{padding:9px;gap:8px}.profile-pick-card .avatar{width:34px;height:34px}}
+/* ===== v23 player profile + road to win ===== */
+.player-hero{position:relative;overflow:hidden;background:
+  radial-gradient(circle at 20% 10%,rgba(247,201,72,.22),transparent 32%),
+  radial-gradient(circle at 90% 0%,rgba(34,199,122,.22),transparent 34%),
+  linear-gradient(135deg,#071510,#113c2b);color:#fff;border-color:rgba(255,255,255,.14)}
+.player-hero .chip{background:rgba(255,255,255,.14);color:#e6fff2;border:1px solid rgba(255,255,255,.12)}
+.player-hero .sub{color:#cbeede}
+.player-hero .stat{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14)}
+.player-hero .stat .v{color:#fff}.player-hero .stat .l{color:#c7eadb}
+.profile-metric{border:1px solid var(--border);background:linear-gradient(180deg,#fff,#f7fbf8);border-radius:18px;padding:12px}
+.profile-metric .label{font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase}
+.profile-metric .value{font-weight:1000;font-size:16px;margin-top:4px}
+.road-card{border:1px solid rgba(34,199,122,.24);background:linear-gradient(180deg,#ffffff,#f2fff8);border-radius:20px;padding:12px;margin:10px 0}
+.road-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;border:1px solid var(--border);background:#fff;border-radius:16px;padding:10px;margin:8px 0}
+.road-main{min-width:0}.road-title{font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.road-sub{font-size:12px;color:var(--muted);margin-top:3px}
+.road-gain{font-family:var(--num);font-weight:1000;color:var(--good);background:#e9fbf1;border-radius:999px;padding:6px 10px;white-space:nowrap}
+.group-strength{display:grid;gap:8px}
+.group-strength-row{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:8px;align-items:center;background:#fff;border:1px solid var(--border);border-radius:14px;padding:8px}
+.group-strength-row .g{font-family:var(--num);font-weight:1000;background:var(--soft);border-radius:10px;text-align:center;padding:6px}
+.group-strength-row .bar{height:10px;border-radius:99px;background:var(--soft);overflow:hidden}
+.group-strength-row .fill{height:100%;border-radius:99px;background:var(--grass)}
+.group-strength-row .score{font-family:var(--num);font-weight:1000;color:var(--grass-d)}
+.profile-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+@media(max-width:560px){.road-row{grid-template-columns:1fr}.road-gain{width:max-content}.profile-actions .btn{width:100%}}
+/* ===== v22 home control center ===== */
+.home-hero{position:relative;overflow:hidden;background:
+  radial-gradient(circle at 15% 10%,rgba(34,199,122,.28),transparent 32%),
+  radial-gradient(circle at 85% 0%,rgba(247,201,72,.28),transparent 34%),
+  linear-gradient(135deg,#071510,#0f3628 58%,#123c2c);color:#fff;border-color:rgba(255,255,255,.12);box-shadow:0 18px 55px rgba(7,21,16,.22)}
+.home-hero::after{content:"";position:absolute;inset:auto -80px -110px auto;width:260px;height:260px;border-radius:50%;border:42px solid rgba(255,255,255,.055)}
+.hero-kicker{display:flex;align-items:center;gap:8px;font-weight:900;color:#b8f7d5;text-transform:uppercase;font-size:11px;letter-spacing:.08em}
+.hero-title{font-size:clamp(26px,4.5vw,46px);font-weight:1000;letter-spacing:-.04em;margin:8px 0 6px}
+.hero-sub{color:#d8f5e6;font-size:13px;max-width:720px}
+.hero-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.home-hero .stat{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.14)}
+.home-hero .stat .v{color:#fff}.home-hero .stat .l{color:#c7eadb}
+.podium{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:10px;align-items:end}
+.podium-card{border:1px solid var(--border);background:linear-gradient(180deg,#fff,#f7fbf8);border-radius:20px;padding:12px;text-align:center;min-width:0}
+.podium-card.first{background:linear-gradient(180deg,#fff7d8,#fff);border-color:rgba(247,201,72,.72);padding-top:18px}
+.podium-card .place{font-family:var(--num);font-weight:1000;color:var(--muted)}
+.podium-card .name{font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:8px}
+.podium-card .pts{font-family:var(--num);font-weight:1000;color:var(--grass-d);margin-top:4px}
+.home-ai textarea{min-height:72px}
+.mover-row{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--border);background:#fff;border-radius:15px;padding:9px 10px;margin:7px 0}
+.mover-row .who{display:flex;align-items:center;gap:9px;min-width:0;font-weight:900}
+.mover-row .change{font-family:var(--num);font-weight:1000}
+.mover-row .change.up{color:var(--good)}.mover-row .change.down{color:var(--bad)}
+.next-impact-card{border:1px solid rgba(34,199,122,.24);background:linear-gradient(180deg,#fff,#f2fff8);border-radius:20px;padding:13px;margin-top:10px}
+@media(max-width:520px){.podium{grid-template-columns:1fr}.podium-card.first{order:-1}.hero-actions .btn{width:100%}}
 /* ===== v10 engagement widgets ===== */
 .insight{border-radius:18px;background:linear-gradient(180deg,#ffffff,#f5fbf7);border:1px solid rgba(16,32,25,.08);padding:12px;margin:10px 0}
 .insight .title{font-weight:900;font-size:13px;color:var(--pitch);display:flex;align-items:center;gap:7px;margin-bottom:7px}
@@ -450,11 +557,11 @@ const TEAM_ALIASES={
 const I18N={
   en:{
     brand:"WC2026 Pick'em", admin:"Admin", langName:"EN",
-    nav_dashboard:"Home", nav_today:"Today", nav_leaderboard:"Table", nav_matches:"Matches", nav_more:"More",
+    nav_dashboard:"Home", nav_today:"Today", nav_leaderboard:"Table", nav_matches:"Matches", nav_profile:"Profile", nav_more:"More",
     v_dashboard:"Dashboard", v_today:"Today's matches", v_matches:"All matches", v_groups:"Group tables",
     v_predictions:"All predictions", v_consensus:"Group leaders consensus", v_knockout:"Knockout bracket",
     v_leaderboard:"Leaderboard", v_player:"Player details", v_audit:"Prediction audit",
-    v_results:"Results editor", v_repair:"Data repair", v_settings:"Settings & API", v_ai:"AI Assistant", v_impact:"Match impact", v_scenarios:"What can change",
+    v_results:"Results editor", v_repair:"Data repair", v_settings:"Settings & API", v_ai:"AI Assistant", v_impact:"Match impact", v_scenarios:"What can change", v_help:"Help & points logic",
     phase_group:"Group stage", phase_ko:"Knockout stage", phase_done:"Tournament complete", phase_pre:"Pre-tournament",
     leader:"Current leader", top3:"Top 3", players:"Players", entryFee:"Entry fee", prizePool:"Prize pool",
     paid:"Paid", unpaid:"Unpaid", completedMatches:"Group matches done", groupsDone:"Groups completed",
@@ -496,11 +603,11 @@ const I18N={
   },
   ar:{
     brand:"توقعات كأس العالم 2026", admin:"المشرف", langName:"ع",
-    nav_dashboard:"الرئيسية", nav_today:"اليوم", nav_leaderboard:"الترتيب", nav_matches:"المباريات", nav_more:"المزيد",
+    nav_dashboard:"الرئيسية", nav_today:"اليوم", nav_leaderboard:"الترتيب", nav_matches:"المباريات", nav_profile:"الملف", nav_more:"المزيد",
     v_dashboard:"لوحة التحكم", v_today:"مباريات اليوم", v_matches:"كل المباريات", v_groups:"جداول المجموعات",
     v_predictions:"كل التوقعات", v_consensus:"إجماع المجموعات", v_knockout:"خروج المغلوب",
     v_leaderboard:"الترتيب", v_player:"تفاصيل اللاعب", v_audit:"تدقيق التوقعات",
-    v_results:"تحرير النتائج", v_repair:"إصلاح البيانات", v_settings:"الإعدادات والـ API", v_ai:"المساعد الذكي", v_impact:"تأثير المباريات", v_scenarios:"ما الذي قد يتغير",
+    v_results:"تحرير النتائج", v_repair:"إصلاح البيانات", v_settings:"الإعدادات والـ API", v_ai:"المساعد الذكي", v_impact:"تأثير المباريات", v_scenarios:"ما الذي قد يتغير", v_help:"المساعدة وطريقة النقاط",
     phase_group:"دور المجموعات", phase_ko:"الأدوار الإقصائية", phase_done:"انتهت البطولة", phase_pre:"قبل البطولة",
     leader:"المتصدر الحالي", top3:"الأوائل الثلاثة", players:"اللاعبون", entryFee:"رسوم الاشتراك", prizePool:"مجموع الجوائز",
     paid:"دفعوا", unpaid:"لم يدفعوا", completedMatches:"مباريات المجموعات المكتملة", groupsDone:"مجموعات مكتملة",
@@ -897,11 +1004,12 @@ function prizeSplit(){
 /* ================= schedule ================= */
 function buildLocalSchedule(){ // synthesize from GROUPS so All-Matches always has data
   const out=[]; const start=new Date(WC_START+'T00:00:00Z');
+  const timeSlots=['8:00 PM','11:00 PM','2:00 AM','5:00 AM']; // UAE display times for fallback schedule
   let day=0;
   GROUP_KEYS.forEach((g)=>{ for(let i=0;i<6;i++){
     const [h,a]=matchTeams(g,i);
     const d=new Date(start); d.setUTCDate(start.getUTCDate()+Math.floor(day/4));
-    out.push({key:matchKey(g,i),group:g,idx:i,home:h,away:a,date:d.toISOString().slice(0,10),phase:'group'});
+    out.push({key:matchKey(g,i),group:g,idx:i,home:h,away:a,date:d.toISOString().slice(0,10),time:timeSlots[day%timeSlots.length],tz:'UAE',phase:'group'});
     day++;
   }});
   return out;
@@ -913,6 +1021,35 @@ function uaeToday(){ // UAE = UTC+4, no DST. Works correctly even when user's de
   const utcMs=n.getTime() + n.getTimezoneOffset()*60000;
   const uaeMs=utcMs + 4*60*60000;
   return new Date(uaeMs).toISOString().slice(0,10);
+}
+function toAmPmFromHHMM(hhmm){
+  if(!hhmm) return '';
+  const m=String(hhmm).match(/^(\d{1,2}):(\d{2})/);
+  if(!m) return String(hhmm);
+  let h=Number(m[1]), min=m[2], ampm=h>=12?'PM':'AM';
+  h=h%12; if(h===0) h=12;
+  return h+':'+min+' '+ampm;
+}
+function eventTimeUAE(e){
+  try{
+    if(e && e.strTimestamp){
+      return new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Dubai',hour:'numeric',minute:'2-digit',hour12:true}).format(new Date(e.strTimestamp));
+    }
+    if(e && e.dateEvent && e.strTime){
+      const raw=String(e.strTime).slice(0,5);
+      // TheSportsDB times are commonly UTC; convert to UAE when possible.
+      const dt=new Date(e.dateEvent+'T'+raw+':00Z');
+      if(!isNaN(dt)) return new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Dubai',hour:'numeric',minute:'2-digit',hour12:true}).format(dt);
+      return toAmPmFromHHMM(raw);
+    }
+  }catch(err){}
+  return '';
+}
+function matchDateTime(m){
+  const date=m&&m.date?m.date:'';
+  const time=m&&m.time?m.time:(m&&m.strTime?toAmPmFromHHMM(m.strTime):'');
+  if(date&&time) return date+' · '+time+(m.tz?' '+m.tz:' UAE');
+  return date||time||'';
 }
 async function fetchDay(date){
   try{
@@ -1046,6 +1183,8 @@ const NAV=[
   {id:'today',ic:'📅',key:'nav_today'},
   {id:'leaderboard',ic:'🏆',key:'nav_leaderboard'},
   {id:'matches',ic:'⚽',key:'nav_matches'},
+  {id:'player',ic:'👤',key:'nav_profile'},
+  {id:'ai',ic:'🤖',key:'v_ai'},
   {id:'more',ic:'☰',key:'nav_more'}
 ];
 const MORE_ITEMS=[
@@ -1055,7 +1194,7 @@ const MORE_ITEMS=[
   {id:'knockout',ic:'🎯',key:'v_knockout'},
   {id:'impact',ic:'🔥',key:'v_impact'},
   {id:'scenarios',ic:'⚡',key:'v_scenarios'},
-  {id:'ai',ic:'🤖',key:'v_ai'}
+  {id:'help',ic:'❓',key:'v_help'}
 ];
 const ADMIN_ITEMS=[
   {id:'audit',ic:'🔎',key:'v_audit'},
@@ -1137,6 +1276,7 @@ function render(){
     settings:viewSettings,
     impact:viewImpact,
     scenarios:viewScenarios,
+    help:viewHelp,
     ai:viewAI
   };
 
@@ -1198,6 +1338,82 @@ function compareGroupCard(g,p1,p2,n1,n2){
 }
 
 /* ================= DASHBOARD ================= */
+
+function dashboardNextMatch(todayList){
+  const today=(todayList||[]).filter(m=>m.group&&m.idx!=null&&!matchResult(m.group,m.idx).complete);
+  return today[0] || upcomingGroupMatches(1)[0] || null;
+}
+function renderHomeHero(lb,leader,next){
+  return `<div class="card home-hero">
+    <div class="hero-kicker">⚽ ${esc(t('brand'))}</div>
+    <div class="hero-title">${esc(tl('Live Pick’em Control Center','مركز تحكم التوقعات المباشر'))}</div>
+    <div class="hero-sub">${esc(tl('Track the projected winner, next match impact, AI scenarios, and leaderboard movement from one screen.','تابع الفائز المتوقع وتأثير المباراة القادمة ومحاكاة الذكاء والترتيب من شاشة واحدة.'))}</div>
+    <div class="grid g3" style="margin-top:16px">
+      ${statTile(leader?leader.name:t('none'),t('projWinner'),true)}
+      ${statTile(leader?leader.total+' '+t('pts'):'—',t('points'))}
+      ${statTile(next?matchDateTime(next):completedMatchCount()+'/72',next?tl('Next match','المباراة القادمة'):t('completedMatches'))}
+    </div>
+    <div class="hero-actions">
+      <button class="btn gold sm" onclick="go('ai')">🤖 ${esc(t('v_ai'))}</button>
+      <button class="btn ghost sm" onclick="go('scenarios')">⚡ ${esc(t('v_scenarios'))}</button>
+      <button class="btn ghost sm" onclick="go('leaderboard')">🏆 ${esc(t('v_leaderboard'))}</button>
+      <button class="btn ghost sm" onclick="shareLeaderboard()">📲 ${esc(t('share'))}</button>
+    </div>
+  </div>`;
+}
+function renderPodium(lb){
+  if(!lb.length) return `<div class="sub">${esc(t('noData'))}</div>`;
+  const order=[lb[1],lb[0],lb[2]].filter(Boolean);
+  return `<div class="podium">${order.map(r=>`<div class="podium-card ${r.rank===1?'first':''}">
+    <div class="place">${r.rank===1?'🥇':r.rank===2?'🥈':'🥉'} #${r.rank}</div>
+    <div style="display:flex;justify-content:center;margin-top:8px">${playerAvatar(r.name,r.rank===1?'lg':'sm')}</div>
+    <div class="name">${esc(r.name)}</div>
+    <div class="pts">${r.total} ${esc(t('pts'))}</div>
+    <div>${mvArrow(rankMovement(r.name))}</div>
+  </div>`).join('')}</div>`;
+}
+function renderNextMatchImpact(m){
+  if(!m) return `<div class="sub">${esc(t('noData'))}</div>`;
+  const sc=scenarioForMatch(m);
+  return `<div class="next-impact-card">
+    <div class="between"><h3>⚡ ${teamHtml(m.home)} vs ${teamHtml(m.away)}</h3><span class="match-time">${esc(matchDateTime(m))}</span></div>
+    <div class="grid g2" style="margin-top:10px">
+      <div class="insight"><div class="title">${esc(tl('If','إذا فاز'))} ${teamHtml(m.home)}</div><div class="impact-list"><span class="impact-pill good">+${SCORING.edgeCorrect}: ${sc.home.length}</span></div><div class="sub">${esc(sc.home.slice(0,8).join(', ')||t('none'))}${sc.home.length>8?'…':''}</div></div>
+      <div class="insight"><div class="title">${esc(tl('If','إذا فاز'))} ${teamHtml(m.away)}</div><div class="impact-list"><span class="impact-pill gold">+${SCORING.edgeCorrect}: ${sc.away.length}</span></div><div class="sub">${esc(sc.away.slice(0,8).join(', ')||t('none'))}${sc.away.length>8?'…':''}</div></div>
+    </div>
+    <div class="voice-row"><button class="btn sm" onclick="go('scenarios')">🤖 ${esc(tl('Simulate with AI','محاكاة بالذكاء'))}</button><button class="btn ghost sm" onclick="shareTodayImpact()">${esc(t('share'))}</button></div>
+  </div>`;
+}
+function renderHomeAIQuick(next){
+  const ex=next?`${next.home} 2-1 ${next.away}`:tl('If Brazil beats Morocco 2-1','إذا فازت البرازيل على المغرب 2-1');
+  return `<div class="home-ai">
+    <textarea id="homeAiBox" placeholder="${esc(tl('Ask with voice or text: what changes if…','اسأل بالصوت أو الكتابة: ماذا يتغير إذا…'))}">${esc(ex)}</textarea>
+    <div class="voice-row">
+      <button class="micbtn" onclick="startVoiceInput('homeAiBox','ai')">🎙️ ${esc(tl('Speak','تحدث'))}</button>
+      <button class="btn sm" onclick="askAIFromHome()">🤖 ${esc(tl('Ask AI','اسأل الذكاء'))}</button>
+      <button class="btn ghost sm" onclick="$('homeAiBox').value='';$('homeAiAns').innerHTML=''">${esc(t('clear'))}</button>
+    </div>
+    <div id="homeAiAns"></div>
+  </div>`;
+}
+function askAIFromHome(){
+  const q=$('homeAiBox')?$('homeAiBox').value:'';
+  if(!q.trim()) return;
+  const ans=answerLocalAI(q,'scenario',LANG);
+  $('homeAiAns').innerHTML=`<div class="ai-ans">${esc(ans)}</div><button class="btn ghost sm" style="margin-top:8px" onclick='copyText(${JSON.stringify(ans)})'>${esc(t('copy'))}</button>`;
+}
+function renderBiggestMovers(latest){
+  let rows=[];
+  if(latest){
+    const a=auditMatch(latest.group,latest.idx);
+    rows=a.rows.filter(x=>x.got>0).map(x=>({name:x.name,label:'+'+x.got+' '+t('pts'),dir:'up'})).slice(0,6);
+  }
+  if(!rows.length){
+    rows=buildLeaderboard().map(r=>({name:r.name,label:mvArrow(rankMovement(r.name)),dir:rankMovement(r.name).dir})).filter(x=>x.dir!=='eq').slice(0,6);
+  }
+  if(!rows.length) return `<div class="sub">${esc(tl('No movement yet. Enter results to see who rises.','لا توجد حركة بعد. أدخل النتائج لرؤية التغييرات.'))}</div>`;
+  return rows.map(x=>`<div class="mover-row"><div class="who">${playerAvatar(x.name,'sm')}<span>${esc(x.name)}</span></div><div class="change ${x.dir==='dn'?'down':'up'}">${typeof x.label==='string'?esc(x.label):x.label}</div></div>`).join('');
+}
 function viewDashboard(){
   const lb=buildLeaderboard();
   const leader=lb[0];
@@ -1205,45 +1421,33 @@ function viewDashboard(){
   const todayList=APP._today||[];
   const winners=topGroupWinnerPicks();
   const latest=latestCompletedMatch();
-  const upcoming=(todayList.filter(m=>m.group&&m.idx!=null&&!matchResult(m.group,m.idx).complete).length?todayList.filter(m=>m.group&&m.idx!=null&&!matchResult(m.group,m.idx).complete):upcomingGroupMatches(3));
+  const next=dashboardNextMatch(todayList);
   return `
+  ${renderHomeHero(lb,leader,next)}
+
   <div class="card">
-    <div class="between"><h3>📊 ${esc(t('v_dashboard'))}</h3><span class="chip on">${esc(t(currentPhase()))}</span></div>
-    <div class="grid g2" style="margin-top:10px">
-      ${statTile(playerNames().length,t('players'))}
-      ${statTile(leader?leader.name:t('none'),t('projWinner'),true)}
-      ${statTile(leader?leader.total+' '+t('pts'):'—',t('points'))}
-      ${statTile(completedMatchCount()+'/72',t('completedMatches'))}
-    </div>
-    <div class="impact-list" style="margin-top:12px">
-      <button class="btn ghost sm" onclick="shareLeaderboard()">${esc(t('share'))} ${esc(t('v_leaderboard'))}</button>
-      <button class="btn ghost sm" onclick="shareTodayImpact()">${esc(tl('Share impact','مشاركة التأثير'))}</button>
-      <button class="btn gold sm" onclick="go('ai')">🤖 ${esc(t('v_ai'))}</button>
-    </div>
+    <div class="between"><h3>⚡ ${esc(tl('Next match impact','تأثير المباراة القادمة'))}</h3><span class="chip on">${esc(t(currentPhase()))}</span></div>
+    ${renderNextMatchImpact(next)}
   </div>
 
   <div class="card">
-    <h3>🏆 ${esc(t('leader'))}</h3>
-    ${leader?`<div class="lb-row r1"><span class="rank num">1</span><span class="nm">${playerNameHtml(leader.name,'sm')}</span><span class="pts num">${leader.total} ${esc(t('pts'))}</span></div>`:`<div class="sub">${esc(t('noLeader'))}</div>`}
-    <div class="sub" style="margin:10px 0 4px">${esc(t('top3'))}</div>
-    ${lb.slice(0,3).map(r=>`<div class="lb-row ${r.rank===1?'r1':''}"><span class="rank num">${r.rank}</span>${mvArrow(rankMovement(r.name))}<span class="nm">${playerNameHtml(r.name,'sm')}</span><span class="pts num">${r.total}</span></div>`).join('')||`<div class="sub">${esc(t('noData'))}</div>`}
-    <button class="btn ghost sm" style="margin-top:10px" onclick="go('leaderboard')">${esc(t('v_leaderboard'))} →</button>
+    <h3>🤖 ${esc(tl('AI quick scenario','سيناريو سريع بالذكاء'))}</h3>
+    ${renderHomeAIQuick(next)}
   </div>
 
   <div class="card">
-    <h3>⚡ ${esc(tl('What can change next','ما الذي قد يغيّر الترتيب؟'))}</h3>
-    ${renderWhatCanChange(upcoming.slice(0,3))}
-    <button class="btn ghost sm" style="margin-top:8px" onclick="shareTodayImpact()">${esc(t('copy'))}</button>
+    <div class="between"><h3>🏆 ${esc(t('top3'))}</h3><button class="btn ghost sm" onclick="go('leaderboard')">${esc(t('v_leaderboard'))} →</button></div>
+    ${renderPodium(lb)}
+  </div>
+
+  <div class="card">
+    <h3>🚀 ${esc(tl('Biggest movers','أكبر المتحركين'))}</h3>
+    ${renderBiggestMovers(latest)}
   </div>
 
   <div class="card">
     <h3>🔥 ${esc(t('matchImpact'))}</h3>
     ${latest?renderMiniImpact(latest.group,latest.idx):`<div class="sub">${esc(t('noData'))}</div>`}
-  </div>
-
-  <div class="card">
-    <h3>🥊 ${esc(tl('Player rivalry','مقارنة لاعبين'))}</h3>
-    ${renderRivalryCard()}
   </div>
 
   <div class="card">
@@ -1267,10 +1471,10 @@ function viewDashboard(){
     <div class="grid g2">
       <button class="btn ghost sm" onclick="go('matches')">⚽ ${esc(t('v_matches'))}</button>
       <button class="btn ghost sm" onclick="go('groups')">📊 ${esc(t('v_groups'))}</button>
-      <button class="btn ghost sm" onclick="go('knockout')">🎯 ${esc(t('v_knockout'))}</button>
       <button class="btn ghost sm" onclick="go('impact')">🔥 ${esc(t('v_impact'))}</button>
       <button class="btn ghost sm" onclick="go('scenarios')">⚡ ${esc(t('v_scenarios'))}</button>
       <button class="btn ghost sm" onclick="go('ai')">🤖 ${esc(t('v_ai'))}</button>
+      <button class="btn ghost sm" onclick="go('predictions')">📝 ${esc(t('v_predictions'))}</button>
     </div>
   </div>
 
@@ -1292,7 +1496,7 @@ function adminHealthPanel(){
 }
 function miniMatch(m){ const r=m.idx!=null?matchResult(m.group,m.idx):null;
   const sc=r&&r.complete?`${r.hs}-${r.as}`:'vs';
-  return `<div class="match"><div class="head"><span>${esc(m.group?('Group '+m.group):'')}</span><span>${esc(m.date||'')}</span></div>
+  return `<div class="match"><div class="head"><span>${esc(m.group?('Group '+m.group):'')}</span><span class="match-time">${esc(matchDateTime(m))}</span></div>
     <div class="teams"><span>${teamHtml(m.home)}</span><span class="sc num">${sc}</span><span>${teamHtml(m.away)}</span></div></div>`; }
 
 /* group winner pick frequency */
@@ -1312,7 +1516,7 @@ function completedMatchesList(){
   for(const g of GROUP_KEYS){
     for(let i=0;i<6;i++){
       const r=matchResult(g,i);
-      if(r.complete) out.push({group:g,idx:i,key:matchKey(g,i),home:r.home,away:r.away,hs:r.hs,as:r.as,winner:r.winner,outcome:r.outcome,date:(buildLocalSchedule().find(m=>m.key===matchKey(g,i))||{}).date});
+      if(r.complete) out.push({group:g,idx:i,key:matchKey(g,i),home:r.home,away:r.away,hs:r.hs,as:r.as,winner:r.winner,outcome:r.outcome,date:(buildLocalSchedule().find(m=>m.key===matchKey(g,i))||{}).date,time:(buildLocalSchedule().find(m=>m.key===matchKey(g,i))||{}).time,tz:'UAE'});
     }
   }
   return out;
@@ -1423,25 +1627,41 @@ function scenarioForMatch(m){
 }
 function scenarioCard(m){
   const sc=scenarioForMatch(m);
-  return `<div class="card"><div class="between"><h3>⚡ ${teamHtml(m.home)} vs ${teamHtml(m.away)}</h3><span class="chip">Group ${esc(m.group)}</span></div>
+  return `<div class="card"><div class="between"><h3>⚡ ${teamHtml(m.home)} vs ${teamHtml(m.away)}</h3><span class="chip">${esc(matchDateTime(m)||('Group '+m.group))}</span></div>
     <div class="grid g2">
       <div class="insight"><div class="title">${esc(tl('If','إذا فاز'))} ${teamHtml(m.home)}</div><div class="impact-list"><span class="impact-pill good">+${SCORING.edgeCorrect} ${esc(t('pts'))}: ${sc.home.length}</span></div><div class="sub">${esc(sc.home.slice(0,12).join(', ')||t('none'))}${sc.home.length>12?'…':''}</div></div>
       <div class="insight"><div class="title">${esc(tl('If','إذا فاز'))} ${teamHtml(m.away)}</div><div class="impact-list"><span class="impact-pill gold">+${SCORING.edgeCorrect} ${esc(t('pts'))}: ${sc.away.length}</span></div><div class="sub">${esc(sc.away.slice(0,12).join(', ')||t('none'))}${sc.away.length>12?'…':''}</div></div>
     </div>
     ${sc.noEdge.length?`<div class="sub" style="margin-top:8px">${esc(t('noPred'))}: ${esc(sc.noEdge.slice(0,10).join(', '))}${sc.noEdge.length>10?'…':''}</div>`:''}
+    <div class="voice-row">
+      <button class="btn ghost sm" onclick="renderScenarioSimulation('${esc(m.home).replace(/'/g,'')} 2-1 ${esc(m.away).replace(/'/g,'')}','scenarioAiOut');go('scenarios')">🤖 ${esc(tl('AI simulate home win','محاكاة فوز الأول'))}</button>
+      <button class="btn ghost sm" onclick="renderScenarioSimulation('${esc(m.home).replace(/'/g,'')} 1-2 ${esc(m.away).replace(/'/g,'')}','scenarioAiOut');go('scenarios')">🤖 ${esc(tl('AI simulate away win','محاكاة فوز الثاني'))}</button>
+    </div>
   </div>`;
 }
 function viewScenarios(){
   const today=(APP._today||[]).filter(m=>m.group&&m.idx!=null&&!matchResult(m.group,m.idx).complete);
   const matches=(today.length?today:upcomingGroupMatches(12));
   return `<div class="card"><div class="between"><h3>⚡ ${esc(t('v_scenarios'))}</h3><button class="btn ghost sm" onclick="shareTodayImpact()">${esc(t('share'))}</button></div>
-    <div class="sub">${esc(tl('Preview who gains points depending on upcoming match winners.','معاينة من سيكسب نقاطاً حسب الفائز في المباريات القادمة.'))}</div></div>`+
+    <div class="sub">${esc(tl('Preview who gains points depending on upcoming match winners.','معاينة من سيكسب نقاطاً حسب الفائز في المباريات القادمة.'))}</div>
+    <div class="scenario-ai-box">
+      <h3>🤖 ${esc(tl('AI scenario simulator','محاكي السيناريو بالذكاء'))}</h3>
+      <div class="sub">${esc(tl('Speak or type, for example: “If Brazil beats Morocco 2-1”.','تحدث أو اكتب مثلاً: إذا فازت البرازيل على المغرب 2-1.'))}</div>
+      <textarea id="scenarioVoiceBox" placeholder="${esc(tl('Type or speak a scenario…','اكتب أو قل السيناريو…'))}" style="margin-top:10px"></textarea>
+      <div class="voice-row">
+        <button class="micbtn" onclick="startVoiceInput('scenarioVoiceBox','scenario')">🎙️ ${esc(tl('Speak','تحدث'))}</button>
+        <button class="btn sm" onclick="renderScenarioSimulation($('scenarioVoiceBox').value,'scenarioAiOut')">⚡ ${esc(tl('Simulate','محاكاة'))}</button>
+        <button class="btn ghost sm" onclick="$('scenarioVoiceBox').value='';$('scenarioAiOut').innerHTML=''">${esc(t('clear'))}</button>
+      </div>
+      <div id="scenarioAiOut"></div>
+    </div>
+  </div>`+
     (matches.length?matches.map(scenarioCard).join(''):`<div class="card"><div class="state">${esc(t('noData'))}</div></div>`);
 }
 function impactSummaryCard(item){
   const d=matchImpactData(item.group,item.idx), r=d.match;
   const score=r.complete?`${r.hs}-${r.as}`:'vs';
-  return `<div class="card"><div class="between"><h3>🔥 ${teamHtml(r.home)} ${score} ${teamHtml(r.away)}</h3><span class="chip">${esc(item.key||matchKey(item.group,item.idx))}</span></div>
+  return `<div class="card"><div class="between"><h3>🔥 ${teamHtml(r.home)} ${score} ${teamHtml(r.away)}</h3><span class="chip">${esc(matchDateTime(item)||item.key||matchKey(item.group,item.idx))}</span></div>
     <div class="impact-list"><span class="impact-pill good">${esc(t('gotRight'))}: ${d.right.length}</span><span class="impact-pill bad">${esc(t('gotWrong'))}: ${d.missed.length}</span><span class="impact-pill gold">+${SCORING.edgeCorrect} ${esc(t('pts'))}</span></div>
     <div class="grid g2" style="margin-top:10px">
       <div class="insight"><div class="title">✅ ${esc(t('gotRight'))}</div><div class="sub">${esc(d.right.slice(0,16).map(x=>x.name).join(', ')||t('none'))}${d.right.length>16?'…':''}</div></div>
@@ -1471,7 +1691,7 @@ function viewLeaderboard(){
     <div class="sub" style="margin-top:8px">${esc(t('breakdown'))}: ${esc(t('groupMatchPts'))} · ${esc(t('groupRankPts'))} · ${esc(t('koPts'))} · ${esc(t('champPts'))}</div>
   </div>`;
 }
-function openPlayer(name){ APP.sel.player=name; go('player'); }
+function openPlayer(name){ chooseProfile(name); }
 
 /* ================= TODAY / ALL MATCHES ================= */
 function viewToday(){
@@ -1505,7 +1725,7 @@ function fullMatchCard(m){
     impact=`<div class="edge">🎯 ${esc(t('gotRight'))}: <b>${right}</b>/${total} · ${esc(t(r.outcome==='draw'?'draw':'winner'))}: <b>${esc(r.outcome==='draw'?'—':canonTeam(r.winner))}</b></div>`;
   }
   return `<div class="match"><div class="head"><span>${esc(m.group?('Group '+m.group+' · '+m.key):'')}</span>
-      <span class="tag ${srcTag}">${esc(t(srcTxt))}</span></div>
+      <span><span class="match-time">${esc(matchDateTime(m))}</span> <span class="tag ${srcTag}">${esc(t(srcTxt))}</span></span></div>
     <div class="teams"><span>${teamHtml(m.home)}</span><span class="sc num">${sc}</span><span>${teamHtml(m.away)}</span></div>
     ${impact}${complete?`<button class="btn ghost sm" style="margin-top:8px;width:100%" onclick="openMatchImpact('${m.group}',${m.idx})">${esc(t('matchImpact'))}</button>`:(m.group&&m.idx!=null?`<button class="btn ghost sm" style="margin-top:8px;width:100%" onclick="go('scenarios')">⚡ ${esc(t('v_scenarios'))}</button>`:'')}</div>`;
 }
@@ -1526,20 +1746,168 @@ function viewGroups(){
 }
 
 /* ================= PLAYER DETAILS ================= */
+
+function playerGroupScoreBreakdown(calc){
+  const by={};
+  GROUP_KEYS.forEach(g=>by[g]={group:g,match:0,rank:0,total:0,complete:groupComplete(g)});
+  (calc.detail.matches||[]).forEach(x=>{ if(by[x.group]){ by[x.group].match+=x.got; by[x.group].total+=x.got; }});
+  (calc.detail.ranking||[]).forEach(x=>{ if(by[x.group]){ by[x.group].rank+=x.got; by[x.group].total+=x.got; }});
+  return Object.values(by).sort((a,b)=>b.total-a.total||a.group.localeCompare(b.group));
+}
+function playerDataQualitySummary(name,p){
+  const issues=[];
+  GROUP_KEYS.forEach(g=>validateGroupPrediction(g,rawGroupPredictionValue(p,g)).forEach(x=>issues.push({group:g,...x})));
+  return issues;
+}
+function rawGroupPredictionValue(p,g){
+  return (p&&p.groupPreds&&p.groupPreds[g]) ??
+    (p&&p.groups&&p.groups[g]) ??
+    (p&&p.predictions&&p.predictions[g]) ??
+    (p&&p.groupPredictions&&p.groupPredictions[g]) ??
+    (p?p[g]:null);
+}
+function playerRoadToWin(name,p){
+  const lb=buildLeaderboard();
+  const me=lb.find(x=>x.name===name);
+  const leader=lb[0];
+  const gap=(leader&&me&&leader.name!==name)?Math.max(0,leader.total-me.total):0;
+  const matches=upcomingGroupMatches(24);
+  const opportunities=[];
+  matches.forEach(m=>{
+    const e=predictedEdge(p,m.group,m.home,m.away);
+    if(e.status!=='ok') return;
+    let hs=2,as=1,winner=m.home;
+    if(sameTeam(e.edge,m.away)){ hs=1; as=2; winner=m.away; }
+    const sim=simulateLeaderboardForMatch(m,hs,as);
+    const row=sim.find(x=>x.name===name);
+    if(row && (row.deltaPts>0 || row.deltaRank>0)){
+      opportunities.push({match:m,hs,as,winner,deltaPts:row.deltaPts,deltaRank:row.deltaRank,newRank:row.rank,newTotal:row.total});
+    }
+  });
+  opportunities.sort((a,b)=>b.deltaRank-a.deltaRank || b.deltaPts-a.deltaPts);
+  return {me,leader,gap,opportunities};
+}
+function renderPlayerHero(name,p,c,me){
+  return `<div class="card player-hero">
+    <div class="between">
+      <div class="player-head">${playerAvatar(name,'lg')}<div class="player-meta"><div class="hero-kicker">🦸 ${esc(tl('Player profile','ملف اللاعب'))}</div><h3 style="font-size:28px">${esc(name)}</h3><div class="sub">${esc(tl('Superhero avatar, current rank, picks and road to win.','الصورة والرتبة والتوقعات وطريق الفوز.'))}</div></div></div>
+      <span class="chip">#${me?me.rank:'-'} · ${c.total} ${esc(t('pts'))}</span>
+    </div>
+    <div class="grid g3" style="margin-top:14px">
+      ${statTile(c.total,t('points'),true)}
+      ${statTile(p&&p.champion?teamText(p.champion):'—',t('champion'))}
+      ${statTile(c.groupMatch,t('groupMatchPts'))}
+    </div>
+    <div class="profile-actions">
+      <button class="btn gold sm" onclick="sharePlayer('${esc(name).replace(/'/g,'')}')">📲 ${esc(t('whatsapp'))}</button>
+      <button class="btn ghost sm" onclick="go('scenarios')">⚡ ${esc(t('v_scenarios'))}</button>
+      <button class="btn ghost sm" onclick="go('ai')">🤖 ${esc(t('v_ai'))}</button>
+    </div>
+  </div>`;
+}
+function renderRoadToWin(name,p){
+  const road=playerRoadToWin(name,p);
+  if(!road.me) return `<div class="sub">${esc(t('noData'))}</div>`;
+  const topText=road.leader&&road.leader.name===name
+    ? tl('Currently leading. Protect the lead by watching the upcoming high-impact matches.','أنت في الصدارة حالياً. حافظ على الصدارة بمتابعة المباريات المؤثرة.')
+    : tl('Gap to leader','الفارق عن المتصدر')+`: ${road.gap} ${t('pts')}`;
+  return `<div class="road-card">
+    <div class="between"><h3>🛣️ ${esc(tl('Road to win','طريق الفوز'))}</h3><span class="chip">#${road.me.rank}</span></div>
+    <div class="sub">${esc(topText)}</div>
+    ${(road.opportunities.length?road.opportunities.slice(0,6).map(o=>`<div class="road-row">
+      <div class="road-main"><div class="road-title">${teamHtml(o.match.home)} ${o.hs}-${o.as} ${teamHtml(o.match.away)}</div>
+      <div class="road-sub">${esc(matchDateTime(o.match))} · ${esc(tl('Needs','يحتاج'))}: ${teamHtml(o.winner)} ${o.deltaRank>0?`· ▲${o.deltaRank}`:''}</div></div>
+      <div class="road-gain">+${o.deltaPts} ${esc(t('pts'))}</div>
+    </div>`).join(''):`<div class="sub" style="margin-top:10px">${esc(tl('No clear upcoming point opportunities found yet.','لا توجد فرص نقاط واضحة حالياً.'))}</div>`)}
+  </div>`;
+}
+function renderPlayerStrengths(name,p,c){
+  const rows=playerGroupScoreBreakdown(c);
+  const max=Math.max(1,...rows.map(x=>x.total));
+  const best=rows[0], weak=rows.slice().reverse().find(x=>playerGroupPred(p,x.group).length)||rows[rows.length-1];
+  return `<div class="grid g2">
+    <div class="profile-metric"><div class="label">${esc(tl('Strongest group','أقوى مجموعة'))}</div><div class="value">Group ${best?best.group:'—'} · ${best?best.total:0} ${esc(t('pts'))}</div></div>
+    <div class="profile-metric"><div class="label">${esc(tl('Needs attention','تحتاج مراجعة'))}</div><div class="value">Group ${weak?weak.group:'—'} · ${weak?weak.total:0} ${esc(t('pts'))}</div></div>
+  </div>
+  <div class="group-strength" style="margin-top:10px">
+    ${rows.map(r=>`<div class="group-strength-row"><div class="g">G${r.group}</div><div class="bar"><div class="fill" style="width:${Math.round(r.total/max*100)}%"></div></div><div class="score">${r.total}</div></div>`).join('')}
+  </div>`;
+}
+function renderRecentPlayerPoints(name,c){
+  const recent=(c.detail.matches||[]).filter(x=>x.got>0).slice(-6).reverse();
+  if(!recent.length) return `<div class="sub">${esc(tl('No match points yet.','لا توجد نقاط مباريات بعد.'))}</div>`;
+  return recent.map(x=>`<div class="mover-row"><div class="who"><span>⚽</span><span>${teamHtml(x.home)} ${x.hs}-${x.as} ${teamHtml(x.away)}</span></div><div class="change up">+${x.got}</div></div>`).join('');
+}
+function renderPlayerAlerts(name,p,c){
+  const issues=playerDataQualitySummary(name,p);
+  const alerts=[];
+  if(c.gRankPending) alerts.push('⏳ '+tl('Group ranking points are still pending until groups finish.','نقاط ترتيب المجموعات معلقة حتى تكتمل المجموعات.'));
+  if(issues.length) alerts.push('⚠️ '+tl('Prediction data issues','مشاكل في بيانات التوقعات')+`: ${issues.length}`);
+  const road=playerRoadToWin(name,p);
+  if(road.opportunities[0]) alerts.push('🔥 '+tl('Best next chance','أفضل فرصة قادمة')+`: ${teamText(road.opportunities[0].winner)} +${road.opportunities[0].deltaPts} ${t('pts')}`);
+  return alerts.length?alerts.map(a=>`<div class="banner warn">${esc(a)}</div>`).join(''):`<div class="banner ok">✅ ${esc(tl('No major issues detected for this player.','لا توجد مشاكل مهمة لهذا اللاعب.'))}</div>`;
+}
+
+function chooseProfile(name){
+  APP.sel.player=name;
+  localStorage.setItem('wc2026_last_profile',name);
+  go('player');
+}
+function profilePickerCards(selected){
+  const lb=buildLeaderboard();
+  const names=playerNames();
+  if(!names.length) return `<div class="sub">${esc(t('noData'))}</div>`;
+  return `<div class="profile-picker-grid">${names.map(n=>{
+    const r=lb.find(x=>x.name===n);
+    return `<div class="profile-pick-card ${n===selected?'on':''}" onclick="chooseProfile('${esc(n).replace(/'/g,'')}')">
+      ${playerAvatar(n,'sm')}
+      <div class="info"><div class="name">${esc(n)}</div><div class="meta">#${r?r.rank:'-'} · ${r?r.total:0} ${esc(t('pts'))}</div></div>
+    </div>`;
+  }).join('')}</div>`;
+}
+function renderProfilePicker(selected){
+  return `<div class="card">
+    <div class="between"><h3>👤 ${esc(tl('Choose profile','اختر الملف'))}</h3><span class="chip">${esc(playerNames().length)} ${esc(t('players'))}</span></div>
+    <div class="sub">${esc(tl('Tap any player to open their profile. The Profile tab remembers the last selected player.','اختر أي لاعب لفتح ملفه. تبويب الملف يتذكر آخر لاعب اخترته.'))}</div>
+    ${profilePickerCards(selected)}
+    ${selected?`<div class="profile-focus-note"><span>${esc(tl('Current profile','الملف الحالي'))}: <b>${esc(selected)}</b></span><button class="btn ghost sm" onclick="APP.sel.player='';localStorage.removeItem('wc2026_last_profile');render()">${esc(tl('Show picker first','عرض الاختيار أولاً'))}</button></div>`:''}
+  </div>`;
+}
 function viewPlayer(){
-  const name=APP.sel.player||(playerNames()[0]);
-  if(!name) return `<div class="card"><div class="state">${esc(t('noData'))}</div></div>`;
+  const last=localStorage.getItem('wc2026_last_profile')||'';
+  const name=APP.sel.player||last||'';
+  if(!name) return renderProfilePicker('');
   const p=getPlayer(name);
   const c=calcPlayerPoints(p,APP.data.groupResults,APP.data.knockoutResults,APP.data.champion);
   const lb=buildLeaderboard(); const me=lb.find(r=>r.name===name);
   const bd=[{n:t('groupMatchPts'),v:c.groupMatch},{n:t('groupRankPts'),v:c.groupRank},{n:t('koPts'),v:c.knockout},{n:t('champPts'),v:c.champ}];
-  return `<div class="card"><div class="between"><div class="player-head">${playerAvatar(name,'lg')}<div class="player-meta"><h3>${esc(name)}</h3><div class="sub">${esc(tl('Superhero avatar','صورة بطل'))}</div></div></div>
-      <span class="chip on">#${me?me.rank:'-'} · ${c.total} ${esc(t('pts'))}</span></div>
-    <select onchange="APP.sel.player=this.value;render()">${playerNames().map(n=>`<option ${n===name?'selected':''}>${esc(n)}</option>`).join('')}</select>
+  return `${renderProfilePicker(name)}
+  ${renderPlayerHero(name,p,c,me)}
+
+  <div class="card">
+    ${renderRoadToWin(name,p)}
   </div>
-  <div class="card"><h3>📊 ${esc(t('breakdown'))}</h3>${barChart(bd)}
+
+  <div class="card">
+    <h3>📊 ${esc(t('breakdown'))}</h3>${barChart(bd)}
     ${c.gRankPending?`<div class="banner warn">⏳ ${esc(t('groupRankPts'))}: ${esc(t('pending'))}</div>`:''}
   </div>
+
+  <div class="card">
+    <h3>💪 ${esc(tl('Strengths and weak spots','نقاط القوة والضعف'))}</h3>
+    ${renderPlayerStrengths(name,p,c)}
+  </div>
+
+  <div class="card">
+    <h3>🚨 ${esc(tl('Smart alerts','تنبيهات ذكية'))}</h3>
+    ${renderPlayerAlerts(name,p,c)}
+  </div>
+
+  <div class="card">
+    <h3>⚽ ${esc(tl('Recent points gained','النقاط الأخيرة'))}</h3>
+    ${renderRecentPlayerPoints(name,c)}
+  </div>
+
   <div class="card"><h3>📝 ${esc(t('v_predictions'))}</h3>
     ${GROUP_KEYS.map(g=>{ const pred=playerGroupPred(p,g); if(!pred.length) return '';
       return `<details class="acc"><summary><span>Group ${g}</span><span class="sub">${esc(rawGroupPredictionPath(p,g))}</span></summary><div class="body">
@@ -1547,8 +1915,7 @@ function viewPlayer(){
       </div></details>`; }).join('')||`<div class="sub">${esc(t('noData'))}</div>`}
     <div class="between" style="margin-top:10px;padding:8px;background:var(--soft);border-radius:10px">
       <span>👑 ${esc(t('champion'))}</span><b>${teamHtml(p&&p.champion?p.champion:null,'—')}</b></div>
-  </div>
-  <div class="card"><button class="btn ghost" onclick="sharePlayer('${esc(name).replace(/'/g,'')}')">${esc(t('whatsapp'))}</button></div>`;
+  </div>`;
 }
 function after_player(){}
 
@@ -1783,36 +2150,140 @@ function buildAuditSummaryText(){
 /* ================= RESULTS EDITOR (admin) ================= */
 function viewResults(){
   const g=APP.sel.resGroup||'A';
-  return `<div class="card"><h3>✏️ ${esc(t('v_results'))}</h3>
+  return `<div class="card"><div class="between"><h3>✏️ ${esc(t('v_results'))}</h3>${APP._lastResultUndo?`<button class="btn ghost sm" onclick="undoLastResult()">↩ ${esc(tl('Undo last','تراجع عن آخر تعديل'))}</button>`:''}</div>
     <div class="seg">${GROUP_KEYS.map(k=>`<button class="${k===g?'on':''}" onclick="APP.sel.resGroup='${k}';render()">${k}</button>`).join('')}</div>
+    <div class="sub" style="margin-top:8px">${esc(tl('Save one match at a time. Preview who gains before saving.','احفظ مباراة واحدة في كل مرة. عاين من سيكسب قبل الحفظ.'))}</div>
   </div>
   <div class="card"><h3>${esc(t('enterResults'))} — Group ${g}</h3>
-    ${RR.map((p,i)=>{ const [h,a]=matchTeams(g,i); const res=(APP.data.groupResults||{})[matchKey(g,i)]||{};
-      return `<div class="match"><div class="head"><span>${matchKey(g,i)}</span><span class="tag ${(APP.data.resultMeta||{})[matchKey(g,i)]==='corrected'?'corr':'adm'}">${esc(t('source'))}</span></div>
-        <div class="teams"><span style="flex:1;text-align:end">${esc(h)}</span>
-          <input class="score-in num" id="sc_${g}_${i}_h" inputmode="numeric" value="${res.home??''}"/>
-          <input class="score-in num" id="sc_${g}_${i}_a" inputmode="numeric" value="${res.away??''}"/>
-          <span style="flex:1">${esc(a)}</span></div></div>`;
-    }).join('')}
-    <button class="btn" onclick="saveGroupResults('${g}')">${esc(t('save'))}</button>
+    ${RR.map((p,i)=>resultEntryCard(g,i)).join('')}
   </div>
   <div class="card"><h3>👑 ${esc(t('champion'))}</h3>
     <input id="champIn" value="${esc(APP.data.champion||'')}" placeholder="${esc(t('champion'))}"/>
     <button class="btn gold" style="margin-top:8px" onclick="saveChampion()">${esc(t('save'))}</button>
   </div>`;
 }
-async function saveGroupResults(g){
+function resultEntryCard(g,i){
+  const [h,a]=matchTeams(g,i), key=matchKey(g,i), res=(APP.data.groupResults||{})[key]||{};
+  const meta=(APP.data.resultMeta||{})[key]||'pending';
+  const sched=((Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule()).find(m=>m.key===key)||{};
+  const tagClass=meta==='corrected'?'corr':meta==='api'?'api':meta==='admin'?'adm':'pend';
+  return `<div class="result-card">
+    <div class="head"><span><b>${esc(key)}</b> · ${esc(matchDateTime(sched))}</span><span class="tag ${tagClass}">${esc(meta)}</span></div>
+    <div class="result-score-row">
+      <div class="result-team">${teamHtml(h)}</div>
+      <input class="score-in num" id="sc_${g}_${i}_h" inputmode="numeric" value="${res.home??''}" oninput="previewResult('${g}',${i})"/>
+      <input class="score-in num" id="sc_${g}_${i}_a" inputmode="numeric" value="${res.away??''}" oninput="previewResult('${g}',${i})"/>
+      <div class="result-team">${teamHtml(a)}</div>
+    </div>
+    <div class="quick-score">
+      ${['1-0','2-1','0-0','1-1','0-1','1-2'].map(s=>`<button onclick="setQuickScore('${g}',${i},'${s}')">${s}</button>`).join('')}
+    </div>
+    <div id="pv_${g}_${i}" class="result-preview">${resultPreviewHtml(g,i,res.home,res.away)}</div>
+    <div class="result-actions">
+      <button class="btn sm" onclick="saveOneResult('${g}',${i})">💾 ${esc(tl('Save match','حفظ المباراة'))}</button>
+      <button class="btn ghost sm" onclick="previewResult('${g}',${i})">👀 ${esc(t('preview'))}</button>
+      <button class="btn ghost sm" onclick="openMatchImpact('${g}',${i})">🔥 ${esc(t('matchImpact'))}</button>
+      ${res.home!=null&&res.away!=null?`<button class="btn bad sm" onclick="clearOneResult('${g}',${i})">${esc(t('clear'))}</button>`:''}
+    </div>
+  </div>`;
+}
+function setQuickScore(g,i,s){
+  const [h,a]=s.split('-');
+  $('sc_'+g+'_'+i+'_h').value=h; $('sc_'+g+'_'+i+'_a').value=a;
+  previewResult(g,i);
+}
+function previewResult(g,i){
+  const h=$('sc_'+g+'_'+i+'_h')?.value.trim(), a=$('sc_'+g+'_'+i+'_a')?.value.trim();
+  const el=$('pv_'+g+'_'+i); if(el) el.innerHTML=resultPreviewHtml(g,i,h,a);
+}
+function resultPreviewHtml(g,i,h,a){
+  if(h===''||a===''||h==null||a==null) return `<span class="sub">${esc(tl('Enter score to preview point impact.','أدخل النتيجة لمعاينة تأثير النقاط.'))}</span>`;
+  if(!/^\d+$/.test(String(h))||!/^\d+$/.test(String(a))) return `<span class="sub">⚠ ${esc(tl('Score must be numbers.','النتيجة يجب أن تكون أرقاماً.'))}</span>`;
+  const [home,away]=matchTeams(g,i);
+  let winner=null; if(Number(h)>Number(a)) winner=home; else if(Number(a)>Number(h)) winner=away;
+  const gainers=[];
+  playerNames().forEach(name=>{
+    const e=predictedEdge(getPlayer(name),g,home,away);
+    if(winner&&e.status==='ok'&&sameTeam(e.edge,winner)) gainers.push(name);
+  });
+  const outcome=winner?teamHtml(winner):esc(t('draw'));
+  return `<div><b>${esc(t('winner'))}:</b> ${outcome} · <b>${esc(t('gotRight'))}:</b> ${gainers.length}</div>
+    <div style="margin-top:5px">${gainers.slice(0,12).map(n=>`<span class="gain">+${SCORING.edgeCorrect} ${esc(n)}</span>`).join('')||`<span class="sub">${esc(t('none'))}</span>`}${gainers.length>12?`<span class="sub"> +${gainers.length-12}</span>`:''}</div>`;
+}
+function leaderboardSnapshot(){
+  return buildLeaderboard().map(r=>({name:r.name,rank:r.rank,total:r.total}));
+}
+function diffLeaderboard(before,after){
+  return after.map(a=>{
+    const b=before.find(x=>x.name===a.name)||{rank:a.rank,total:a.total};
+    return {...a, oldRank:b.rank, oldTotal:b.total, deltaPts:a.total-b.total, deltaRank:b.rank-a.rank};
+  });
+}
+async function saveOneResult(g,i){
   APP.data.groupResults=APP.data.groupResults||{}; APP.data.resultMeta=APP.data.resultMeta||{};
+  const h=$('sc_'+g+'_'+i+'_h').value.trim(), a=$('sc_'+g+'_'+i+'_a').value.trim(), key=matchKey(g,i);
+  if(!/^\d+$/.test(h)||!/^\d+$/.test(a)){ toast(tl('Invalid score','نتيجة غير صحيحة')); return; }
+  const beforeData=JSON.parse(JSON.stringify(APP.data.groupResults||{}));
+  const beforeMeta=JSON.parse(JSON.stringify(APP.data.resultMeta||{}));
+  const beforeLb=leaderboardSnapshot();
+  const beforeLeader=beforeLb[0]&&beforeLb[0].name;
   snapshotRanks();
-  for(let i=0;i<6;i++){ const h=$('sc_'+g+'_'+i+'_h').value.trim(), a=$('sc_'+g+'_'+i+'_a').value.trim();
-    const key=matchKey(g,i); const before=APP.data.groupResults[key];
-    if(h===''&&a===''){ continue; }
-    if(!/^\d+$/.test(h)||!/^\d+$/.test(a)){ toast(t('no')+': '+key); return; }
-    APP.data.groupResults[key]={home:h,away:a};
-    APP.data.resultMeta[key]=before?'corrected':'admin';
-    logAction('result_edit','groupResults.'+key,before,{home:h,away:a});
-  }
+  const before=APP.data.groupResults[key];
+  APP.data.groupResults[key]={home:h,away:a};
+  APP.data.resultMeta[key]=before?'corrected':'admin';
+  APP._lastResultUndo={group:g,idx:i,key,beforeData,beforeMeta};
+  logAction('result_edit','groupResults.'+key,before,{home:h,away:a});
+  await saveState();
+  const after=leaderboardSnapshot();
+  showResultCelebration(g,i,beforeLb,after,beforeLeader);
+  toast(t('saved'));
+  render();
+}
+async function clearOneResult(g,i){
+  const key=matchKey(g,i), before=APP.data.groupResults&&APP.data.groupResults[key];
+  if(!before){ toast(t('noData')); return; }
+  APP._lastResultUndo={group:g,idx:i,key,beforeData:JSON.parse(JSON.stringify(APP.data.groupResults||{})),beforeMeta:JSON.parse(JSON.stringify(APP.data.resultMeta||{}))};
+  delete APP.data.groupResults[key]; if(APP.data.resultMeta) APP.data.resultMeta[key]='pending';
+  logAction('result_clear','groupResults.'+key,before,null);
   await saveState(); toast(t('saved')); render();
+}
+async function undoLastResult(){
+  if(!APP._lastResultUndo){ toast(t('noData')); return; }
+  APP.data.groupResults=APP._lastResultUndo.beforeData||{};
+  APP.data.resultMeta=APP._lastResultUndo.beforeMeta||{};
+  logAction('result_undo','groupResults.'+APP._lastResultUndo.key,null,'restored');
+  APP._lastResultUndo=null;
+  await saveState(); toast(tl('Undo complete','تم التراجع')); render();
+}
+function showResultCelebration(g,i,beforeLb,afterLb,beforeLeader){
+  const r=matchResult(g,i), changed=diffLeaderboard(beforeLb,afterLb);
+  const gainers=changed.filter(x=>x.deltaPts>0).sort((a,b)=>b.deltaPts-a.deltaPts).slice(0,8);
+  const movers=changed.filter(x=>x.deltaRank!==0).sort((a,b)=>b.deltaRank-a.deltaRank).slice(0,6);
+  const newLeader=afterLb[0]&&afterLb[0].name;
+  const leaderChanged=beforeLeader&&newLeader&&beforeLeader!==newLeader;
+  const msg=buildResultShare(g,i,changed);
+  openSheet(`<div class="card celebration">
+    <h3>${leaderChanged?'🎉 '+esc(tl('New leader!','متصدر جديد!')):'✅ '+esc(tl('Result saved','تم حفظ النتيجة'))}</h3>
+    <div class="teams" style="margin:12px 0"><span>${teamHtml(r.home)}</span><span class="sc num">${r.hs}-${r.as}</span><span>${teamHtml(r.away)}</span></div>
+    <div class="sub">${esc(tl('Top gainers and leaderboard impact','أعلى الكاسبين وتأثير الترتيب'))}</div>
+    ${gainers.length?gainers.map(x=>`<div class="lb-row"><span class="rank">+${x.deltaPts}</span><span class="nm">${playerNameHtml(x.name,'sm')}</span><span class="pts">${x.total}</span></div>`).join(''):`<div class="sub">${esc(t('none'))}</div>`}
+    ${movers.length?`<h3 style="margin-top:12px">🚀 ${esc(tl('Rank movers','تغيّر المراكز'))}</h3>`+movers.map(x=>`<div class="lb-row"><span class="rank">${x.deltaRank>0?'▲'+x.deltaRank:'▼'+Math.abs(x.deltaRank)}</span><span class="nm">${playerNameHtml(x.name,'sm')}</span><span class="pts">#${x.rank}</span></div>`).join(''):''}
+    <button class="btn gold" style="margin-top:12px" onclick='copyText(${JSON.stringify(msg)})'>${esc(t('share'))}</button>
+    <button class="btn ghost" style="margin-top:8px" onclick="closeSheet()">${esc(t('close'))}</button>
+  </div>`);
+}
+function buildResultShare(g,i,changed){
+  const r=matchResult(g,i);
+  const top=buildLeaderboard().slice(0,5).map(x=>`#${x.rank} ${x.name} — ${x.total}`).join('\n');
+  const gainers=changed.filter(x=>x.deltaPts>0).sort((a,b)=>b.deltaPts-a.deltaPts).slice(0,5).map(x=>`${x.name} +${x.deltaPts}`).join(', ')||t('none');
+  return `⚽ ${teamText(r.home)} ${r.hs}-${r.as} ${teamText(r.away)}\n🔥 ${tl('Top gainers','أعلى الكاسبين')}: ${gainers}\n\n🏆 ${tl('Leaderboard','الترتيب')}\n${top}`;
+}
+async function saveGroupResults(g){
+  // Backwards-compatible bulk save button; now saves all filled scores but still uses the safer one-match logic internally.
+  for(let i=0;i<6;i++){
+    const h=$('sc_'+g+'_'+i+'_h')?.value.trim(), a=$('sc_'+g+'_'+i+'_a')?.value.trim();
+    if(h!==''&&a!=='') await saveOneResult(g,i);
+  }
 }
 async function saveChampion(){ const v=$('champIn').value.trim();
   logAction('champion','champion',APP.data.champion,v); APP.data.champion=v||null; await saveState(); toast(t('saved')); render(); }
@@ -1940,13 +2411,116 @@ function answerWinnerQuestion(ctx){
   return `🏆 ${t('projWinner')}: ${p.name} — ${p.total} ${t('pts')}`+aiSource('from_calc');
 }
 
+function scenarioMatchesPool(){
+  const sched=(Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule();
+  return sched.filter(m=>m.group&&m.idx!=null&&!matchResult(m.group,m.idx).complete);
+}
+function mentionedTeamInText(team,qNorm){ const k=teamCompareKey(team); return k && qNorm.includes(k); }
+function parseScenarioCommand(q){
+  const raw=String(q||'').trim();
+  const qn=norm(raw);
+  const matches=scenarioMatchesPool();
+  let best=null, bestScore=0;
+  matches.forEach(m=>{
+    const score=(mentionedTeamInText(m.home,qn)?1:0)+(mentionedTeamInText(m.away,qn)?1:0);
+    if(score>bestScore){best=m;bestScore=score;}
+  });
+  if(!best && matches.length) best=matches[0];
+  if(!best) return null;
+  let hs=null, as=null;
+  const scoreMatch=raw.match(/(\d{1,2})\s*[-:]\s*(\d{1,2})/);
+  if(scoreMatch){ hs=Number(scoreMatch[1]); as=Number(scoreMatch[2]); }
+  else{
+    const drawWords=['draw','tie','تعادل'];
+    const isDraw=drawWords.some(w=>qn.includes(norm(w)));
+    if(isDraw){ hs=1; as=1; }
+    else{
+      let homeMention=mentionedTeamInText(best.home,qn), awayMention=mentionedTeamInText(best.away,qn);
+      const winWords=['win','wins','beat','beats','defeat','defeats','فوز','يفوز','تفوز','يهزم','تهزم'];
+      const asksWin=winWords.some(w=>qn.includes(norm(w)));
+      if(asksWin && awayMention && !homeMention){ hs=1; as=2; }
+      else { hs=2; as=1; }
+    }
+  }
+  return {match:best,hs,as,raw};
+}
+function simulateLeaderboardForMatch(m,hs,as){
+  const before=buildLeaderboard();
+  const old=APP.data.groupResults||{};
+  const oldMeta=APP.data.resultMeta||{};
+  const sim=JSON.parse(JSON.stringify(old));
+  sim[matchKey(m.group,m.idx)]={home:String(hs),away:String(as)};
+  APP.data.groupResults=sim;
+  const after=buildLeaderboard();
+  APP.data.groupResults=old;
+  APP.data.resultMeta=oldMeta;
+  return after.map(r=>{
+    const b=before.find(x=>x.name===r.name)||{rank:r.rank,total:r.total};
+    return {...r, oldRank:b.rank, oldTotal:b.total, deltaPts:r.total-b.total, deltaRank:b.rank-r.rank};
+  });
+}
+function scenarioWinnerText(m,hs,as){
+  if(hs>as) return teamText(m.home);
+  if(as>hs) return teamText(m.away);
+  return tl('Draw','تعادل');
+}
+function renderScenarioSimulation(q, targetId){
+  const parsed=parseScenarioCommand(q);
+  const target=targetId?$(targetId):$('scenarioAiOut');
+  if(!target) return;
+  if(!parsed){ target.innerHTML=`<div class="banner warn">${esc(t('noData'))}</div>`; return; }
+  const {match:m,hs,as}=parsed;
+  const rows=simulateLeaderboardForMatch(m,hs,as);
+  const movers=rows.filter(r=>r.deltaPts!==0||r.deltaRank!==0).sort((a,b)=>b.deltaPts-a.deltaPts || b.deltaRank-a.deltaRank).slice(0,8);
+  const top=rows.slice(0,5);
+  const summary=tl(
+    `Scenario: ${teamText(m.home)} ${hs}-${as} ${teamText(m.away)}. Winner: ${scenarioWinnerText(m,hs,as)}.`,
+    `السيناريو: ${teamText(m.home)} ${hs}-${as} ${teamText(m.away)}. النتيجة: ${scenarioWinnerText(m,hs,as)}.`
+  );
+  target.innerHTML=`<div class="ai-ans">${summary}</div>
+    <div class="sim-table">
+      ${top.map(r=>`<div class="sim-row"><div class="rank num">#${r.rank}</div><div class="name">${playerNameHtml(r.name,'sm')}</div><div class="num">${r.total} ${esc(t('pts'))}</div><div class="delta ${r.deltaRank>0?'up':r.deltaRank<0?'down':'same'}">${r.deltaRank>0?'▲'+r.deltaRank:r.deltaRank<0?'▼'+Math.abs(r.deltaRank):'–'} ${r.deltaPts?`+${r.deltaPts}`:''}</div></div>`).join('')}
+    </div>
+    <div class="sub" style="margin-top:10px">${esc(tl('Players affected','اللاعبون المتأثرون'))}: ${esc(movers.map(r=>`${r.name} +${r.deltaPts}`).join(', ')||t('none'))}</div>
+    <div class="voice-row"><button class="btn ghost sm" onclick="copyText(${JSON.stringify(summary)})">${esc(t('copy'))}</button><button class="btn ghost sm" onclick="askAI('explain scenario ${m.home} ${hs}-${as} ${m.away}')">🤖 ${esc(t('v_ai'))}</button></div>`;
+}
+function answerScenarioQuestion(question){
+  const parsed=parseScenarioCommand(question);
+  if(!parsed) return t('noData')+aiSource('from_calc');
+  const {match:m,hs,as}=parsed;
+  const rows=simulateLeaderboardForMatch(m,hs,as);
+  const top=rows.slice(0,5).map(r=>`${r.rank}. ${r.name} — ${r.total} ${t('pts')} (${r.deltaPts>=0?'+':''}${r.deltaPts})`).join('\n');
+  return `⚡ ${tl('Scenario simulation','محاكاة السيناريو')}\n${teamText(m.home)} ${hs}-${as} ${teamText(m.away)}\n${tl('Winner','الفائز')}: ${scenarioWinnerText(m,hs,as)}\n\n${top}`+aiSource('from_calc');
+}
+let VOICE_REC=null;
+function voiceSupported(){ return !!(window.SpeechRecognition||window.webkitSpeechRecognition); }
+function startVoiceInput(targetId, autoAsk){
+  const btn=event&&event.currentTarget?event.currentTarget:null;
+  if(!voiceSupported()){ toast(tl('Voice is not supported in this browser. Try Chrome or Edge.','الصوت غير مدعوم في هذا المتصفح. جرّب Chrome أو Edge.')); return; }
+  if(VOICE_REC){ try{VOICE_REC.stop();}catch(e){} VOICE_REC=null; if(btn)btn.classList.remove('listening'); return; }
+  const Rec=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const rec=new Rec(); VOICE_REC=rec;
+  rec.lang=LANG==='ar'?'ar-AE':'en-US'; rec.interimResults=false; rec.continuous=false;
+  if(btn) btn.classList.add('listening');
+  rec.onresult=(e)=>{
+    const text=(e.results&&e.results[0]&&e.results[0][0]&&e.results[0][0].transcript)||'';
+    const el=$(targetId); if(el) el.value=(el.value?el.value+' ':'')+text;
+    if(autoAsk==='ai') askAI(text);
+    if(autoAsk==='scenario') renderScenarioSimulation(text,'scenarioAiOut');
+  };
+  rec.onerror=(e)=>toast(tl('Voice error: ','خطأ في الصوت: ')+(e.error||''));
+  rec.onend=()=>{VOICE_REC=null; if(btn)btn.classList.remove('listening');};
+  rec.start();
+}
 function answerLocalAI(question,mode,language){
   const ctx=buildSafeAIContext(); const q=(question||'').toLowerCase();
   if(mode==='write') return generateWritingResponse(ctx,question,language);
+  if(mode==='scenario') return answerScenarioQuestion(question);
   const has=(...ws)=>ws.some(w=>q.includes(w));
   if(has('winner','projected','فائز','الفائز')) return answerWinnerQuestion(ctx);
   if(has('lead','top','winning','first','متصدر','الأول','يتصدر')) return answerLeaderboardQuestion(ctx);
   if(has('champion','winner pick','بطل','يتوقع البطل')) return answerPredictionQuestion(ctx);
+  if(has('scenario','simulate','simulation','what if','if ','beat','beats','win','wins','draw','سيناريو','محاكاة','إذا','لو','فاز','تعادل')) return answerScenarioQuestion(question);
   if(has('impact','gain','gained','change','تأثير','تغير','كسب')) return buildTodayImpactText()+aiSource('from_calc');
   if(has('today','match today','اليوم','مباريات اليوم')) return answerScheduleQuestion(ctx);
   if(ctx.players.some(p=>q.includes(p.name.toLowerCase()))) return answerPlayerPointsQuestion(ctx,question);
@@ -1982,18 +2556,112 @@ function buildShareMatch(g,i){ const a=auditMatch(g,i); const r=a.match; const r
   const ar=LANG==='ar';
   return ar?`⚽ ${r.home} ${r.hs}-${r.as} ${r.away}\nأصاب الأفضلية: ${right} لاعب.`:`⚽ ${r.home} ${r.hs}-${r.as} ${r.away}\nGot the edge: ${right} players.`; }
 
+
+/* ================= HELP / POINTS LOGIC ================= */
+function reasonLabel(reason){
+  const m={
+    edge_correct:tl('Predicted edge correct','توقع الأفضلية صحيح'),
+    edge_wrong:tl('Predicted edge wrong','توقع الأفضلية خطأ'),
+    draw_no_edge:tl('Draw: no edge points','تعادل: لا نقاط أفضلية'),
+    missing_team:tl('Missing team in prediction','الفريق غير موجود في التوقع'),
+    no_pred:tl('No prediction','لا يوجد توقع'),
+    equal_rank:tl('Teams ranked equally / unclear','ترتيب غير واضح'),
+    exact:tl('Exact position','المركز صحيح'),
+    in_group:tl('Team qualified but wrong position','الفريق موجود لكن بمركز مختلف'),
+    miss:tl('Missed','خطأ')
+  };
+  return m[reason]||reason||'—';
+}
+function scoringWorkflowHtml(){
+  return `<div class="workflow">
+    <div class="workflow-step"><div class="numstep">1</div><div><div class="stitle">${esc(tl('Read each player prediction','قراءة توقع كل لاعب'))}</div><div class="sub">${esc(tl('The app reads groupPreds first, then older prediction fields for compatibility.','التطبيق يقرأ groupPreds أولاً ثم الحقول القديمة للتوافق.'))}</div></div></div>
+    <div class="workflow-step"><div class="numstep">2</div><div><div class="stitle">${esc(tl('Normalize team names','توحيد أسماء الفرق'))}</div><div class="sub">${esc(tl('Aliases like USA / United States and Bosnia-Herzegovina are treated as the same team.','الأسماء المختلفة مثل USA و United States تُعامل كفريق واحد.'))}</div></div></div>
+    <div class="workflow-step"><div class="numstep">3</div><div><div class="stitle">${esc(tl('Compare predicted edge for every match','مقارنة الأفضلية المتوقعة لكل مباراة'))}</div><div class="sub">${esc(tl('If a player ranked one team higher than the other, that team is the predicted edge.','إذا وضع اللاعب فريقاً أعلى من الآخر فهذه هي الأفضلية المتوقعة.'))}</div></div></div>
+    <div class="workflow-step"><div class="numstep">4</div><div><div class="stitle">${esc(tl('Add group ranking points when a group is complete','إضافة نقاط ترتيب المجموعة عند اكتمالها'))}</div><div class="sub">${esc(tl('Exact position gives full points; team in group but wrong position gives partial points.','المركز الصحيح يعطي نقاط كاملة، والفريق الموجود بمركز مختلف يعطي نقاط جزئية.'))}</div></div></div>
+    <div class="workflow-step"><div class="numstep">5</div><div><div class="stitle">${esc(tl('Add knockout and champion points','إضافة نقاط الأدوار الإقصائية والبطل'))}</div><div class="sub">${esc(tl('Knockout and champion points are added when those actual results are entered.','تضاف نقاط الأدوار الإقصائية والبطل عند إدخال النتائج الفعلية.'))}</div></div></div>
+  </div>`;
+}
+function scoringRulesHtml(){
+  const ko=SCORING.knockout||{};
+  return `<div>
+    <div class="points-rule"><span>⚽ ${esc(tl('Correct group-match edge','أفضلية مباراة المجموعة صحيحة'))}</span><b>+${SCORING.edgeCorrect}</b></div>
+    <div class="points-rule"><span>🥇 ${esc(tl('Exact group position','المركز الصحيح في المجموعة'))}</span><b>+${SCORING.exactPosition}</b></div>
+    <div class="points-rule"><span>✅ ${esc(tl('Team in group, wrong position','الفريق موجود لكن بمركز مختلف'))}</span><b>+${SCORING.teamInGroupWrongPos}</b></div>
+    <div class="points-rule"><span>🎯 ${esc(tl('Round of 32 pick','توقع دور الـ32'))}</span><b>+${ko.R32||0}</b></div>
+    <div class="points-rule"><span>🎯 ${esc(tl('Round of 16 pick','توقع دور الـ16'))}</span><b>+${ko.R16||0}</b></div>
+    <div class="points-rule"><span>🎯 ${esc(tl('Quarter/Semi/Final picks','توقع ربع/نصف النهائي/النهائي'))}</span><b>${ko.QF||0} / ${ko.SF||0} / ${ko.F||0}</b></div>
+    <div class="points-rule"><span>👑 ${esc(tl('Champion correct','البطل صحيح'))}</span><b>+${SCORING.champion}</b></div>
+  </div>`;
+}
+function playerPointsExplanation(name){
+  const p=getPlayer(name);
+  if(!p) return `<div class="sub">${esc(t('noData'))}</div>`;
+  const c=calcPlayerPoints(p,APP.data.groupResults,APP.data.knockoutResults,APP.data.champion);
+  const recentMatches=(c.detail.matches||[]).slice().reverse().slice(0,12);
+  const ranking=(c.detail.ranking||[]).slice(0,16);
+  const lb=buildLeaderboard();
+  const me=lb.find(x=>x.name===name)||{};
+  return `<div class="card">
+    <div class="between">
+      <div class="help-player-head">${playerAvatar(name,'sm')}<div class="info"><div class="name">${esc(name)}</div><div class="sub">#${me.rank||'-'} · ${c.total} ${esc(t('pts'))}</div></div></div>
+      <span class="chip on">${esc(tl('Calculated live','محسوبة مباشرة'))}</span>
+    </div>
+    <div class="grid g2" style="margin-top:10px">
+      ${statTile(c.groupMatch,t('groupMatchPts'))}
+      ${statTile(c.groupRank,t('groupRankPts'))}
+      ${statTile(c.knockout,t('koPts'))}
+      ${statTile(c.champ,t('champPts'),true)}
+    </div>
+  </div>
+  <div class="card">
+    <h3>⚽ ${esc(tl('Match points explanation','شرح نقاط المباريات'))}</h3>
+    <div class="help-table">
+      ${recentMatches.length?recentMatches.map(x=>`<div class="help-row"><div><b>${teamHtml(x.home)} ${x.hs}-${x.as} ${teamHtml(x.away)}</b><div class="why">${esc(reasonLabel(x.reason))} · ${esc(t('predictedEdge'))}: ${x.edge&&x.edge.edge?teamHtml(x.edge.edge):esc(t('none'))}</div></div><span class="tag ${x.got?'paid':'pend'}">${esc(x.key)}</span><span class="pts">+${x.got}</span></div>`).join(''):`<div class="sub">${esc(tl('No completed match points yet.','لا توجد نقاط مباريات مكتملة بعد.'))}</div>`}
+    </div>
+  </div>
+  <div class="card">
+    <h3>📊 ${esc(tl('Group ranking explanation','شرح ترتيب المجموعات'))}</h3>
+    <div class="help-table">
+      ${ranking.length?ranking.map(x=>`<div class="help-row"><div><b>Group ${x.group} · ${esc(t('pos'+x.pos))}</b><div class="why">${esc(tl('Predicted','المتوقع'))}: ${teamHtml(x.predTeam,'—')} · ${esc(t('actual'))}: ${teamHtml(x.actualTeam,'—')} · ${esc(reasonLabel(x.reason))}</div></div><span class="tag ${x.got?'paid':'pend'}">${esc(x.reason)}</span><span class="pts">+${x.got}</span></div>`).join(''):`<div class="sub">${esc(tl('Group ranking points appear after groups are complete.','تظهر نقاط ترتيب المجموعة بعد اكتمال المجموعة.'))}</div>`}
+    </div>
+  </div>`;
+}
+function viewHelp(){
+  const names=playerNames();
+  const name=APP.sel.helpPlayer||APP.sel.player||localStorage.getItem('wc2026_last_profile')||names[0]||'';
+  return `<div class="card">
+    <div class="between"><h3>❓ ${esc(t('v_help'))}</h3><span class="chip">${esc(tl('Transparent scoring','نظام نقاط واضح'))}</span></div>
+    <div class="sub">${esc(tl('This page explains exactly how prediction points are calculated and lets you inspect any player.','هذه الصفحة تشرح طريقة حساب نقاط التوقعات وتتيح فحص أي لاعب.'))}</div>
+  </div>
+  <div class="card">
+    <h3>🔢 ${esc(tl('Point rules','قواعد النقاط'))}</h3>
+    ${scoringRulesHtml()}
+  </div>
+  <div class="card">
+    <h3>🔄 ${esc(tl('Scoring workflow','سير العمل'))}</h3>
+    ${scoringWorkflowHtml()}
+  </div>
+  <div class="card">
+    <h3>👤 ${esc(tl('Inspect player points','فحص نقاط لاعب'))}</h3>
+    <select onchange="APP.sel.helpPlayer=this.value;APP.sel.player=this.value;localStorage.setItem('wc2026_last_profile',this.value);render()">${names.map(n=>`<option ${n===name?'selected':''}>${esc(n)}</option>`).join('')}</select>
+  </div>
+  ${name?playerPointsExplanation(name):`<div class="card"><div class="state">${esc(t('noData'))}</div></div>`}`;
+}
+
 /* ================= AI VIEW ================= */
 function viewAI(){
   const mode=APP.sel.aiMode||'text';
   return `<div class="card"><div class="between"><h3>🤖 ${esc(t('v_ai'))}</h3></div>
     <div class="seg" style="margin-bottom:10px">
       <button class="${mode==='text'?'on':''}" onclick="APP.sel.aiMode='text';render()">${esc(t('ai_text'))}</button>
+      <button class="${mode==='scenario'?'on':''}" onclick="APP.sel.aiMode='scenario';render()">${esc(tl('Scenario','سيناريو'))}</button>
       <button class="${mode==='write'?'on':''}" onclick="APP.sel.aiMode='write';render()">${esc(t('ai_write'))}</button>
     </div>
-    <div class="chips">${(I18N[LANG].ai_examples||[]).map(x=>`<button onclick="askAI(${JSON.stringify(x).replace(/"/g,'&quot;')})">${esc(x)}</button>`).join('')}</div>
-    <textarea id="aiBox" placeholder="${esc(t('ai_q'))}" style="margin-top:10px"></textarea>
-    <div class="row" style="gap:8px;margin-top:8px">
-      <button class="btn" onclick="askAI($('aiBox').value)">${esc(t('v_ai'))}</button>
+    <div class="chips">${(I18N[LANG].ai_examples||[]).concat([tl('If Brazil beats Morocco 2-1, what changes?','إذا فازت البرازيل على المغرب 2-1 ماذا يتغير؟')]).map(x=>`<button onclick="askAI(${JSON.stringify(x).replace(/"/g,'&quot;')})">${esc(x)}</button>`).join('')}</div>
+    <textarea id="aiBox" placeholder="${esc(mode==='scenario'?tl('Ask a scenario: If team A beats team B 2-1…','اسأل سيناريو: إذا فاز فريق على فريق 2-1…'):t('ai_q'))}" style="margin-top:10px"></textarea>
+    <div class="voice-row">
+      <button class="micbtn" onclick="startVoiceInput('aiBox','ai')">🎙️ ${esc(tl('Speak','تحدث'))}</button>
+      <button class="btn sm" onclick="askAI($('aiBox').value)">${esc(t('v_ai'))}</button>
       <button class="btn ghost sm" onclick="$('aiBox').value='';$('aiAns').innerHTML=''">${esc(t('clear'))}</button>
     </div>
     <div id="aiAns"></div>
@@ -2041,7 +2709,7 @@ async function loadToday(){
   // map API events onto local fixtures when possible; otherwise show local fixtures dated today
   const schedule=(Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule();
   const local=schedule.filter(m=>m.date===date);
-  APP._today = ev.length? ev.map(e=>({group:groupFromEvent(e),home:e.strHomeTeam,away:e.strAwayTeam,date,key:null,idx:null,source:'api'}))
+  APP._today = ev.length? ev.map(e=>({group:groupFromEvent(e),home:e.strHomeTeam,away:e.strAwayTeam,date:(e.dateEvent||date),time:eventTimeUAE(e),tz:'UAE',key:null,idx:null,source:'api'}))
     : local;
   APP._todayLoading=false; render();
 }
@@ -2051,7 +2719,7 @@ async function doFetchSchedule(){
   APP._schedLoading=true; render();
   const ev=await fetchFullSchedule((i,n)=>{ if(i%7===0){} });
   if(ev.length){ APP._schedule=ev.map(e=>({group:groupFromEvent(e),home:e.strHomeTeam,away:e.strAwayTeam,
-      date:(e.dateEvent||''),key:null,idx:null})); toast(t('saved')); }
+      date:(e.dateEvent||''),time:eventTimeUAE(e),tz:'UAE',key:null,idx:null})); toast(t('saved')); }
   else { APP._schedule=(Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule(); toast(t('syncFail')); }
   APP._schedLoading=false; render();
 }
