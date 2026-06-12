@@ -4,6 +4,16 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="theme-color" content="#0a1f17"/>
+<meta name="application-name" content="WC2026 Pick'em"/>
+<meta name="apple-mobile-web-app-title" content="WC2026 Pick'em"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<link rel="manifest" href="manifest.webmanifest"/>
+<link rel="apple-touch-icon" href="icon-192.png"/>
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"/>
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png"/>
+
 <title>WC2026 Pick'em</title>
 <style>
 /* ===== Part 1: design tokens + mobile-first CSS (RTL-aware) ===== */
@@ -33,6 +43,16 @@ a{color:var(--grass-d);text-decoration:none}
 h1,h2,h3,h4{margin:0;line-height:1.2}
 .hide{display:none!important}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 16px}
+
+
+/* ===== v28 PWA install support ===== */
+.install-banner{display:none;position:fixed;left:12px;right:12px;bottom:calc(82px + env(safe-area-inset-bottom));z-index:55;background:linear-gradient(135deg,#071510,#123c2c);color:#fff;border:1px solid rgba(255,255,255,.14);box-shadow:var(--shadow-lg);border-radius:20px;padding:12px;align-items:center;gap:10px}
+.install-banner.show{display:flex}
+.install-banner .txt{flex:1;min-width:0}
+.install-banner .title{font-weight:1000}
+.install-banner .sub{color:#d7f5e6}
+.pwa-status{font-size:11px;font-weight:900;border-radius:999px;padding:3px 8px;background:rgba(255,255,255,.14);color:#d7f5e6}
+@media(min-width:900px){.install-banner{left:50%;right:auto;transform:translateX(-50%);width:min(560px,calc(100% - 32px));bottom:96px}}
 
 /* Top bar */
 .topbar{
@@ -351,8 +371,8 @@ body{
   body[data-view="dashboard"] main#view>.card:nth-child(4){grid-column:span 5}
   body[data-view="dashboard"] main#view>.card:nth-child(5){grid-column:span 7}
   body[data-view="dashboard"] main#view>.card:nth-child(6),body[data-view="dashboard"] main#view>.card:nth-child(7){grid-column:span 6}
-  body[data-view="leaderboard"] main#view,body[data-view="groups"] main#view,body[data-view="matches"] main#view,body[data-view="predictions"] main#view,body[data-view="consensus"] main#view,body[data-view="impact"] main#view,body[data-view="scenarios"] main#view,body[data-view="help"] main#view,body[data-view="audit"] main#view,body[data-view="repair"] main#view,body[data-view="settings"] main#view{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;align-items:start}
-  body[data-view="leaderboard"] main#view>.card,body[data-view="matches"] main#view>.card:first-child,body[data-view="predictions"] main#view>.card:first-child,body[data-view="consensus"] main#view>.card:first-child,body[data-view="impact"] main#view>.card:first-child,body[data-view="scenarios"] main#view>.card:first-child,body[data-view="help"] main#view>.card:first-child,body[data-view="audit"] main#view>.card:first-child,body[data-view="repair"] main#view>.card:first-child,body[data-view="settings"] main#view>.card:first-child{grid-column:1/-1}
+  body[data-view="leaderboard"] main#view,body[data-view="groups"] main#view,body[data-view="matches"] main#view,body[data-view="predictions"] main#view,body[data-view="consensus"] main#view,body[data-view="impact"] main#view,body[data-view="scenarios"] main#view,body[data-view="help"] main#view,body[data-view="alerts"] main#view,body[data-view="backup"] main#view,body[data-view="sharecards"] main#view,body[data-view="health"] main#view,body[data-view="audit"] main#view,body[data-view="repair"] main#view,body[data-view="settings"] main#view{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;align-items:start}
+  body[data-view="leaderboard"] main#view>.card,body[data-view="matches"] main#view>.card:first-child,body[data-view="predictions"] main#view>.card:first-child,body[data-view="consensus"] main#view>.card:first-child,body[data-view="impact"] main#view>.card:first-child,body[data-view="scenarios"] main#view>.card:first-child,body[data-view="help"] main#view>.card:first-child,body[data-view="alerts"] main#view>.card:first-child,body[data-view="backup"] main#view>.card:first-child,body[data-view="sharecards"] main#view>.card:first-child,body[data-view="health"] main#view>.card:first-child,body[data-view="audit"] main#view>.card:first-child,body[data-view="repair"] main#view>.card:first-child,body[data-view="settings"] main#view>.card:first-child{grid-column:1/-1}
   body[data-view="groups"] main#view>.card,body[data-view="matches"] main#view>details.acc,body[data-view="predictions"] main#view>details.acc,body[data-view="consensus"] main#view>.card,body[data-view="impact"] main#view>.card:not(:first-child),body[data-view="scenarios"] main#view>.card:not(:first-child),body[data-view="help"] main#view>.card:not(:first-child){grid-column:span 6;margin:0}
   body[data-view="groups"] main#view>.card:first-child{grid-column:1/-1}
   body[data-view="audit"] main#view>.card:not(:first-child),body[data-view="repair"] main#view>.card:not(:first-child),body[data-view="settings"] main#view>.card:not(:first-child){grid-column:span 6;margin:0}
@@ -371,6 +391,19 @@ body{
 
 
 
+
+/* ===== v29 complete polish: alerts, backup, share cards, health, cleaner nav ===== */
+.alert-card{border:1px solid var(--border);background:linear-gradient(180deg,#fff,#f7fbf8);border-radius:18px;padding:12px;margin:9px 0;display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:10px;align-items:center}
+.alert-card .emoji{font-size:24px}.alert-card .title{font-weight:1000}.alert-card .meta{font-size:12px;color:var(--muted);margin-top:2px}
+.alert-card.high{border-color:rgba(247,201,72,.8);background:linear-gradient(180deg,#fff9df,#fff)}
+.share-preview{border:1px solid rgba(255,255,255,.14);background:linear-gradient(135deg,#071510,#123c2c);color:#fff;border-radius:24px;padding:18px;box-shadow:var(--shadow-lg)}
+.share-preview .sub{color:#d7f5e6}.share-preview .lb-row{background:rgba(255,255,255,.10);border-color:rgba(255,255,255,.15);color:#fff}.share-preview .pts{color:#fff}.share-preview .rank{color:#f7c948}
+.backup-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;border:1px solid var(--border);border-radius:16px;background:#fff;padding:10px;margin:8px 0}
+.backup-item .name{font-weight:1000}.backup-item .meta{font-size:12px;color:var(--muted)}
+.health-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.health-tile{border:1px solid var(--border);background:#fff;border-radius:16px;padding:12px}.health-tile .label{font-size:12px;color:var(--muted);font-weight:900}.health-tile .value{font-weight:1000;margin-top:4px}
+.lab-score{display:grid;grid-template-columns:1fr 70px 70px 1fr;gap:8px;align-items:center;margin-top:10px}
+@media(max-width:560px){.alert-card{grid-template-columns:32px 1fr}.alert-card .tag{grid-column:2}.lab-score{grid-template-columns:1fr 58px 58px 1fr}}
 /* ===== v27 admin result entry + celebration ===== */
 .result-card{border:1px solid var(--border);background:linear-gradient(180deg,#fff,#f7fbf8);border-radius:20px;padding:13px;margin:10px 0}
 .result-card .teams{margin:8px 0}
@@ -489,11 +522,17 @@ body{
   <div class="spacer"></div>
   <button class="iconbtn" id="langBtn" onclick="toggleLang()">EN</button>
   <button class="iconbtn gold hide" id="adminBtn" onclick="openAdmin()">Admin</button>
+  <button class="iconbtn" id="installBtn" onclick="installPWA()" style="display:none">Install</button>
 </div>
 <div class="phase wrap" id="phaseStrip"></div>
 <main class="wrap" id="view"></main>
 
 <nav class="botnav" id="botnav"></nav>
+<div class="install-banner" id="installBanner">
+  <div class="txt"><div class="title">📲 Install WC2026 Pick'em</div><div class="sub">Add it to your phone home screen for app-like access.</div></div>
+  <button class="btn gold sm" onclick="installPWA()">Install</button>
+  <button class="btn ghost sm" onclick="dismissInstallBanner()">Later</button>
+</div>
 
 <div class="sheet-bg" id="sheetBg" onclick="if(event.target===this)closeSheet()">
   <div class="sheet" id="sheet"></div>
@@ -557,18 +596,18 @@ const TEAM_ALIASES={
 const I18N={
   en:{
     brand:"WC2026 Pick'em", admin:"Admin", langName:"EN",
-    nav_dashboard:"Home", nav_today:"Today", nav_leaderboard:"Table", nav_matches:"Matches", nav_profile:"Profile", nav_more:"More",
+    nav_dashboard:"Home", nav_today:"Today", nav_leaderboard:"Table", nav_matches:"Matches", nav_profile:"Profile", nav_more:"More", v_alerts:"Alerts", v_backup:"Backup / Restore", v_sharecards:"Share cards", v_health:"Health check",
     v_dashboard:"Dashboard", v_today:"Today's matches", v_matches:"All matches", v_groups:"Group tables",
     v_predictions:"All predictions", v_consensus:"Group leaders consensus", v_knockout:"Knockout bracket",
     v_leaderboard:"Leaderboard", v_player:"Player details", v_audit:"Prediction audit",
     v_results:"Results editor", v_repair:"Data repair", v_settings:"Settings & API", v_ai:"AI Assistant", v_impact:"Match impact", v_scenarios:"What can change", v_help:"Help & points logic",
     phase_group:"Group stage", phase_ko:"Knockout stage", phase_done:"Tournament complete", phase_pre:"Pre-tournament",
-    leader:"Current leader", top3:"Top 3", players:"Players", entryFee:"Entry fee", prizePool:"Prize pool",
-    paid:"Paid", unpaid:"Unpaid", completedMatches:"Group matches done", groupsDone:"Groups completed",
+    leader:"Current leader", top3:"Top 3", players:"Players", entryFee:"Entry status", prizePool:"Winner status",
+    paid:"Complete", unpaid:"Pending", completedMatches:"Group matches done", groupsDone:"Groups completed",
     todayMatches:"Today's matches", nextMatch:"Next match", latestResults:"Latest results",
     champConsensus:"Champion pick consensus", topWinners:"Most-picked group winners", pointsDist:"Points distribution",
     quickLinks:"Quick links", health:"Data health", noLeader:"No leader yet", none:"None", pts:"pts",
-    rank:"Rank", player:"Player", points:"Points", paidStatus:"Payment", markPaid:"Mark paid", markUnpaid:"Mark unpaid",
+    rank:"Rank", player:"Player", points:"Points", paidStatus:"Status", markPaid:"Mark complete", markUnpaid:"Mark pending",
     projWinner:"Projected winner", winnerTakesAll:"Winner takes all", split2:"Top 2 split", split3:"Top 3 split",
     custom:"Custom", distribution:"Prize distribution",
     pos1:"1st", pos2:"2nd", pos3:"3rd", pos4:"4th",
@@ -603,18 +642,18 @@ const I18N={
   },
   ar:{
     brand:"توقعات كأس العالم 2026", admin:"المشرف", langName:"ع",
-    nav_dashboard:"الرئيسية", nav_today:"اليوم", nav_leaderboard:"الترتيب", nav_matches:"المباريات", nav_profile:"الملف", nav_more:"المزيد",
+    nav_dashboard:"الرئيسية", nav_today:"اليوم", nav_leaderboard:"الترتيب", nav_matches:"المباريات", nav_profile:"الملف", nav_more:"المزيد", v_alerts:"التنبيهات", v_backup:"النسخ والاستعادة", v_sharecards:"بطاقات المشاركة", v_health:"فحص النظام",
     v_dashboard:"لوحة التحكم", v_today:"مباريات اليوم", v_matches:"كل المباريات", v_groups:"جداول المجموعات",
     v_predictions:"كل التوقعات", v_consensus:"إجماع المجموعات", v_knockout:"خروج المغلوب",
     v_leaderboard:"الترتيب", v_player:"تفاصيل اللاعب", v_audit:"تدقيق التوقعات",
     v_results:"تحرير النتائج", v_repair:"إصلاح البيانات", v_settings:"الإعدادات والـ API", v_ai:"المساعد الذكي", v_impact:"تأثير المباريات", v_scenarios:"ما الذي قد يتغير", v_help:"المساعدة وطريقة النقاط",
     phase_group:"دور المجموعات", phase_ko:"الأدوار الإقصائية", phase_done:"انتهت البطولة", phase_pre:"قبل البطولة",
-    leader:"المتصدر الحالي", top3:"الأوائل الثلاثة", players:"اللاعبون", entryFee:"رسوم الاشتراك", prizePool:"مجموع الجوائز",
+    leader:"المتصدر الحالي", top3:"الأوائل الثلاثة", players:"اللاعبون", entryFee:"رسوم الاشتراك", prizePool:"حالة الفائز",
     paid:"دفعوا", unpaid:"لم يدفعوا", completedMatches:"مباريات المجموعات المكتملة", groupsDone:"مجموعات مكتملة",
     todayMatches:"مباريات اليوم", nextMatch:"المباراة القادمة", latestResults:"أحدث النتائج",
     champConsensus:"إجماع توقع البطل", topWinners:"الأكثر توقعاً كمتصدر", pointsDist:"توزيع النقاط",
     quickLinks:"روابط سريعة", health:"صحة البيانات", noLeader:"لا يوجد متصدر بعد", none:"لا شيء", pts:"نقطة",
-    rank:"المركز", player:"اللاعب", points:"النقاط", paidStatus:"الدفع", markPaid:"تحديد كمدفوع", markUnpaid:"تحديد كغير مدفوع",
+    rank:"المركز", player:"اللاعب", points:"النقاط", paidStatus:"الحالة", markPaid:"تحديد كمدفوع", markUnpaid:"تحديد كغير مدفوع",
     projWinner:"الفائز المتوقع", winnerTakesAll:"الفائز يأخذ الكل", split2:"تقسيم بين الأول والثاني", split3:"تقسيم بين الثلاثة الأوائل",
     custom:"مخصص", distribution:"توزيع الجوائز",
     pos1:"الأول", pos2:"الثاني", pos3:"الثالث", pos4:"الرابع",
@@ -1180,25 +1219,29 @@ function teamPill(tm){ return '<span>'+esc(canonTeam(tm)||'—')+'</span>'; }
 /* nav config */
 const NAV=[
   {id:'dashboard',ic:'🏠',key:'nav_dashboard'},
-  {id:'today',ic:'📅',key:'nav_today'},
   {id:'leaderboard',ic:'🏆',key:'nav_leaderboard'},
-  {id:'matches',ic:'⚽',key:'nav_matches'},
   {id:'player',ic:'👤',key:'nav_profile'},
   {id:'ai',ic:'🤖',key:'v_ai'},
   {id:'more',ic:'☰',key:'nav_more'}
 ];
 const MORE_ITEMS=[
+  {id:'today',ic:'📅',key:'nav_today'},
+  {id:'matches',ic:'⚽',key:'nav_matches'},
+  {id:'alerts',ic:'🔔',key:'v_alerts'},
+  {id:'scenarios',ic:'⚡',key:'v_scenarios'},
+  {id:'sharecards',ic:'📲',key:'v_sharecards'},
   {id:'groups',ic:'📊',key:'v_groups'},
   {id:'predictions',ic:'📝',key:'v_predictions'},
   {id:'consensus',ic:'👥',key:'v_consensus'},
   {id:'knockout',ic:'🎯',key:'v_knockout'},
   {id:'impact',ic:'🔥',key:'v_impact'},
-  {id:'scenarios',ic:'⚡',key:'v_scenarios'},
   {id:'help',ic:'❓',key:'v_help'}
 ];
 const ADMIN_ITEMS=[
-  {id:'audit',ic:'🔎',key:'v_audit'},
   {id:'results',ic:'✏️',key:'v_results'},
+  {id:'audit',ic:'🔎',key:'v_audit'},
+  {id:'backup',ic:'💾',key:'v_backup'},
+  {id:'health',ic:'🧪',key:'v_health'},
   {id:'repair',ic:'🛠️',key:'v_repair'},
   {id:'settings',ic:'⚙️',key:'v_settings'}
 ];
@@ -1276,12 +1319,16 @@ function render(){
     settings:viewSettings,
     impact:viewImpact,
     scenarios:viewScenarios,
+    alerts:viewAlerts,
+    backup:viewBackup,
+    sharecards:viewShareCards,
+    health:viewHealth,
     help:viewHelp,
     ai:viewAI
   };
 
   const fn=map[APP.view]||viewDashboard;
-  const adminViews=['audit','results','repair','settings'];
+  const adminViews=['audit','results','repair','settings','backup','health'];
 
   if(adminViews.includes(APP.view)&&!APP.isAdmin){
     $('view').innerHTML=banner+adminGate();
@@ -2178,6 +2225,7 @@ function resultEntryCard(g,i){
     <div class="quick-score">
       ${['1-0','2-1','0-0','1-1','0-1','1-2'].map(s=>`<button onclick="setQuickScore('${g}',${i},'${s}')">${s}</button>`).join('')}
     </div>
+    <div class="field" style="margin-top:8px"><label>${esc(tl('Result source','مصدر النتيجة'))}</label><select id="src_${g}_${i}"><option value="admin" ${meta==='admin'?'selected':''}>Admin</option><option value="api" ${meta==='api'?'selected':''}>API</option><option value="corrected" ${meta==='corrected'?'selected':''}>Corrected</option></select></div>
     <div id="pv_${g}_${i}" class="result-preview">${resultPreviewHtml(g,i,res.home,res.away)}</div>
     <div class="result-actions">
       <button class="btn sm" onclick="saveOneResult('${g}',${i})">💾 ${esc(tl('Save match','حفظ المباراة'))}</button>
@@ -2230,7 +2278,7 @@ async function saveOneResult(g,i){
   snapshotRanks();
   const before=APP.data.groupResults[key];
   APP.data.groupResults[key]={home:h,away:a};
-  APP.data.resultMeta[key]=before?'corrected':'admin';
+  APP.data.resultMeta[key]=($('src_'+g+'_'+i)?.value)||(before?'corrected':'admin');
   APP._lastResultUndo={group:g,idx:i,key,beforeData,beforeMeta};
   logAction('result_edit','groupResults.'+key,before,{home:h,away:a});
   await saveState();
@@ -2557,6 +2605,149 @@ function buildShareMatch(g,i){ const a=auditMatch(g,i); const r=a.match; const r
   return ar?`⚽ ${r.home} ${r.hs}-${r.as} ${r.away}\nأصاب الأفضلية: ${right} لاعب.`:`⚽ ${r.home} ${r.hs}-${r.as} ${r.away}\nGot the edge: ${right} players.`; }
 
 
+
+/* ================= V29 ALERTS / BACKUP / SHARE / HEALTH / SCENARIO LAB ================= */
+function appAlerts(){
+  const alerts=[];
+  const lb=buildLeaderboard();
+  const leader=lb[0];
+  if(leader) alerts.push({emoji:'🏆',title:tl('Current projected leader','المتصدر المتوقع حالياً'),meta:`${leader.name} · ${leader.total} ${t('pts')}`,level:'high',view:'leaderboard'});
+  const next=dashboardNextMatch(APP._today||[]);
+  if(next){
+    const sc=scenarioForMatch(next);
+    alerts.push({emoji:'⚡',title:tl('Next match impact','تأثير المباراة القادمة'),meta:`${teamText(next.home)} vs ${teamText(next.away)} · ${Math.max(sc.home.length,sc.away.length)} ${tl('players affected','لاعبين متأثرين')}`,level:'high',view:'scenarios'});
+  }
+  GROUP_KEYS.forEach(g=>{ if(groupComplete(g)) alerts.push({emoji:'✅',title:`Group ${g} ${tl('complete','مكتملة')}`,meta:tl('Group ranking points are active.','تم تفعيل نقاط ترتيب المجموعة.'),view:'groups'}); });
+  const issues=auditDataQuality();
+  if(issues.length) alerts.push({emoji:'⚠️',title:tl('Prediction data needs review','بيانات التوقعات تحتاج مراجعة'),meta:`${issues.length} ${tl('issues found','مشاكل')}`,level:'high',view:'audit'});
+  const latest=latestCompletedMatch();
+  if(latest){
+    const r=matchResult(latest.group,latest.idx);
+    alerts.push({emoji:'🔥',title:tl('Latest completed result','آخر نتيجة مكتملة'),meta:`${teamText(r.home)} ${r.hs}-${r.as} ${teamText(r.away)}`,view:'impact'});
+  }
+  if(!navigator.onLine) alerts.push({emoji:'📴',title:tl('Offline mode','وضع عدم الاتصال'),meta:tl('Using cached data until connection returns.','يتم استخدام البيانات المحفوظة حتى عودة الاتصال.'),level:'high'});
+  return alerts;
+}
+function viewAlerts(){
+  const alerts=appAlerts();
+  return `<div class="card"><div class="between"><h3>🔔 ${esc(t('v_alerts'))}</h3><span class="chip">${alerts.length}</span></div>
+    <div class="sub">${esc(tl('Live notes about leaders, match impact, completed groups and data quality.','ملاحظات مباشرة عن المتصدرين وتأثير المباريات والمجموعات المكتملة وجودة البيانات.'))}</div></div>
+    <div class="card">${alerts.map(a=>`<div class="alert-card ${a.level==='high'?'high':''}" onclick="${a.view?`go('${a.view}')`:''}"><div class="emoji">${a.emoji}</div><div><div class="title">${esc(a.title)}</div><div class="meta">${esc(a.meta)}</div></div><span class="tag">${esc(a.level==='high'?tl('Important','مهم'):tl('Info','معلومة'))}</span></div>`).join('')||`<div class="state">${esc(t('noData'))}</div>`}</div>`;
+}
+function renderScenarioLab(matches){
+  const opts=(matches||upcomingGroupMatches(12)).filter(m=>m.group&&m.idx!=null&&!matchResult(m.group,m.idx).complete);
+  const first=opts[0];
+  return `<div class="card flat"><h3>🧪 ${esc(tl('Scenario lab','مختبر السيناريو'))}</h3>
+    <select id="labMatch">${opts.map(m=>`<option value="${m.key}">${esc(m.key+' · '+teamText(m.home)+' vs '+teamText(m.away))}</option>`).join('')}</select>
+    <div class="lab-score"><span>${first?teamHtml(first.home):'—'}</span><input id="labH" class="score-in num" value="2"/><input id="labA" class="score-in num" value="1"/><span>${first?teamHtml(first.away):'—'}</span></div>
+    <div class="quick-score">${['1-0','2-1','0-0','1-1','0-1','1-2'].map(s=>`<button onclick="const p='${s}'.split('-');$('labH').value=p[0];$('labA').value=p[1];runScenarioLab()">${s}</button>`).join('')}</div>
+    <button class="btn sm" style="margin-top:10px" onclick="runScenarioLab()">⚡ ${esc(tl('Run scenario','تشغيل السيناريو'))}</button>
+    <div id="labOut"></div>
+  </div>`;
+}
+function runScenarioLab(){
+  const key=$('labMatch')?.value, h=$('labH')?.value, a=$('labA')?.value;
+  const m=upcomingGroupMatches(80).find(x=>x.key===key)||((APP._today||[]).find(x=>x.key===key));
+  if(!m||!/^\d+$/.test(h)||!/^\d+$/.test(a)){ toast(t('noData')); return; }
+  const rows=simulateLeaderboardForMatch(m,Number(h),Number(a));
+  const gainers=rows.filter(x=>x.deltaPts>0).sort((a,b)=>b.deltaPts-a.deltaPts).slice(0,10);
+  const movers=rows.filter(x=>x.deltaRank!==0).sort((a,b)=>b.deltaRank-a.deltaRank).slice(0,10);
+  const out=`<div class="result-preview"><b>${teamHtml(m.home)} ${h}-${a} ${teamHtml(m.away)}</b>
+    <h3 style="margin-top:10px">🔥 ${esc(tl('Top gainers','أعلى الكاسبين'))}</h3>${gainers.map(x=>`<div class="mover-row"><div class="who">${playerAvatar(x.name,'sm')}<span>${esc(x.name)}</span></div><div class="change up">+${x.deltaPts}</div></div>`).join('')||`<div class="sub">${esc(t('none'))}</div>`}
+    <h3 style="margin-top:10px">🚀 ${esc(tl('Rank movement','حركة الترتيب'))}</h3>${movers.map(x=>`<div class="mover-row"><div class="who">${playerAvatar(x.name,'sm')}<span>${esc(x.name)}</span></div><div class="change ${x.deltaRank>0?'up':'down'}">${x.deltaRank>0?'▲':'▼'}${Math.abs(x.deltaRank)} · #${x.rank}</div></div>`).join('')||`<div class="sub">${esc(t('none'))}</div>`}
+  </div>`;
+  $('labOut').innerHTML=out;
+}
+function listBackups(){
+  const arr=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k&&k.startsWith('wc2026_manual_backup_')){
+      try{ arr.push({key:k,ts:Number(k.split('_').pop())||0,size:(localStorage.getItem(k)||'').length}); }catch(_){}
+    }
+  }
+  return arr.sort((a,b)=>b.ts-a.ts);
+}
+function createManualBackup(){
+  const key='wc2026_manual_backup_'+Date.now();
+  localStorage.setItem(key,JSON.stringify(APP.data));
+  toast(t('saved')); render();
+}
+function backupName(b){ return new Date(b.ts).toLocaleString(); }
+function restoreBackupKey(key){
+  try{
+    const raw=localStorage.getItem(key); if(!raw) return toast(t('noData'));
+    APP.data=ensureShape(JSON.parse(raw));
+    saveState().then(()=>{toast(t('saved')); render();});
+  }catch(e){ toast(t('no')); }
+}
+function deleteBackupKey(key){ localStorage.removeItem(key); toast(t('clear')); render(); }
+function importBackupText(){
+  try{
+    const raw=$('backupImport').value.trim(); if(!raw) return;
+    const data=ensureShape(JSON.parse(raw));
+    APP.data=data; saveState().then(()=>{toast(t('saved')); render();});
+  }catch(e){ toast(t('no')); }
+}
+function viewBackup(){
+  const backups=listBackups();
+  return `<div class="card"><div class="between"><h3>💾 ${esc(t('v_backup'))}</h3><button class="btn sm" onclick="createManualBackup()">${esc(tl('Create backup','إنشاء نسخة'))}</button></div>
+    <div class="sub">${esc(tl('Export, import, and restore local backups before big admin edits.','تصدير واستيراد واستعادة نسخ محلية قبل تعديلات الإدارة المهمة.'))}</div>
+    <div class="result-actions"><button class="btn ghost sm" onclick="downloadText('wc2026-backup-${Date.now()}.json',JSON.stringify(APP.data,null,2))">${esc(t('exportBackup'))}</button><button class="btn ghost sm" onclick="$('backupImportBox').style.display='block'">${esc(t('restore'))}</button></div>
+  </div>
+  <div class="card" id="backupImportBox" style="display:none"><h3>📥 ${esc(tl('Import JSON','استيراد JSON'))}</h3><textarea id="backupImport" placeholder="Paste backup JSON here"></textarea><button class="btn" onclick="importBackupText()">${esc(t('apply'))}</button></div>
+  <div class="card"><h3>🗂️ ${esc(tl('Local backups','النسخ المحلية'))}</h3>${backups.map(b=>`<div class="backup-item"><div><div class="name">${esc(backupName(b))}</div><div class="meta">${Math.round(b.size/1024)} KB · ${esc(b.key)}</div></div><div class="row"><button class="btn ghost sm" onclick="restoreBackupKey('${b.key}')">${esc(t('restore'))}</button><button class="btn bad sm" onclick="deleteBackupKey('${b.key}')">${esc(t('clear'))}</button></div></div>`).join('')||`<div class="sub">${esc(t('noData'))}</div>`}</div>
+  <div class="card"><h3>📜 ${esc(tl('Audit log restore reference','مرجع سجل التغييرات'))}</h3>${(APP.data.auditLog||[]).slice(0,20).map((l,idx)=>`<details class="acc"><summary><span>${esc(l.type)} · ${esc(l.path)}</span><span class="sub">${esc((l.ts||'').slice(0,16).replace('T',' '))}</span></summary><div class="body"><b>${esc(t('before'))}</b><pre>${esc(JSON.stringify(l.before,null,2))}</pre><b>${esc(t('after'))}</b><pre>${esc(JSON.stringify(l.after,null,2))}</pre></div></details>`).join('')||`<div class="sub">${esc(t('noData'))}</div>`}</div>`;
+}
+function shareCardText(type){
+  if(type==='leaderboard') return shareLeaderboardText();
+  if(type==='player'){
+    const n=APP.sel.player||localStorage.getItem('wc2026_last_profile')||playerNames()[0]||'';
+    return playerShareText(n);
+  }
+  if(type==='road'){
+    const n=APP.sel.player||localStorage.getItem('wc2026_last_profile')||playerNames()[0]||'';
+    const road=playerRoadToWin(n,getPlayer(n));
+    const top=(road.opportunities||[]).slice(0,4).map(o=>`${teamText(o.match.home)} ${o.hs}-${o.as} ${teamText(o.match.away)}: +${o.deltaPts}`).join('\n')||t('none');
+    return `🛣️ ${n} — ${tl('Road to win','طريق الفوز')}\n${top}`;
+  }
+  const latest=latestCompletedMatch();
+  if(latest){ const r=matchResult(latest.group,latest.idx); return `⚽ ${teamText(r.home)} ${r.hs}-${r.as} ${teamText(r.away)}\n🔥 ${buildTodayImpactText()}`; }
+  return buildTodayImpactText();
+}
+function viewShareCards(){
+  const lb=buildLeaderboard().slice(0,5);
+  const n=APP.sel.player||localStorage.getItem('wc2026_last_profile')||playerNames()[0]||'';
+  const c=n?calcPlayerPoints(getPlayer(n),APP.data.groupResults,APP.data.knockoutResults,APP.data.champion):null;
+  return `<div class="card"><h3>📲 ${esc(t('v_sharecards'))}</h3><div class="sub">${esc(tl('Clean screenshot-ready cards plus copyable WhatsApp text.','بطاقات جاهزة للسكرين شوت مع نص واتساب قابل للنسخ.'))}</div></div>
+  <div class="card"><div class="share-preview"><h3>🏆 ${esc(t('v_leaderboard'))}</h3>${lb.map(r=>`<div class="lb-row"><span class="rank">#${r.rank}</span><span class="nm">${playerNameHtml(r.name,'sm')}</span><span class="pts">${r.total}</span></div>`).join('')}</div><button class="btn ghost sm" style="margin-top:10px" onclick="copyText(shareCardText('leaderboard'))">${esc(t('copy'))}</button></div>
+  <div class="card"><div class="share-preview"><h3>👤 ${esc(n||t('player'))}</h3>${n?`<div class="grid g2">${statTile(c.total,t('points'),true)}${statTile(getPlayer(n).champion||'—',t('champion'))}</div>`:`<div class="sub">${esc(t('noData'))}</div>`}</div><button class="btn ghost sm" style="margin-top:10px" onclick="copyText(shareCardText('player'))">${esc(t('copy'))}</button></div>
+  <div class="card"><div class="share-preview"><h3>🛣️ ${esc(tl('Road to win','طريق الفوز'))}</h3><pre style="white-space:pre-wrap">${esc(shareCardText('road'))}</pre></div><button class="btn ghost sm" style="margin-top:10px" onclick="copyText(shareCardText('road'))">${esc(t('copy'))}</button></div>
+  <div class="card"><div class="share-preview"><h3>🔥 ${esc(t('matchImpact'))}</h3><pre style="white-space:pre-wrap">${esc(shareCardText('match'))}</pre></div><button class="btn ghost sm" style="margin-top:10px" onclick="copyText(shareCardText('match'))">${esc(t('copy'))}</button></div>`;
+}
+function healthShapeReport(){
+  const d=APP.data||{};
+  return [
+    {label:'Supabase URL',value:SB_URL?'OK':'Missing'},
+    {label:'Players',value:Array.isArray(d.players)?d.players.length:'Missing'},
+    {label:'Group results',value:Object.keys(d.groupResults||{}).length},
+    {label:'Schedule matches',value:Array.isArray(d.scheduleMatches)?d.scheduleMatches.length:'Missing'},
+    {label:'Audit log',value:Array.isArray(d.auditLog)?d.auditLog.length:'Missing'},
+    {label:'Data quality issues',value:auditDataQuality().length},
+    {label:'Online',value:navigator.onLine?'YES':'NO'},
+    {label:'PWA mode',value:isStandalonePWA()?'Installed':'Browser'}
+  ];
+}
+function viewHealth(){
+  const rows=healthShapeReport();
+  return `<div class="card"><div class="between"><h3>🧪 ${esc(t('v_health'))}</h3><button class="btn sm" onclick="testApis()">${esc(tl('Run API test','تشغيل فحص API'))}</button></div>
+    <div class="sub">${esc(tl('Checks database shape, local status, PWA status, and external API connectivity.','يفحص شكل قاعدة البيانات وحالة الاتصال والتطبيق وواجهات API.'))}</div>
+  </div>
+  <div class="card"><div class="health-grid">${rows.map(r=>`<div class="health-tile"><div class="label">${esc(r.label)}</div><div class="value">${esc(String(r.value))}</div></div>`).join('')}</div></div>
+  <div class="card"><h3>🔎 API test output</h3><pre id="apiTestOut" style="white-space:pre-wrap;display:block;max-height:320px;overflow:auto">${esc(tl('Press Run API test.','اضغط تشغيل فحص API.'))}</pre></div>
+  <div class="card"><h3>🛠️ ${esc(tl('Quick repairs','إصلاحات سريعة'))}</h3><button class="btn ghost sm" onclick="APP.data=ensureShape(APP.data||{});saveState().then(()=>{toast(t('saved'));render();})">${esc(tl('Ensure data shape','تصحيح شكل البيانات'))}</button><button class="btn ghost sm" style="margin-inline-start:8px" onclick="APP._schedule=(Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule();toast(t('saved'))">${esc(tl('Reload schedule fallback','إعادة تحميل جدول احتياطي'))}</button></div>`;
+}
+
 /* ================= HELP / POINTS LOGIC ================= */
 function reasonLabel(reason){
   const m={
@@ -2755,6 +2946,58 @@ async function testApis(){
   if(out) out.textContent=lines.join('\n'); else alert(lines.join('\n'));
 }
 
+
+/* ================= PWA install ================= */
+let deferredInstallPrompt=null;
+function isStandalonePWA(){
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
+}
+function updateInstallUI(){
+  const btn=$('installBtn'), banner=$('installBanner');
+  const dismissed=localStorage.getItem('wc2026_install_dismissed')==='1';
+  const canInstall=!!deferredInstallPrompt && !isStandalonePWA() && !dismissed;
+  if(btn) btn.style.display=canInstall?'inline-flex':'none';
+  if(banner) banner.classList.toggle('show',canInstall);
+}
+window.addEventListener('beforeinstallprompt',(e)=>{
+  e.preventDefault();
+  deferredInstallPrompt=e;
+  updateInstallUI();
+});
+window.addEventListener('appinstalled',()=>{
+  deferredInstallPrompt=null;
+  localStorage.setItem('wc2026_install_dismissed','1');
+  toast('Installed');
+  updateInstallUI();
+});
+async function installPWA(){
+  if(!deferredInstallPrompt){
+    openSheet(`<h3 style="padding:0 8px">📲 Install app</h3>
+      <div class="card flat"><b>iPhone / iPad</b><div class="sub">Open in Safari → Share → Add to Home Screen.</div></div>
+      <div class="card flat"><b>Android / Chrome</b><div class="sub">Open the menu ⋮ → Install app or Add to Home screen.</div></div>
+      <div class="banner warn">Install works after hosting this folder on HTTPS, like GitHub Pages, Netlify, or Vercel.</div>
+      <button class="btn ghost" onclick="closeSheet()">Close</button>`);
+    return;
+  }
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt=null;
+  updateInstallUI();
+}
+function dismissInstallBanner(){
+  localStorage.setItem('wc2026_install_dismissed','1');
+  updateInstallUI();
+}
+async function registerPWA(){
+  try{
+    if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+      const reg=await navigator.serviceWorker.register('./sw.js');
+      console.log('PWA service worker registered',reg.scope);
+    }
+  }catch(e){ console.warn('PWA service worker registration failed',e); }
+}
+
+
 /* ================= boot ================= */
 async function boot(){
   if(!APP.data) APP.data=ensureShape({});
@@ -2764,6 +3007,8 @@ async function boot(){
   await loadState();
   APP._schedule=(Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule();
   render();
+  registerPWA();
+  updateInstallUI();
   loadToday();
 }
 window.addEventListener('online',()=>{ if(APP.cached) boot(); });
