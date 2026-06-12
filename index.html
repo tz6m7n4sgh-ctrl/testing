@@ -225,7 +225,7 @@ details.acc .body{padding:0 12px 12px}
 const SB_URL='https://jrwkhogoewhlfrzlsmlh.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impyd2tob2dvZXdobGZyemxzbWxoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNjU2MzEsImV4cCI6MjA5Njc0MTYzMX0.1TF9PSzu4t9661aDXfaqc1tZPZ5uxeAW6Q5hE2My6Qc';
 const API=SB_URL+'/rest/v1/wc2026';
-const H={apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'};
+const H={apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json',Accept:'application/json'};
 const SPORTSDB='https://www.thesportsdb.com/api/v1/json/3/eventsday.php';
 const WC_LEAGUE='4429';
 const WC_START='2026-06-11', WC_END='2026-07-19';
@@ -241,18 +241,18 @@ const SCORING={
 
 /* --- Central GROUPS object (admin/data overrides this) --- */
 const GROUPS={
-  A:["Mexico","Korea Republic","Cabo Verde","Norway"],
+  A:["Mexico","South Africa","South Korea","Czechia"],
   B:["Canada","Switzerland","Qatar","Bosnia-Herzegovina"],
-  C:["USA","Czechia","Saudi Arabia","Ecuador"],
-  D:["Argentina","Australia","Egypt","New Zealand"],
-  E:["France","Senegal","Japan","Panama"],
-  F:["England","Croatia","Ivory Coast","Honduras"],
-  G:["Brazil","Morocco","Iran","Jordan"],
-  H:["Spain","Uruguay","Ghana","Curacao"],
-  I:["Portugal","Colombia","Nigeria","Uzbekistan"],
-  J:["Germany","Netherlands","South Africa","Haiti"],
-  K:["Italy","Mexico City","Algeria","Costa Rica"],
-  L:["Belgium","Denmark","Tunisia","Paraguay"]
+  C:["Brazil","Morocco","Scotland","Haiti"],
+  D:["USA","Paraguay","Australia","TBD"],
+  E:["Germany","Curacao","Ivory Coast","Ecuador"],
+  F:["Netherlands","Japan","Tunisia","TBD"],
+  G:["Belgium","Egypt","Iran","New Zealand"],
+  H:["Spain","Cape Verde","Saudi Arabia","Uruguay"],
+  I:["France","Senegal","Norway","TBD"],
+  J:["Argentina","Algeria","Austria","Jordan"],
+  K:["England","Croatia","Ghana","Panama"],
+  L:["Portugal","Colombia","Uzbekistan","TBD"]
 };
 const GROUP_KEYS=Object.keys(GROUPS);
 
@@ -370,9 +370,19 @@ let LANG=localStorage.getItem('wc_lang')||'en';
 const t=(k)=>{const v=I18N[LANG][k];return v===undefined?(I18N.en[k]??k):v;};
 
 /* ================= Part 2: state, persistence, normalization ================= */
-const APP={ data:null, loaded:false, error:null, cached:false, isAdmin:false, view:'dashboard', sel:{}, snapshot:null, prevRanks:null };
+const APP={ data:null, loaded:false, error:null, cached:false, isAdmin:false, view:'dashboard', sel:{}, snapshot:null, prevRanks:null, apiStatus:null };
 const CACHE_KEY='wc2026_cache_v1';
 const ADMIN_FLAG='wc2026_admin';
+
+function fetchWithTimeout(url, opts={}, ms=8000){
+  const ctrl=new AbortController();
+  const id=setTimeout(()=>ctrl.abort(), ms);
+  const finalOpts={mode:'cors', credentials:'omit', ...opts, signal:ctrl.signal};
+  return fetch(url,finalOpts).finally(()=>clearTimeout(id));
+}
+function isSandboxOrFile(){
+  return location.protocol==='file:' || location.origin==='null' || location.href.startsWith('sandbox:') || location.hostname.includes('sandbox');
+}
 
 /* ---- always-return-array guard for flaky APIs ---- */
 function asArrayPayload(json){
@@ -398,16 +408,23 @@ function ensureShape(d){
 }
 
 async function loadState(){
-  APP.error=null;
+  APP.error=null; APP.apiStatus=null;
   try{
-    const r=await fetch(API+'?id=eq.main&select=data',{headers:H});
-    if(!r.ok) throw new Error('HTTP '+r.status);
+    const r=await fetchWithTimeout(API+'?id=eq.main&select=data',{headers:H},10000);
+    APP.apiStatus={name:'supabase', ok:r.ok, status:r.status, statusText:r.statusText};
+    if(!r.ok){
+      let txt='';
+      try{ txt=await r.text(); }catch(_){}
+      throw new Error('Supabase HTTP '+r.status+' '+txt.slice(0,180));
+    }
     const rows=await r.json();
     const row=Array.isArray(rows)?rows[0]:null;
     APP.data=ensureShape(row?row.data:{});
     APP.cached=false; APP.loaded=true;
     localStorage.setItem(CACHE_KEY, JSON.stringify(APP.data));
   }catch(e){
+    console.error('Supabase load failed. This may be network, CORS, RLS, wrong key, or sandbox/file origin.', e);
+    APP.apiStatus={name:'supabase', ok:false, error:String(e&&e.message?e.message:e), sandbox:isSandboxOrFile()};
     const c=localStorage.getItem(CACHE_KEY);
     if(c){ APP.data=ensureShape(JSON.parse(c)); APP.cached=true; APP.loaded=true; APP.error=navigator.onLine?'sync':'offline'; }
     else { APP.data=ensureShape({}); APP.loaded=true; APP.error='load'; }
@@ -417,11 +434,14 @@ async function loadState(){
 async function saveState(actionLabel,beforePath){
   localStorage.setItem(CACHE_KEY, JSON.stringify(APP.data)); // local-first
   try{
-    const r=await fetch(API+'?id=eq.main',{method:'PATCH',
-      headers:{...H,Prefer:'return=minimal'}, body:JSON.stringify({data:APP.data})});
-    if(!r.ok) throw new Error('HTTP '+r.status);
+    const r=await fetchWithTimeout(API+'?id=eq.main',{method:'PATCH',
+      headers:{...H,Prefer:'return=minimal'}, body:JSON.stringify({data:APP.data})},10000);
+    if(!r.ok){
+      let txt=''; try{txt=await r.text();}catch(_){}
+      throw new Error('Supabase save HTTP '+r.status+' '+txt.slice(0,180));
+    }
     APP.cached=false; return true;
-  }catch(e){ APP.cached=true; return false; }
+  }catch(e){ console.error('Supabase save failed.', e); APP.cached=true; APP.apiStatus={name:'supabase-save', ok:false, error:String(e&&e.message?e.message:e), sandbox:isSandboxOrFile()}; return false; }
 }
 
 /* ---- audit log + local backup snapshot ---- */
@@ -477,8 +497,19 @@ function normalizePrediction(pred){
 /* tolerant access to a player's group prediction regardless of stored shape */
 function playerGroupPred(playerData,group){
   if(!playerData) return [];
-  const buckets=[playerData.groups, playerData.predictions, playerData.groupPredictions, playerData];
-  for(const b of buckets){ if(b && b[group]!=null) return normalizePrediction(b[group]); }
+  // Existing database compatibility:
+  // current app data uses player.groupPreds[group], while some prototypes used
+  // player.groups / player.predictions / player.groupPredictions.
+  const buckets=[
+    playerData.groupPreds,
+    playerData.groups,
+    playerData.predictions,
+    playerData.groupPredictions,
+    playerData
+  ];
+  for(const b of buckets){
+    if(b && b[group]!=null) return normalizePrediction(b[group]);
+  }
   return [];
 }
 /* team at a given 1-based position in a prediction */
@@ -491,14 +522,38 @@ function rankOfTeamInPred(playerData,group,team){
 }
 /* which group a match belongs to, from a match key like "B_2" or {group} */
 function groupForMatch(match){
-  if(typeof match==='string'){ const m=match.split('_'); return m[0]; }
+  if(typeof match==='string'){
+    const m=match.split('_');
+    return m[0]||null;
+  }
   if(match&&match.group) return match.group;
+  if(!match) return null;
+
+  // Important: many schedule/API matches are plain objects like
+  // {home:"Canada", away:"Bosnia-Herzegovina"} and do not carry a group.
+  // Detect the group by comparing normalized team names against generated GM.
+  const h=teamCompareKey(match.home);
+  const a=teamCompareKey(match.away);
+  if(!h||!a) return null;
+
+  for(const g of GROUP_KEYS){
+    for(let i=0;i<6;i++){
+      const [mh,ma]=matchTeams(g,i);
+      const kh=teamCompareKey(mh);
+      const ka=teamCompareKey(ma);
+
+      if((kh===h&&ka===a)||(kh===a&&ka===h)){
+        return g;
+      }
+    }
+  }
+
   return null;
 }
 
 /* player list helpers */
-function playerNames(){ return Object.keys(APP.data.players||{}); }
-function getPlayer(name){ return (APP.data.players||{})[name]||null; }
+function playerNames(){ const d=APP.data||defaultData(); return Object.keys(d.players||{}); }
+function getPlayer(name){ const d=APP.data||defaultData(); return (d.players||{})[name]||null; }
 
 /* ================= Part 3: scoring, tables, schedule, audit, repair ================= */
 
@@ -515,14 +570,15 @@ function readScore(res){
 }
 function matchResult(group,idx){
   const [home,away]=matchTeams(group,idx);
-  const sc=readScore((APP.data.groupResults||{})[matchKey(group,idx)]);
+  const d=APP.data||defaultData();
+  const sc=readScore((d.groupResults||{})[matchKey(group,idx)]);
   if(!sc) return {home,away,complete:false};
   let winner=null,outcome='draw';
   if(sc.hs>sc.as){winner=home;outcome='home';} else if(sc.as>sc.hs){winner=away;outcome='away';}
   return {home,away,hs:sc.hs,as:sc.as,winner,outcome,complete:true};
 }
 function groupComplete(group){ for(let i=0;i<6;i++) if(!matchResult(group,i).complete) return false; return true; }
-function completedMatchCount(){ let n=0; for(const g of GROUP_KEYS) for(let i=0;i<6;i++) if(matchResult(g,i).complete) n++; return n; }
+function completedMatchCount(){ if(!APP.data) return 0; let n=0; for(const g of GROUP_KEYS) for(let i=0;i<6;i++) if(matchResult(g,i).complete) n++; return n; }
 
 /* ---- actual standings for a group ---- */
 function computeGroupTable(group){
@@ -658,9 +714,15 @@ function uaeToday(){ // UAE = UTC+4, no DST
   return u.toISOString().slice(0,10);
 }
 async function fetchDay(date){
-  try{ const r=await fetch(SPORTSDB+'?d='+date+'&l='+WC_LEAGUE);
-    if(!r.ok) throw 0; const j=await r.json(); return asArrayPayload(j); }
-  catch(_){ return []; }
+  try{
+    const r=await fetchWithTimeout(SPORTSDB+'?d='+date+'&l='+WC_LEAGUE,{headers:{Accept:'application/json'}},8000);
+    if(!r.ok) throw new Error('SportsDB HTTP '+r.status);
+    const j=await r.json();
+    return asArrayPayload(j);
+  }catch(e){
+    console.warn('SportsDB fetch failed for '+date+'. Falling back to local schedule.', e);
+    return [];
+  }
 }
 async function fetchFullSchedule(onProgress){
   const dates=dateRange(WC_START,WC_END); const all=[];
@@ -684,7 +746,13 @@ function validateGroupPrediction(group,pred){
 function auditDataQuality(){
   const out=[];
   playerNames().forEach(name=>{ const p=getPlayer(name);
-    GROUP_KEYS.forEach(g=>{ const raw=(p.groups&&p.groups[g])??(p.predictions&&p.predictions[g])??p[g];
+    GROUP_KEYS.forEach(g=>{
+      const raw=(p.groupPreds&&p.groupPreds[g]) ??
+        (p.groups&&p.groups[g]) ??
+        (p.predictions&&p.predictions[g]) ??
+        (p.groupPredictions&&p.groupPredictions[g]) ??
+        p[g];
+
       const issues=validateGroupPrediction(g,raw);
       issues.forEach(is=>out.push({player:name,group:g,raw,issue:is}));
     });
@@ -735,10 +803,19 @@ function applyRepairMissingTeam(name,group){
   const pv=previewRepairMissingTeam(name,group); if(!pv||pv.noop) return false;
   backupBeforeRepair('repair');
   const p=getPlayer(name);
-  if(!p.groups) p.groups={};
-  const before=p.groups[group]!==undefined?p.groups[group]:(p[group]!==undefined?p[group]:null);
-  p.groups[group]=pv.after;
-  logAction('repair_missing_team','players.'+name+'.groups.'+group, before, pv.after);
+
+  // Existing database compatibility: write repairs to groupPreds first.
+  // Do not create a separate groups object when groupPreds already exists.
+  if(!p.groupPreds) p.groupPreds={};
+
+  const before=p.groupPreds[group]!==undefined
+    ? p.groupPreds[group]
+    : (p.groups&&p.groups[group]!==undefined
+        ? p.groups[group]
+        : (p[group]!==undefined?p[group]:null));
+
+  p.groupPreds[group]=pv.after;
+  logAction('repair_missing_team','players.'+name+'.groupPreds.'+group, before, pv.after);
   return true;
 }
 function exportAudit(type){
@@ -752,13 +829,14 @@ function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;',
 const $=id=>document.getElementById(id);
 
 function currentPhase(){
-  if(APP.data.champion) return 'phase_done';
-  const anyKo=Object.keys(APP.data.knockoutResults||{}).length>0;
+  const d=APP.data||defaultData();
+  if(d.champion) return 'phase_done';
+  const anyKo=Object.keys(d.knockoutResults||{}).length>0;
   if(anyKo) return 'phase_ko';
   if(completedMatchCount()>0) return 'phase_group';
   return 'phase_pre';
 }
-function fmtAED(n){ return (n||0).toLocaleString('en-US')+' '+(APP.data.settings.currency||'AED'); }
+function fmtAED(n){ const d=APP.data||defaultData(); return (n||0).toLocaleString('en-US')+' '+((d.settings&&d.settings.currency)||'AED'); }
 function teamPill(tm){ return '<span>'+esc(canonTeam(tm)||'—')+'</span>'; }
 
 /* nav config */
@@ -811,20 +889,62 @@ function applyDir(){ document.documentElement.lang=LANG; document.documentElemen
   $('adminBtn').classList.toggle('hide',!APP.isAdmin); }
 
 function render(){
-  applyDir(); renderNav();
-  $('phaseStrip').innerHTML=`<span>⚽</span><b>${esc(t(currentPhase()))}</b><span>· ${completedMatchCount()}/72 ${esc(t('completedMatches'))}</span>`;
-  if(!APP.loaded){ $('view').innerHTML=stateLoading(); return; }
+  applyDir();
+  renderNav();
+
+  // First render happens before Supabase finishes loading.
+  // Do not call currentPhase(), completedMatchCount(), or any view until APP.data exists.
+  if(!APP.loaded || !APP.data){
+    $('phaseStrip').innerHTML=`<span>⚽</span><b>${esc(t('loading'))}</b>`;
+    $('view').innerHTML=stateLoading();
+    return;
+  }
+
+  $('phaseStrip').innerHTML=
+    `<span>⚽</span><b>${esc(t(currentPhase()))}</b><span>· ${completedMatchCount()}/72 ${esc(t('completedMatches'))}</span>`;
+
   let banner='';
-  if(APP.error==='load') banner=`<div class="banner err">⚠ ${esc(t('errLoad'))} <button class="btn sm ghost" onclick="boot()">${esc(t('retry'))}</button></div>`;
-  else if(APP.error==='sync'||APP.cached) banner=`<div class="banner cache">💾 ${esc(t(APP.error==='offline'?'offline':'syncFail'))}</div>`;
-  const map={dashboard:viewDashboard,today:viewToday,matches:viewMatches,groups:viewGroups,
-    predictions:viewPredictions,consensus:viewConsensus,knockout:viewKnockout,leaderboard:viewLeaderboard,
-    player:viewPlayer,audit:viewAudit,results:viewResults,repair:viewRepair,settings:viewSettings,ai:viewAI};
+  if(APP.error==='load'){
+    banner=`<div class="banner err">⚠ ${esc(t('errLoad'))} <button class="btn sm ghost" onclick="boot()">${esc(t('retry'))}</button></div>`;
+  }else if(APP.error==='sync'||APP.cached){
+    banner=`<div class="banner cache">💾 ${esc(t(APP.error==='offline'?'offline':'syncFail'))}</div>`;
+  }
+
+  const map={
+    dashboard:viewDashboard,
+    today:viewToday,
+    matches:viewMatches,
+    groups:viewGroups,
+    predictions:viewPredictions,
+    consensus:viewConsensus,
+    knockout:viewKnockout,
+    leaderboard:viewLeaderboard,
+    player:viewPlayer,
+    audit:viewAudit,
+    results:viewResults,
+    repair:viewRepair,
+    settings:viewSettings,
+    ai:viewAI
+  };
+
   const fn=map[APP.view]||viewDashboard;
   const adminViews=['audit','results','repair','settings'];
-  if(adminViews.includes(APP.view)&&!APP.isAdmin){ $('view').innerHTML=banner+adminGate(); return; }
-  $('view').innerHTML=banner+fn();
-  if(typeof window['after_'+APP.view]==='function') window['after_'+APP.view]();
+
+  if(adminViews.includes(APP.view)&&!APP.isAdmin){
+    $('view').innerHTML=banner+adminGate();
+    return;
+  }
+
+  try{
+    $('view').innerHTML=banner+fn();
+  }catch(e){
+    console.error('Render failed:', e);
+    $('view').innerHTML=banner+`<div class="banner err">⚠ Render error: ${esc(e.message||e)}</div>`;
+  }
+
+  if(typeof window['after_'+APP.view]==='function'){
+    window['after_'+APP.view]();
+  }
 }
 function stateLoading(){ return `<div class="state"><div class="spin"></div>${esc(t('loading'))}</div>`; }
 function adminGate(){ return `<div class="card"><h3>🔒 ${esc(t('adminOnly'))}</h3>
@@ -1247,6 +1367,12 @@ function viewSettings(){
   </div>
   <div class="card"><h3>🌐 ${esc(t('fetchSchedule'))}</h3>
     <button class="btn ghost" onclick="doFetchSchedule()">${esc(t('fetchSchedule'))}</button>
+  </div>
+  <div class="card"><h3>🧪 API / CORS</h3>
+    <div class="sub">Origin: ${esc(location.origin||'null')} · Protocol: ${esc(location.protocol)}</div>
+    ${isSandboxOrFile()?`<div class="banner warn">⚠ This is running from file/sandbox origin. External API calls may be blocked. Host it on HTTPS, GitHub Pages, Netlify, or Vercel for a real browser test.</div>`:''}
+    <button class="btn ghost" style="margin-top:8px" onclick="testApis()">Test Supabase + SportsDB</button>
+    <div id="apiTestOut" class="ai-ans" style="display:none"></div>
   </div>`;
 }
 async function saveSettings(){ const s=APP.data.settings; const before={...s};
@@ -1393,7 +1519,7 @@ function askAI(q){ if(!q||!q.trim()) return;
 
 /* ================= admin auth ================= */
 function adminHash(s){ let h=0; for(let i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))>>>0; } return h.toString(16); }
-const ADMIN_HASH='13d38d1'; // hash of 'admin2026' — change via adminHash('newPassword') in console
+const ADMIN_HASH='6b8b4567'; // change to adminHash('yourPassword') to set a new password
 function openAdmin(){
   if(APP.isAdmin){ openMore(); return; }
   openSheet(`<h3 style="padding:0 8px">🔒 ${esc(t('pwPrompt'))}</h3>
@@ -1431,8 +1557,39 @@ async function doFetchSchedule(){
   APP._schedLoading=false; render();
 }
 
+
+async function testApis(){
+  const out=$('apiTestOut');
+  if(out){ out.style.display='block'; out.textContent='Testing APIs…'; }
+  const lines=[];
+  lines.push('Origin: '+(location.origin||'null'));
+  lines.push('Protocol: '+location.protocol);
+  lines.push('Sandbox/file origin: '+(isSandboxOrFile()?'YES':'NO'));
+  try{
+    const r=await fetchWithTimeout(API+'?id=eq.main&select=data',{headers:H},10000);
+    lines.push('Supabase: HTTP '+r.status+' '+r.statusText);
+    const txt=await r.text();
+    lines.push('Supabase body preview: '+txt.slice(0,160));
+  }catch(e){
+    lines.push('Supabase failed: '+String(e&&e.message?e.message:e));
+    lines.push('Possible causes: CORS/preflight blocked, wrong key, RLS policy, DNS/network blocked, or sandbox/file origin.');
+  }
+  try{
+    const d=WC_START;
+    const r=await fetchWithTimeout(SPORTSDB+'?d='+d+'&l='+WC_LEAGUE,{headers:{Accept:'application/json'}},10000);
+    lines.push('SportsDB: HTTP '+r.status+' '+r.statusText);
+    const txt=await r.text();
+    lines.push('SportsDB body preview: '+txt.slice(0,160));
+  }catch(e){
+    lines.push('SportsDB failed: '+String(e&&e.message?e.message:e));
+    lines.push('The app will still use local generated schedule as fallback.');
+  }
+  if(out) out.textContent=lines.join('\n'); else alert(lines.join('\n'));
+}
+
 /* ================= boot ================= */
 async function boot(){
+  if(!APP.data) APP.data=ensureShape({});
   APP.loaded=false; render();
   try{ const r=localStorage.getItem('wc2026_ranks'); if(r) APP.prevRanks=JSON.parse(r); }catch(_){}
   if(sessionStorage.getItem(ADMIN_FLAG)==='1') APP.isAdmin=true;
