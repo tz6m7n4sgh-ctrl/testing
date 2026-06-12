@@ -523,6 +523,16 @@ body{
 @media(max-width:420px){.topbar .brand span:last-child{max-width:155px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#adminBtn{min-width:66px;padding:0 9px}.iconbtn{min-width:40px}}
 
 </style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-DEDV833VML"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-DEDV833VML');
+</script>
+
 </head>
 <body>
 <div class="topbar">
@@ -555,6 +565,12 @@ const SB_URL='https://jrwkhogoewhlfrzlsmlh.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impyd2tob2dvZXdobGZyemxzbWxoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNjU2MzEsImV4cCI6MjA5Njc0MTYzMX0.1TF9PSzu4t9661aDXfaqc1tZPZ5uxeAW6Q5hE2My6Qc';
 const API=SB_URL+'/rest/v1/wc2026';
 const RESULTS_API=SB_URL+'/rest/v1/wc2026_match_results';
+
+// Google Analytics 4.
+// Replace this with your GA4 Measurement ID, for example: G-ABC123XYZ.
+// Leave empty to disable analytics.
+const GA_MEASUREMENT_ID='G-DEDV833VML';
+
 const H={apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json',Accept:'application/json'};
 const SPORTSDB='https://www.thesportsdb.com/api/v1/json/3/eventsday.php';
 const WC_LEAGUE='4429';
@@ -703,6 +719,56 @@ const t=(k)=>{const v=I18N[LANG][k];return v===undefined?(I18N.en[k]??k):v;};
 const APP={ data:null, loaded:false, error:null, cached:false, isAdmin:false, view:'dashboard', sel:{}, snapshot:null, prevRanks:null, apiStatus:null };
 const CACHE_KEY='wc2026_cache_v1';
 const ADMIN_FLAG='wc2026_admin';
+
+/* ================= anonymous analytics ================= */
+function analyticsEnabled(){
+  return /^G-[A-Z0-9]+$/i.test(GA_MEASUREMENT_ID||'') && GA_MEASUREMENT_ID!=='G-XXXXXXXXXX';
+}
+function loadAnalytics(){
+  if(!analyticsEnabled()||window.__gaLoaded) return;
+  window.__gaLoaded=true;
+  window.dataLayer=window.dataLayer||[];
+  if(typeof window.gtag!=='function'){
+    window.gtag=function(){dataLayer.push(arguments);};
+    gtag('js',new Date());
+    gtag('config',GA_MEASUREMENT_ID,{
+      send_page_view:false,
+      anonymize_ip:true,
+      cookie_flags:'SameSite=None;Secure'
+    });
+    const s=document.createElement('script');
+    s.async=true;
+    s.src='https://www.googletagmanager.com/gtag/js?id='+encodeURIComponent(GA_MEASUREMENT_ID);
+    document.head.appendChild(s);
+  }
+}
+function trackEvent(name,params){
+  try{
+    if(!analyticsEnabled()) return;
+    loadAnalytics();
+    gtag('event',name,Object.assign({
+      app_version:'v33',
+      app_language:LANG,
+      app_view:APP.view||'dashboard',
+      is_admin:!!APP.isAdmin
+    },params||{}));
+  }catch(_){}
+}
+function trackPageView(view){
+  try{
+    if(!analyticsEnabled()) return;
+    loadAnalytics();
+    gtag('event','page_view',{
+      page_title:'WC2026 Pickem - '+(view||APP.view||'dashboard'),
+      page_location:location.href.split('#')[0]+'#'+(view||APP.view||'dashboard'),
+      page_path:'/'+(view||APP.view||'dashboard'),
+      app_version:'v33',
+      app_language:LANG,
+      is_admin:!!APP.isAdmin
+    });
+  }catch(_){}
+}
+
 
 function fetchWithTimeout(url, opts={}, ms=8000){
   const ctrl=new AbortController();
@@ -1367,7 +1433,7 @@ function openMore(){
 function openSheet(html){ $('sheet').innerHTML='<div class="grab"></div>'+html; $('sheetBg').classList.add('open'); }
 function closeSheet(){ $('sheetBg').classList.remove('open'); }
 
-function go(view){ APP.view=view; closeSheet(); render(); window.scrollTo(0,0); }
+function go(view){ APP.view=view; closeSheet(); render(); window.scrollTo(0,0); trackPageView(view); trackEvent('nav_click',{view}); }
 
 /* ---- top-level render ---- */
 function applyDir(){ document.documentElement.lang=LANG; document.documentElement.dir=LANG==='ar'?'rtl':'ltr';
@@ -1998,6 +2064,7 @@ function renderPlayerAlerts(name,p,c){
 function chooseProfile(name){
   APP.sel.player=name;
   localStorage.setItem('wc2026_last_profile',name);
+  trackEvent('profile_select',{has_profile:!!name});
   go('player');
 }
 function profilePickerCards(selected){
@@ -2386,6 +2453,7 @@ async function saveOneResult(g,i){
   await saveState();
   const after=leaderboardSnapshot();
   showResultCelebration(g,i,beforeLb,after,beforeLeader);
+  trackEvent('admin_result_save',{match_key:key,source});
   toast(t('saved'));
   render();
 }
@@ -2396,7 +2464,7 @@ async function clearOneResult(g,i){
   delete APP.data.groupResults[key]; if(APP.data.resultMeta) APP.data.resultMeta[key]='pending';
   logAction('result_clear','groupResults.'+key,before,null);
   await upsertNormalizedResult(normalizedResultRow(g,i,null,null,'corrected','scheduled'));
-  await saveState(); toast(t('saved')); render();
+  await saveState(); trackEvent('admin_result_clear',{match_key:key}); toast(t('saved')); render();
 }
 async function undoLastResult(){
   if(!APP._lastResultUndo){ toast(t('noData')); return; }
@@ -2408,7 +2476,7 @@ async function undoLastResult(){
   else await upsertNormalizedResult(normalizedResultRow(undo.group,undo.idx,null,null,'corrected','scheduled'));
   logAction('result_undo','groupResults.'+undo.key,null,'restored');
   APP._lastResultUndo=null;
-  await saveState(); toast(tl('Undo complete','تم التراجع')); render();
+  await saveState(); trackEvent('admin_result_undo',{match_key:undo.key}); toast(tl('Undo complete','تم التراجع')); render();
 }
 function showResultCelebration(g,i,beforeLb,afterLb,beforeLeader){
   const r=matchResult(g,i), changed=diffLeaderboard(beforeLb,afterLb);
@@ -2484,6 +2552,10 @@ function viewSettings(){
     <div class="between"><span>${esc(s.locked?t('locked'):t('unlocked'))}</span>
       <button class="btn sm ${s.locked?'gold':'ghost'}" onclick="toggleLock()">${esc(s.locked?t('unlock'):t('locked'))}</button></div>
     <button class="btn" style="margin-top:10px" onclick="saveSettings()">${esc(t('save'))}</button>
+  </div>
+  <div class="card"><h3>📈 Google Analytics</h3>
+    <div class="sub">${esc(tl('Analytics is anonymous. No login, player names, predictions, or personal data are sent. Replace GA_MEASUREMENT_ID in the HTML to enable.','التحليلات مجهولة. لا يتم إرسال أسماء اللاعبين أو التوقعات أو بيانات شخصية. استبدل GA_MEASUREMENT_ID في ملف HTML للتفعيل.'))}</div>
+    <div class="banner ${analyticsEnabled()?'ok':'warn'}">${analyticsEnabled()?`✅ ${esc(tl('Enabled','مفعل'))}: ${esc(GA_MEASUREMENT_ID)}`:`⚠ ${esc(tl('Disabled: add your GA4 Measurement ID','غير مفعل: أضف Measurement ID من GA4'))}`}</div>
   </div>
   <div class="card"><h3>🌐 ${esc(t('fetchSchedule'))}</h3>
     <button class="btn ghost" onclick="doFetchSchedule()">${esc(t('fetchSchedule'))}</button>
@@ -2766,6 +2838,7 @@ async function runResultSyncCompare(){
   try{
     APP._syncRows=await fetchCompletedApiComparisons();
     APP._lastSyncCheck=new Date().toISOString();
+    trackEvent('result_sync_compare',{count:APP._syncRows.length});
   }catch(e){
     APP._syncRows=[];
     toast(t('syncFail'));
@@ -2811,6 +2884,7 @@ async function applyApiResult(idx){
   await upsertNormalizedResult(normalizedResultRow(row.match.group,row.match.idx,row.api.home,row.api.away,'api','final'));
   await saveState();
   toast(t('saved'));
+  trackEvent('api_result_apply_one',{match_key:key});
   await runResultSyncCompare();
 }
 async function applyAllApiResults(){
@@ -2830,6 +2904,7 @@ async function applyAllApiResults(){
   await upsertNormalizedResults(normRows);
   await saveState();
   toast(t('saved'));
+  trackEvent('api_result_apply_all',{count:rows.length});
   await runResultSyncCompare();
 }
 function viewSyncResults(){
@@ -2903,6 +2978,7 @@ function runScenarioLab(){
     <h3 style="margin-top:10px">🚀 ${esc(tl('Rank movement','حركة الترتيب'))}</h3>${movers.map(x=>`<div class="mover-row"><div class="who">${playerAvatar(x.name,'sm')}<span>${esc(x.name)}</span></div><div class="change ${x.deltaRank>0?'up':'down'}">${x.deltaRank>0?'▲':'▼'}${Math.abs(x.deltaRank)} · #${x.rank}</div></div>`).join('')||`<div class="sub">${esc(t('none'))}</div>`}
   </div>`;
   $('labOut').innerHTML=out;
+  trackEvent('scenario_lab_run',{match_key:key});
 }
 function listBackups(){
   const arr=[];
@@ -2917,6 +2993,7 @@ function listBackups(){
 function createManualBackup(){
   const key='wc2026_manual_backup_'+Date.now();
   localStorage.setItem(key,JSON.stringify(APP.data));
+  trackEvent('backup_create');
   toast(t('saved')); render();
 }
 function backupName(b){ return new Date(b.ts).toLocaleString(); }
@@ -2983,7 +3060,8 @@ function healthShapeReport(){
     {label:'Online',value:navigator.onLine?'YES':'NO'},
     {label:'PWA mode',value:isStandalonePWA()?'Installed':'Browser'},
     {label:'Results storage',value:(APP._resultsTableStatus&&APP._resultsTableStatus.ok)?'normalized table':'JSON fallback'},
-    {label:'Normalized rows',value:(APP._resultsTableStatus&&APP._resultsTableStatus.rows)!=null?APP._resultsTableStatus.rows:'—'}
+    {label:'Normalized rows',value:(APP._resultsTableStatus&&APP._resultsTableStatus.rows)!=null?APP._resultsTableStatus.rows:'—'},
+    {label:'Analytics',value:analyticsEnabled()?'GA4 enabled':'Disabled / missing ID'}
   ];
 }
 function viewHealth(){
@@ -3130,15 +3208,16 @@ function tryAdmin(){
     sessionStorage.setItem(ADMIN_FLAG,'1');
     closeSheet();
     toast(t('admin'));
+    trackEvent('admin_login_success');
     render();
   }else{
     toast(t('wrongPw'));
   }
 }
-function logoutAdmin(){ APP.isAdmin=false; sessionStorage.removeItem(ADMIN_FLAG); render(); }
+function logoutAdmin(){ APP.isAdmin=false; sessionStorage.removeItem(ADMIN_FLAG); trackEvent('admin_logout'); render(); }
 
 /* ================= language ================= */
-function toggleLang(){ LANG=LANG==='ar'?'en':'ar'; localStorage.setItem('wc_lang',LANG); render(); }
+function toggleLang(){ LANG=LANG==='ar'?'en':'ar'; localStorage.setItem('wc_lang',LANG); trackEvent('language_change',{language:LANG}); render(); }
 
 /* ================= schedule loaders ================= */
 async function loadToday(){
@@ -3261,6 +3340,8 @@ async function boot(){
   await loadState();
   APP._schedule=(Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule();
   render();
+  loadAnalytics();
+  trackEvent('app_open',{view:APP.view||'dashboard'});
   registerPWA();
   updateInstallUI();
   loadToday();
