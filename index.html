@@ -14,7 +14,7 @@
   --ink:#0c1512; --paper:#f6f8f7; --card:#ffffff; --muted:#5f7068;
   --soft:#eef2f0; --border:#dde6e2; --bad:#e2574c; --good:#19a96b; --warn:#e8a23b;
   --r:16px; --r-sm:10px; --shadow:0 2px 10px rgba(10,31,23,.08); --shadow-lg:0 8px 30px rgba(10,31,23,.16);
-  --tap:46px; --maxw:560px;
+  --tap:46px; --maxw:1180px;
   --sans:"Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,"Noto Sans Arabic",sans-serif;
   --num:"SF Mono",ui-monospace,"Roboto Mono",Menlo,Consolas,monospace;
 }
@@ -32,7 +32,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 a{color:var(--grass-d);text-decoration:none}
 h1,h2,h3,h4{margin:0;line-height:1.2}
 .hide{display:none!important}
-.wrap{max-width:var(--maxw);margin:0 auto;padding:0 14px}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 16px}
 
 /* Top bar */
 .topbar{
@@ -115,7 +115,7 @@ h1,h2,h3,h4{margin:0;line-height:1.2}
 /* More menu sheet */
 .sheet-bg{position:fixed;inset:0;background:rgba(8,18,14,.5);z-index:60;display:none;align-items:flex-end}
 .sheet-bg.open{display:flex}
-.sheet{background:#fff;width:100%;max-width:var(--maxw);margin:0 auto;border-radius:18px 18px 0 0;padding:8px 14px calc(18px + env(safe-area-inset-bottom));max-height:84vh;overflow:auto;animation:up .22s ease}
+.sheet{background:#fff;width:100%;max-width:min(var(--maxw),760px);margin:0 auto;border-radius:18px 18px 0 0;padding:8px 14px calc(18px + env(safe-area-inset-bottom));max-height:84vh;overflow:auto;animation:up .22s ease}
 @keyframes up{from{transform:translateY(30px);opacity:.6}to{transform:translateY(0);opacity:1}}
 .sheet .grab{width:40px;height:4px;border-radius:9px;background:#d6ded9;margin:8px auto 12px}
 .menu-item{display:flex;align-items:center;gap:12px;padding:13px 8px;border-radius:12px;font-weight:600;border-bottom:1px solid var(--soft)}
@@ -199,6 +199,132 @@ details.acc .body{padding:0 12px 12px}
 [dir="rtl"] .gtable tr.q1 td:first-child{box-shadow:inset -3px 0 0 var(--grass)}
 
 @media(min-width:600px){ body{font-size:15.5px} .g3{grid-template-columns:repeat(3,1fr)} }
+
+/* ===== Wide desktop/tablet layout ===== */
+@media(min-width:900px){
+  body{padding-bottom:24px;background:linear-gradient(180deg,#f6f8f7 0,#eef3f0 100%)}
+  .wrap{padding-left:24px;padding-right:24px}
+  .topbar{padding-left:24px;padding-right:24px}
+  .topbar .brand{font-size:18px}
+  .phase{border-radius:0 0 18px 18px;margin-bottom:8px}
+  #view{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;align-items:start;padding-top:8px}
+  #view>.card{grid-column:span 6;margin:0}
+  #view>.card:first-child{grid-column:1/-1}
+  #view>details.acc{grid-column:span 6;margin:0}
+  .card{padding:18px;border-radius:18px}
+  .card h3{font-size:16px}
+  .grid.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .botnav{left:50%;right:auto;bottom:14px;transform:translateX(-50%);width:min(760px,calc(100% - 32px));border:1px solid var(--border);border-radius:22px;padding:8px;box-shadow:var(--shadow-lg)}
+  .botnav button{font-size:11.5px}
+  .sheet-bg{align-items:center;justify-content:center}
+  .sheet{border-radius:22px;max-height:82vh;padding-bottom:18px}
+  .match{padding:13px}
+  .teams .sc{font-size:22px}
+}
+
+@media(min-width:1180px){
+  :root{--maxw:1280px}
+  #view>.card{grid-column:span 4}
+  #view>.card:first-child{grid-column:1/-1}
+  #view>details.acc{grid-column:span 4}
+  /* Larger detail-heavy pages still get readable cards */
+  .gtable{font-size:13.5px}
+}
+
+@media(min-width:900px){
+  /* Views with many sections breathe better in two/three columns; full-width table-like cards remain readable */
+  #view>.card:has(table.gtable){grid-column:span 6}
+  #view>.card:has(.bracket){grid-column:1/-1}
+  #view>.card:has(textarea){grid-column:span 6}
+}
+
+
+
+/* ===== v9 premium visual redesign override ===== */
+:root{
+  --pitch:#071510; --pitch2:#0d2b20; --line:#1f5f48;
+  --grass:#22c77a; --grass-d:#0b8f59;
+  --gold:#f7c948; --gold-d:#9b7412;
+  --ink:#102019; --paper:#f3f7f4; --card:#ffffff; --muted:#66766f;
+  --soft:#f0f5f2; --border:#dbe8e1;
+  --r:22px; --r-sm:16px; --shadow:0 8px 24px rgba(7,21,16,.08); --shadow-lg:0 18px 55px rgba(7,21,16,.20);
+  --maxw:1220px;
+}
+body{
+  background:
+    radial-gradient(circle at 15% -10%, rgba(34,199,122,.18), transparent 34%),
+    radial-gradient(circle at 95% 0%, rgba(247,201,72,.14), transparent 32%),
+    linear-gradient(180deg,#f7faf8 0%,#eef5f1 100%);
+}
+.wrap{max-width:var(--maxw);padding-left:clamp(14px,3vw,28px);padding-right:clamp(14px,3vw,28px)}
+.topbar{
+  background:linear-gradient(135deg,#071510 0%,#0e3124 100%);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  box-shadow:0 10px 36px rgba(7,21,16,.28);
+}
+.topbar .brand{font-size:18px}.topbar .brand .dot{background:var(--gold);box-shadow:0 0 0 5px rgba(247,201,72,.22)}
+.phase{
+  max-width:var(--maxw);margin:10px auto 0;border-radius:999px;background:rgba(7,21,16,.90);
+  box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.09);width:calc(100% - 28px);
+}
+.card{
+  border-color:rgba(16,32,25,.08);
+  border-radius:24px;
+  box-shadow:var(--shadow);
+  padding:18px;
+  background:rgba(255,255,255,.88);
+  backdrop-filter:saturate(140%) blur(8px);
+}
+.card h3{font-size:17px;margin-bottom:12px}.sub{color:#6b7b74}.stat{background:linear-gradient(180deg,#f6faf8,#edf5f1);border:1px solid rgba(16,32,25,.05);border-radius:18px}.stat .v{font-size:26px}.stat.gold{background:linear-gradient(145deg,#fff8dc,#ffeaa0)}
+.lb-row,.match,details.acc{border-color:rgba(16,32,25,.08);box-shadow:0 4px 14px rgba(7,21,16,.04)}
+.lb-row{border-radius:18px;padding:13px 14px}.lb-row.r1{background:linear-gradient(135deg,#fff9de,#fffef7);box-shadow:0 8px 24px rgba(247,201,72,.12)}
+.btn{border-radius:16px;box-shadow:0 8px 18px rgba(34,199,122,.18)}.btn.ghost{box-shadow:none;border:1px solid rgba(16,32,25,.06)}.btn.gold{box-shadow:0 8px 18px rgba(247,201,72,.20)}
+.chip{border:1px solid rgba(16,32,25,.06)}.chip.on{background:linear-gradient(135deg,var(--grass),#9ff1c7)}
+.match{border-radius:18px;background:#fff}.teams .sc{background:#f0f6f2;border:1px solid #e0ebe5}.edge{background:linear-gradient(180deg,#f4faf7,#eef5f1);border:1px solid rgba(16,32,25,.05)}
+.botnav{box-shadow:0 -12px 35px rgba(7,21,16,.10)}
+
+@media(min-width:860px){
+  body{padding-bottom:24px}.topbar{padding-left:clamp(24px,4vw,56px);padding-right:clamp(24px,4vw,56px)}
+  .botnav{left:50%;right:auto;bottom:18px;transform:translateX(-50%);max-width:760px;border-radius:999px;border:1px solid rgba(16,32,25,.08);padding:8px 10px;box-shadow:0 16px 48px rgba(7,21,16,.14)}
+  .botnav button{padding:8px 14px;flex-direction:row;font-size:12px}.botnav button .ic{font-size:18px}
+  main#view{padding-top:16px;padding-bottom:92px}
+  body[data-view="dashboard"] main#view{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;align-items:start}
+  body[data-view="dashboard"] main#view>.card{margin:0;grid-column:span 6}
+  body[data-view="dashboard"] main#view>.card:first-child{grid-column:span 12;background:linear-gradient(135deg,#ffffff 0%,#f3fbf6 58%,#fff8de 100%)}
+  body[data-view="dashboard"] main#view>.card:nth-child(2),body[data-view="dashboard"] main#view>.card:nth-child(3){grid-column:span 6}
+  body[data-view="dashboard"] main#view>.card:nth-child(4){grid-column:span 5}
+  body[data-view="dashboard"] main#view>.card:nth-child(5){grid-column:span 7}
+  body[data-view="dashboard"] main#view>.card:nth-child(6),body[data-view="dashboard"] main#view>.card:nth-child(7){grid-column:span 6}
+  body[data-view="leaderboard"] main#view,body[data-view="groups"] main#view,body[data-view="matches"] main#view,body[data-view="predictions"] main#view,body[data-view="consensus"] main#view,body[data-view="audit"] main#view,body[data-view="repair"] main#view,body[data-view="settings"] main#view{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px;align-items:start}
+  body[data-view="leaderboard"] main#view>.card,body[data-view="matches"] main#view>.card:first-child,body[data-view="predictions"] main#view>.card:first-child,body[data-view="consensus"] main#view>.card:first-child,body[data-view="audit"] main#view>.card:first-child,body[data-view="repair"] main#view>.card:first-child,body[data-view="settings"] main#view>.card:first-child{grid-column:1/-1}
+  body[data-view="groups"] main#view>.card,body[data-view="matches"] main#view>details.acc,body[data-view="predictions"] main#view>details.acc,body[data-view="consensus"] main#view>.card{grid-column:span 6;margin:0}
+  body[data-view="groups"] main#view>.card:first-child{grid-column:1/-1}
+  body[data-view="audit"] main#view>.card:not(:first-child),body[data-view="repair"] main#view>.card:not(:first-child),body[data-view="settings"] main#view>.card:not(:first-child){grid-column:span 6;margin:0}
+  .g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(min-width:1180px){
+  body[data-view="groups"] main#view>.card,body[data-view="consensus"] main#view>.card{grid-column:span 4}
+  body[data-view="groups"] main#view>.card:first-child,body[data-view="consensus"] main#view>.card:first-child{grid-column:1/-1}
+}
+@media(max-width:859px){
+  .topbar{border-radius:0 0 18px 18px}.phase{margin-top:8px;width:calc(100% - 20px)}.card{padding:15px;margin:12px 0;border-radius:20px}.stat .v{font-size:22px}
+}
+
+/* ===== v10 engagement widgets ===== */
+.insight{border-radius:18px;background:linear-gradient(180deg,#ffffff,#f5fbf7);border:1px solid rgba(16,32,25,.08);padding:12px;margin:10px 0}
+.insight .title{font-weight:900;font-size:13px;color:var(--pitch);display:flex;align-items:center;gap:7px;margin-bottom:7px}
+.impact-grid{display:grid;grid-template-columns:1fr;gap:10px}
+.impact-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.impact-pill{font-size:12px;font-weight:800;border-radius:999px;padding:5px 9px;background:var(--soft);color:var(--ink)}
+.impact-pill.good{background:#e5faef;color:#087343}.impact-pill.bad{background:#fdeceb;color:#b53a2e}.impact-pill.gold{background:#fff2bf;color:#80600b}
+.vsbox{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center}
+.vsbox select{min-width:0}.vs-mid{font-weight:900;color:var(--muted);text-align:center}
+.delta-card{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.delta-card .side{border:1px solid var(--border);border-radius:14px;padding:10px;background:#fff}
+.delta-card .side b{display:block;font-size:16px;margin-bottom:3px}
+@media(min-width:860px){.impact-grid{grid-template-columns:1fr 1fr}.delta-card{grid-template-columns:1fr 1fr}}
+
 </style>
 </head>
 <body>
@@ -314,7 +440,7 @@ const I18N={
     exportAudit:"Export audit", exportBackup:"Export backup", restore:"Restore from backup",
     activityLog:"Activity log", deadline:"Prediction deadline", locked:"Predictions locked", unlocked:"Predictions open", unlock:"Unlock",
     ai_q:"Ask about predictions, points, results…", ai_text:"Q&A", ai_write:"Writing",
-    ai_examples:["Who is leading?","What's the prize pool?","Who hasn't paid?","Match summary"],
+    ai_examples:["Who is leading?","Who is projected winner?","Who gained points?","Match summary"],
     mode:"Mode", from_appdata:"app data", from_calc:"calculated results", from_api:"schedule API", from_admin:"admin data",
     answerFrom:"Answer based on", adminOnly:"Admin only", pwPrompt:"Enter admin password", wrongPw:"Wrong password",
     logout:"Log out admin", consensusNote:"All four positions shown.", noData:"Nothing here yet."
@@ -360,7 +486,7 @@ const I18N={
     exportAudit:"تصدير التدقيق", exportBackup:"تصدير نسخة احتياطية", restore:"استعادة من نسخة",
     activityLog:"سجل النشاط", deadline:"موعد إقفال التوقعات", locked:"التوقعات مقفلة", unlocked:"التوقعات مفتوحة", unlock:"فتح",
     ai_q:"اسأل عن التوقعات، النقاط، النتائج…", ai_text:"سؤال وجواب", ai_write:"كتابة",
-    ai_examples:["من المتصدر؟","كم مجموع الجوائز؟","من لم يدفع؟","ملخص المباريات"],
+    ai_examples:["من المتصدر؟","من الفائز المتوقع؟","من كسب نقاط؟","ملخص المباريات"],
     mode:"الوضع", from_appdata:"بيانات التطبيق", from_calc:"نتائج محسوبة", from_api:"جدول الـAPI", from_admin:"بيانات المشرف",
     answerFrom:"الإجابة مبنية على", adminOnly:"للمشرف فقط", pwPrompt:"أدخل كلمة مرور المشرف", wrongPw:"كلمة مرور خاطئة",
     logout:"خروج المشرف", consensusNote:"تُعرض المراكز الأربعة كاملة.", noData:"لا توجد بيانات بعد."
@@ -396,7 +522,7 @@ function asArrayPayload(json){
 function defaultData(){
   return { players:{}, groupResults:{}, knockoutResults:{}, knockoutMatches:{}, champion:null,
     settings:{ entryFeeAED:200, currency:"AED", distribution:"winnerTakesAll", deadline:null, locked:false },
-    auditLog:[], resultMeta:{} };
+    auditLog:[], resultMeta:{}, scheduleMatches:[] };
 }
 function ensureShape(d){
   const def=defaultData();
@@ -697,21 +823,23 @@ function prizeSplit(){
 
 /* ================= schedule ================= */
 function buildLocalSchedule(){ // synthesize from GROUPS so All-Matches always has data
-  const out=[]; const start=new Date(WC_START);
+  const out=[]; const start=new Date(WC_START+'T00:00:00Z');
   let day=0;
   GROUP_KEYS.forEach((g)=>{ for(let i=0;i<6;i++){
     const [h,a]=matchTeams(g,i);
-    const d=new Date(start); d.setDate(start.getDate()+Math.floor(day/4));
+    const d=new Date(start); d.setUTCDate(start.getUTCDate()+Math.floor(day/4));
     out.push({key:matchKey(g,i),group:g,idx:i,home:h,away:a,date:d.toISOString().slice(0,10),phase:'group'});
     day++;
   }});
   return out;
 }
-function dateRange(a,b){ const out=[],d=new Date(a),end=new Date(b);
-  while(d<=end){ out.push(d.toISOString().slice(0,10)); d.setDate(d.getDate()+1);} return out; }
-function uaeToday(){ // UAE = UTC+4, no DST
-  const n=new Date(); const u=new Date(n.getTime()+ (4*60 - n.getTimezoneOffset())*60000);
-  return u.toISOString().slice(0,10);
+function dateRange(a,b){ const out=[],d=new Date(a+'T00:00:00Z'),end=new Date(b+'T00:00:00Z');
+  while(d<=end){ out.push(d.toISOString().slice(0,10)); d.setUTCDate(d.getUTCDate()+1);} return out; }
+function uaeToday(){ // UAE = UTC+4, no DST. Works correctly even when user's device is already in UAE timezone.
+  const n=new Date();
+  const utcMs=n.getTime() + n.getTimezoneOffset()*60000;
+  const uaeMs=utcMs + 4*60*60000;
+  return new Date(uaeMs).toISOString().slice(0,10);
 }
 async function fetchDay(date){
   try{
@@ -890,6 +1018,7 @@ function applyDir(){ document.documentElement.lang=LANG; document.documentElemen
 
 function render(){
   applyDir();
+  document.body.dataset.view=APP.view||'dashboard';
   renderNav();
 
   // First render happens before Supabase finishes loading.
@@ -960,19 +1089,26 @@ function mvArrow(m){ const sym=m.dir==='up'?'▲'+m.delta:m.dir==='dn'?'▼'+m.d
 
 /* ================= DASHBOARD ================= */
 function viewDashboard(){
-  const lb=buildLeaderboard(), pc=paidCounts(), pool=prizePool();
+  const lb=buildLeaderboard();
   const leader=lb[0];
   const champCons=consensusCount(p=>p.champion);
   const todayList=APP._today||[];
   const winners=topGroupWinnerPicks();
+  const latest=latestCompletedMatch();
+  const upcoming=(todayList.filter(m=>m.group&&m.idx!=null&&!matchResult(m.group,m.idx).complete).length?todayList.filter(m=>m.group&&m.idx!=null&&!matchResult(m.group,m.idx).complete):upcomingGroupMatches(3));
   return `
   <div class="card">
     <div class="between"><h3>📊 ${esc(t('v_dashboard'))}</h3><span class="chip on">${esc(t(currentPhase()))}</span></div>
     <div class="grid g2" style="margin-top:10px">
       ${statTile(playerNames().length,t('players'))}
-      ${statTile(fmtAED(pool),t('prizePool'),true)}
-      ${statTile(fmtAED(APP.data.settings.entryFeeAED),t('entryFee'))}
+      ${statTile(leader?leader.name:t('none'),t('projWinner'),true)}
+      ${statTile(leader?leader.total+' '+t('pts'):'—',t('points'))}
       ${statTile(completedMatchCount()+'/72',t('completedMatches'))}
+    </div>
+    <div class="impact-list" style="margin-top:12px">
+      <button class="btn ghost sm" onclick="shareLeaderboard()">${esc(t('share'))} ${esc(t('v_leaderboard'))}</button>
+      <button class="btn ghost sm" onclick="shareTodayImpact()">${esc(tl('Share impact','مشاركة التأثير'))}</button>
+      <button class="btn gold sm" onclick="go('ai')">🤖 ${esc(t('v_ai'))}</button>
     </div>
   </div>
 
@@ -980,18 +1116,24 @@ function viewDashboard(){
     <h3>🏆 ${esc(t('leader'))}</h3>
     ${leader?`<div class="lb-row r1"><span class="rank num">1</span><span class="nm">${esc(leader.name)}</span><span class="pts num">${leader.total} ${esc(t('pts'))}</span></div>`:`<div class="sub">${esc(t('noLeader'))}</div>`}
     <div class="sub" style="margin:10px 0 4px">${esc(t('top3'))}</div>
-    ${lb.slice(0,3).map(r=>`<div class="lb-row ${r.rank===1?'r1':''}"><span class="rank num">${r.rank}</span><span class="nm">${esc(r.name)}</span><span class="pts num">${r.total}</span></div>`).join('')||`<div class="sub">${esc(t('noData'))}</div>`}
+    ${lb.slice(0,3).map(r=>`<div class="lb-row ${r.rank===1?'r1':''}"><span class="rank num">${r.rank}</span>${mvArrow(rankMovement(r.name))}<span class="nm">${esc(r.name)}</span><span class="pts num">${r.total}</span></div>`).join('')||`<div class="sub">${esc(t('noData'))}</div>`}
     <button class="btn ghost sm" style="margin-top:10px" onclick="go('leaderboard')">${esc(t('v_leaderboard'))} →</button>
   </div>
 
   <div class="card">
-    <h3>💰 ${esc(t('prizePool'))}</h3>
-    <div class="grid g3">
-      ${statTile(fmtAED(pool),t('prizePool'),true)}
-      ${statTile(pc.paid,t('paid'))}
-      ${APP.isAdmin?statTile(pc.unpaid,t('unpaid')):statTile('—',t('unpaid'))}
-    </div>
-    ${leader?`<div class="edge" style="margin-top:10px">🎯 ${esc(t('projWinner'))}: <b>${esc(prizeSplit().map(p=>p.name+' ('+fmtAED(p.amount)+')').join(', ')||'—')}</b></div>`:''}
+    <h3>⚡ ${esc(tl('What can change next','ما الذي قد يغيّر الترتيب؟'))}</h3>
+    ${renderWhatCanChange(upcoming.slice(0,3))}
+    <button class="btn ghost sm" style="margin-top:8px" onclick="shareTodayImpact()">${esc(t('copy'))}</button>
+  </div>
+
+  <div class="card">
+    <h3>🔥 ${esc(t('matchImpact'))}</h3>
+    ${latest?renderMiniImpact(latest.group,latest.idx):`<div class="sub">${esc(t('noData'))}</div>`}
+  </div>
+
+  <div class="card">
+    <h3>🥊 ${esc(tl('Player rivalry','مقارنة لاعبين'))}</h3>
+    ${renderRivalryCard()}
   </div>
 
   <div class="card">
@@ -1052,6 +1194,95 @@ function consensusCount(getter){ const c={};
   return Object.entries(c).map(([key,count])=>({key,count})).sort((a,b)=>b.count-a.count);
 }
 
+function tl(en,ar){ return LANG==='ar'?ar:en; }
+function completedMatchesList(){
+  const out=[];
+  for(const g of GROUP_KEYS){
+    for(let i=0;i<6;i++){
+      const r=matchResult(g,i);
+      if(r.complete) out.push({group:g,idx:i,key:matchKey(g,i),home:r.home,away:r.away,hs:r.hs,as:r.as,winner:r.winner,outcome:r.outcome,date:(buildLocalSchedule().find(m=>m.key===matchKey(g,i))||{}).date});
+    }
+  }
+  return out;
+}
+function latestCompletedMatch(){ const arr=completedMatchesList(); return arr[arr.length-1]||null; }
+function matchImpactData(group,idx){
+  const a=auditMatch(group,idx), r=a.match;
+  const right=a.rows.filter(x=>x.got>0);
+  const missed=a.rows.filter(x=>x.got===0);
+  const byEdge={};
+  a.rows.forEach(x=>{ const k=x.edge&&x.edge.status==='ok'?canonTeam(x.edge.edge):tl('No edge','لا أفضلية'); (byEdge[k]=byEdge[k]||[]).push(x.name); });
+  return {match:r, right, missed, byEdge, rows:a.rows};
+}
+function renderMiniImpact(group,idx){
+  if(group==null||idx==null) return `<div class="sub">${esc(t('noData'))}</div>`;
+  const d=matchImpactData(group,idx), r=d.match;
+  const score=r.complete?`${r.hs}-${r.as}`:'vs';
+  return `<div class="insight"><div class="title">🔥 ${esc(tl('Latest match impact','تأثير آخر مباراة'))}</div>
+    <div class="teams"><span>${esc(canonTeam(r.home))}</span><span class="sc num">${score}</span><span>${esc(canonTeam(r.away))}</span></div>
+    <div class="impact-list">
+      <span class="impact-pill good">${esc(t('gotRight'))}: ${d.right.length}</span>
+      <span class="impact-pill bad">${esc(t('gotWrong'))}: ${d.missed.length}</span>
+      <span class="impact-pill gold">+${SCORING.edgeCorrect} ${esc(t('pts'))}</span>
+    </div>
+    ${d.right.length?`<div class="sub" style="margin-top:8px">${esc(t('gotRight'))}: ${esc(d.right.slice(0,8).map(x=>x.name).join(', '))}${d.right.length>8?'…':''}</div>`:''}
+    <button class="btn ghost sm" style="margin-top:8px" onclick="openMatchImpact('${group}',${idx})">${esc(t('matchImpact'))}</button>
+  </div>`;
+}
+function upcomingGroupMatches(limit){
+  const sched=(Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule();
+  return sched.filter(m=>m.group&&m.idx!=null&&!matchResult(m.group,m.idx).complete).slice(0,limit||6);
+}
+function renderWhatCanChange(matches){
+  matches=matches||upcomingGroupMatches(3);
+  if(!matches.length) return `<div class="sub">${esc(t('noData'))}</div>`;
+  return matches.map(m=>{
+    const a=auditMatch(m.group,m.idx);
+    const home=[],away=[],none=[];
+    a.rows.forEach(x=>{
+      if(x.edge.status==='ok'&&sameTeam(x.edge.edge,m.home)) home.push(x.name);
+      else if(x.edge.status==='ok'&&sameTeam(x.edge.edge,m.away)) away.push(x.name);
+      else none.push(x.name);
+    });
+    return `<div class="insight"><div class="title">⚡ ${esc(canonTeam(m.home))} vs ${esc(canonTeam(m.away))}</div>
+      <div class="impact-list">
+        <span class="impact-pill good">${esc(canonTeam(m.home))}: ${home.length}</span>
+        <span class="impact-pill gold">${esc(canonTeam(m.away))}: ${away.length}</span>
+        <span class="impact-pill">${esc(t('noPred'))}: ${none.length}</span>
+      </div>
+      <div class="sub" style="margin-top:8px">${esc(tl('If this team wins, these players gain group-match points.','إذا فاز هذا الفريق، اللاعبون الذين اختاروا الأفضلية سيكسبون نقاط المباراة.'))}</div>
+    </div>`;
+  }).join('');
+}
+function renderRivalryCard(){
+  const names=playerNames();
+  if(names.length<2) return `<div class="sub">${esc(t('noData'))}</div>`;
+  const a=APP.sel.rivalA||names[0], b=APP.sel.rivalB||names.find(n=>n!==a)||names[0];
+  const ca=calcPlayerPoints(getPlayer(a),APP.data.groupResults,APP.data.knockoutResults,APP.data.champion);
+  const cb=calcPlayerPoints(getPlayer(b),APP.data.groupResults,APP.data.knockoutResults,APP.data.champion);
+  const diffs=[];
+  GROUP_KEYS.forEach(g=>{
+    const pa=playerGroupPred(getPlayer(a),g), pb=playerGroupPred(getPlayer(b),g);
+    if(JSON.stringify(pa)!==JSON.stringify(pb)) diffs.push(`Group ${g}: ${a} ${pa[0]||'—'} / ${b} ${pb[0]||'—'}`);
+  });
+  const caName=getPlayer(a)?.champion||'—', cbName=getPlayer(b)?.champion||'—';
+  return `<div class="vsbox"><select onchange="APP.sel.rivalA=this.value;render()">${names.map(n=>`<option ${n===a?'selected':''}>${esc(n)}</option>`).join('')}</select><div class="vs-mid">VS</div><select onchange="APP.sel.rivalB=this.value;render()">${names.map(n=>`<option ${n===b?'selected':''}>${esc(n)}</option>`).join('')}</select></div>
+    <div class="delta-card"><div class="side"><b>${esc(a)}</b><span class="num">${ca.total} ${esc(t('pts'))}</span><div class="sub">👑 ${esc(canonTeam(caName))}</div></div><div class="side"><b>${esc(b)}</b><span class="num">${cb.total} ${esc(t('pts'))}</span><div class="sub">👑 ${esc(canonTeam(cbName))}</div></div></div>
+    <details class="acc" style="margin-top:10px"><summary>${esc(tl('Different predictions','اختلافات التوقعات'))}<span class="sub">${diffs.length}</span></summary><div class="body">${diffs.slice(0,12).map(x=>`<div class="sub" style="padding:4px 0">${esc(x)}</div>`).join('')||`<div class="sub">${esc(t('none'))}</div>`}</div></details>`;
+}
+function buildTodayImpactText(){
+  const ms=(APP._today&&APP._today.length?APP._today:upcomingGroupMatches(3)).filter(m=>m.group&&m.idx!=null);
+  if(!ms.length) return LANG==='ar'?'لا توجد مباريات مؤثرة اليوم.':'No impactful matches today.';
+  const lines=[LANG==='ar'?'⚡ مباريات ممكن تغيّر الترتيب':'⚡ Matches that can change the table'];
+  ms.slice(0,4).forEach(m=>{
+    const a=auditMatch(m.group,m.idx); let h=0,aw=0;
+    a.rows.forEach(x=>{ if(x.edge.status==='ok'&&sameTeam(x.edge.edge,m.home)) h++; if(x.edge.status==='ok'&&sameTeam(x.edge.edge,m.away)) aw++; });
+    lines.push(`${canonTeam(m.home)} vs ${canonTeam(m.away)} — ${canonTeam(m.home)}: ${h}, ${canonTeam(m.away)}: ${aw}`);
+  });
+  return lines.join('\n');
+}
+function shareTodayImpact(){ copyText(buildTodayImpactText()); }
+
 /* ================= LEADERBOARD ================= */
 function viewLeaderboard(){
   const lb=buildLeaderboard();
@@ -1060,7 +1291,7 @@ function viewLeaderboard(){
     ${lb.map(r=>{ const m=rankMovement(r.name);
       return `<div class="lb-row ${r.rank===1?'r1':''}" onclick="openPlayer('${esc(r.name).replace(/'/g,'')}')">
         <span class="rank num">${r.rank}</span>${mvArrow(m)}
-        <span class="nm">${esc(r.name)} ${r.paid?'':'<span class="tag unpaid">'+esc(t('unpaid'))+'</span>'}</span>
+        <span class="nm">${esc(r.name)}</span>
         <span class="pts num">${r.total}</span></div>`; }).join('')||`<div class="sub">${esc(t('noData'))}</div>`}
     <div class="sub" style="margin-top:8px">${esc(t('breakdown'))}: ${esc(t('groupMatchPts'))} · ${esc(t('groupRankPts'))} · ${esc(t('koPts'))} · ${esc(t('champPts'))}</div>
   </div>`;
@@ -1070,7 +1301,9 @@ function openPlayer(name){ APP.sel.player=name; go('player'); }
 /* ================= TODAY / ALL MATCHES ================= */
 function viewToday(){
   const list=APP._today||[];
-  return `<div class="card"><h3>📅 ${esc(t('v_today'))} <span class="sub">(${esc(uaeToday())} UAE)</span></h3>
+  const impactList=list.filter(m=>m.group&&m.idx!=null&&!matchResult(m.group,m.idx).complete);
+  return `<div class="card"><div class="between"><h3>📅 ${esc(t('v_today'))} <span class="sub">(${esc(uaeToday())} UAE)</span></h3><button class="btn ghost sm" onclick="shareTodayImpact()">${esc(t('share'))}</button></div>
+    ${impactList.length?`<div class="insight"><div class="title">⚡ ${esc(tl('What can change today','ما الذي قد يتغير اليوم؟'))}</div>${renderWhatCanChange(impactList)}</div>`:''}
     ${APP._todayLoading?stateLoading():(list.length?list.map(fullMatchCard).join(''):`<div class="state">${esc(t('noToday'))}</div>`)}
   </div>`;
 }
@@ -1347,23 +1580,13 @@ async function confirmRepair(name,group){ if(applyRepairMissingTeam(name,group))
 
 /* ================= SETTINGS (admin) ================= */
 function viewSettings(){
-  const s=APP.data.settings; const pc=paidCounts();
+  const s=APP.data.settings;
   return `<div class="card"><h3>⚙️ ${esc(t('v_settings'))}</h3>
-    <div class="field"><label>${esc(t('entryFee'))} (AED)</label><input id="setFee" class="num" value="${s.entryFeeAED}"/></div>
-    <div class="field"><label>${esc(t('distribution'))}</label>
-      <select id="setDist">${['winnerTakesAll','split2','split3','custom'].map(o=>`<option value="${o}" ${s.distribution===o?'selected':''}>${esc(t(o))}</option>`).join('')}</select></div>
+    <div class="sub" style="margin-bottom:10px">${esc(tl('Winner-based competition. No money/prize amounts are shown.','المسابقة مبنية على الفائز فقط، بدون عرض مبالغ أو جوائز مالية.'))}</div>
     <div class="field"><label>${esc(t('deadline'))}</label><input id="setDeadline" type="datetime-local" value="${s.deadline||''}"/></div>
     <div class="between"><span>${esc(s.locked?t('locked'):t('unlocked'))}</span>
       <button class="btn sm ${s.locked?'gold':'ghost'}" onclick="toggleLock()">${esc(s.locked?t('unlock'):t('locked'))}</button></div>
     <button class="btn" style="margin-top:10px" onclick="saveSettings()">${esc(t('save'))}</button>
-  </div>
-  <div class="card"><h3>💰 ${esc(t('paidStatus'))}</h3>
-    ${playerNames().map(n=>{ const p=getPlayer(n);
-      return `<div class="between" style="padding:8px 0;border-bottom:1px solid var(--soft)">
-        <span>${esc(n)} <span class="tag ${p.paid?'paid':'unpaid'}">${esc(p.paid?t('paid'):t('unpaid'))}</span></span>
-        <button class="btn sm ${p.paid?'ghost':'gold'}" onclick="togglePaid('${esc(n).replace(/'/g,'')}')">${esc(p.paid?t('markUnpaid'):t('markPaid'))}</button></div>`;
-    }).join('')}
-    <div class="sub" style="margin-top:8px">${esc(t('paid'))}: ${pc.paid} · ${esc(t('unpaid'))}: ${pc.unpaid}</div>
   </div>
   <div class="card"><h3>🌐 ${esc(t('fetchSchedule'))}</h3>
     <button class="btn ghost" onclick="doFetchSchedule()">${esc(t('fetchSchedule'))}</button>
@@ -1376,7 +1599,7 @@ function viewSettings(){
   </div>`;
 }
 async function saveSettings(){ const s=APP.data.settings; const before={...s};
-  s.entryFeeAED=Number($('setFee').value)||200; s.distribution=$('setDist').value; s.deadline=$('setDeadline').value||null;
+  s.deadline=$('setDeadline').value||null;
   logAction('settings','settings',before,s); await saveState(); toast(t('saved')); render(); }
 async function toggleLock(){ APP.data.settings.locked=!APP.data.settings.locked; logAction('lock','settings.locked',!APP.data.settings.locked,APP.data.settings.locked); await saveState(); render(); }
 async function togglePaid(n){ const p=getPlayer(n); p.paid=!p.paid; logAction('payment','players.'+n+'.paid',!p.paid,p.paid); await saveState(); render(); }
@@ -1408,15 +1631,14 @@ function buildSafeAIContext(){
   return {
     phase:t(currentPhase()),
     players:lb.map(r=>({name:r.name,rank:r.rank,total:r.total,
-      groupMatch:r.groupMatch,groupRank:r.groupRank,knockout:r.knockout,champ:r.champ,
-      paid: APP.isAdmin?r.paid:undefined})),
-    prizePool:prizePool(), entryFee:APP.data.settings.entryFeeAED, currency:APP.data.settings.currency,
-    paidCounts: APP.isAdmin?paidCounts():undefined,
+      groupMatch:r.groupMatch,groupRank:r.groupRank,knockout:r.knockout,champ:r.champ})),
     champion:APP.data.champion,
     completedMatches:completedMatchCount(),
     groupsDone:GROUP_KEYS.filter(groupComplete).length,
     today:(APP._today||[]).map(m=>({group:m.group,home:canonTeam(m.home),away:canonTeam(m.away)})),
     champConsensus:consensusCount(p=>p.champion).slice(0,5),
+    latestMatch: latestCompletedMatch(),
+    upcoming: upcomingGroupMatches(3).map(m=>({group:m.group,idx:m.idx,home:canonTeam(m.home),away:canonTeam(m.away)})),
     isAdmin:APP.isAdmin
   };
 }
@@ -1441,27 +1663,20 @@ function answerScheduleQuestion(ctx){
   if(!ctx.today.length) return t('noToday')+aiSource('from_api');
   return `📅 ${t('todayMatches')}\n`+ctx.today.map(m=>`${m.home} vs ${m.away} (${m.group})`).join('\n')+aiSource('from_api');
 }
-function answerPrizeQuestion(ctx){
-  let s=`💰 ${t('prizePool')}: ${ctx.prizePool} ${ctx.currency}\n${t('players')}: ${ctx.players.length} × ${ctx.entryFee} ${ctx.currency}`;
-  if(ctx.isAdmin&&ctx.paidCounts) s+=`\n${t('paid')}: ${ctx.paidCounts.paid} · ${t('unpaid')}: ${ctx.paidCounts.unpaid}`;
-  const split=prizeSplit().map(p=>`${p.name}: ${fmtAED(p.amount)}`).join('\n');
-  if(split) s+=`\n${t('projWinner')}:\n${split}`;
-  return s+aiSource('from_calc');
-}
-function answerPaymentQuestion(ctx){
-  if(!ctx.isAdmin) return t('adminOnly')+aiSource('from_appdata');
-  const unpaid=ctx.players.filter(p=>p.paid===false).map(p=>p.name);
-  return `${t('unpaid')} (${unpaid.length}):\n`+(unpaid.join('\n')||t('none'))+aiSource('from_admin');
+function answerWinnerQuestion(ctx){
+  if(!ctx.players.length) return t('noData')+aiSource('from_appdata');
+  const p=ctx.players[0];
+  return `🏆 ${t('projWinner')}: ${p.name} — ${p.total} ${t('pts')}`+aiSource('from_calc');
 }
 
 function answerLocalAI(question,mode,language){
   const ctx=buildSafeAIContext(); const q=(question||'').toLowerCase();
   if(mode==='write') return generateWritingResponse(ctx,question,language);
   const has=(...ws)=>ws.some(w=>q.includes(w));
-  if(has('prize','pool','جائزة','جوائز')) return answerPrizeQuestion(ctx);
-  if(has('paid','pay','unpaid','دفع','يدفع')) return answerPaymentQuestion(ctx);
+  if(has('winner','projected','فائز','الفائز')) return answerWinnerQuestion(ctx);
   if(has('lead','top','winning','first','متصدر','الأول','يتصدر')) return answerLeaderboardQuestion(ctx);
   if(has('champion','winner pick','بطل','يتوقع البطل')) return answerPredictionQuestion(ctx);
+  if(has('impact','gain','gained','change','تأثير','تغير','كسب')) return buildTodayImpactText()+aiSource('from_calc');
   if(has('today','match today','اليوم','مباريات اليوم')) return answerScheduleQuestion(ctx);
   if(ctx.players.some(p=>q.includes(p.name.toLowerCase()))) return answerPlayerPointsQuestion(ctx,question);
   if(has('point','score','نقاط','نقطة')) return answerLeaderboardQuestion(ctx);
@@ -1473,10 +1688,12 @@ function generateWritingResponse(ctx,question,language){
   const ar=language==='ar';
   const lb=ctx.players, leader=lb[0];
   const q=(question||'').toLowerCase();
-  if(q.includes('prize')||q.includes('pay')||q.includes('جائزة')||q.includes('دفع')){
+  if(q.includes('winner')||q.includes('فائز')||q.includes('الفائز')){
     return ar
-      ? `🏆 *سحب كأس العالم 2026*\nمجموع الجوائز الآن: ${ctx.prizePool} ${ctx.currency} (${lb.length} مشترك × ${ctx.entryFee}).\nالمتصدر: ${leader?leader.name:'—'}.\nذكّروا من لم يدفع رسوم الاشتراك 🙏`
-      : `🏆 *WC2026 Pick'em*\nPrize pool: ${ctx.prizePool} ${ctx.currency} (${lb.length} × ${ctx.entryFee}).\nLeader: ${leader?leader.name:'—'}.\nPlease settle the 200 AED entry fee if you haven't 🙏`;
+      ? `🏆 *توقعات كأس العالم 2026*
+الفائز المتوقع حالياً: ${leader?leader.name:'—'} (${leader?leader.total:0} نقطة).`
+      : `🏆 *WC2026 Pick'em*
+Current projected winner: ${leader?leader.name:'—'} (${leader?leader.total:0} pts).`;
   }
   // default: leaderboard / matchday update
   const top=lb.slice(0,5).map((p,i)=>`${['🥇','🥈','🥉','4️⃣','5️⃣'][i]} ${p.name} — ${p.total}`).join('\n');
@@ -1541,8 +1758,9 @@ async function loadToday(){
   const date=uaeToday();
   const ev=await fetchDay(date);
   // map API events onto local fixtures when possible; otherwise show local fixtures dated today
-  const local=buildLocalSchedule().filter(m=>m.date===date);
-  APP._today = ev.length? ev.map(e=>({group:groupFromEvent(e),home:e.strHomeTeam,away:e.strAwayTeam,date,key:null,idx:null}))
+  const schedule=(Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule();
+  const local=schedule.filter(m=>m.date===date);
+  APP._today = ev.length? ev.map(e=>({group:groupFromEvent(e),home:e.strHomeTeam,away:e.strAwayTeam,date,key:null,idx:null,source:'api'}))
     : local;
   APP._todayLoading=false; render();
 }
@@ -1553,7 +1771,7 @@ async function doFetchSchedule(){
   const ev=await fetchFullSchedule((i,n)=>{ if(i%7===0){} });
   if(ev.length){ APP._schedule=ev.map(e=>({group:groupFromEvent(e),home:e.strHomeTeam,away:e.strAwayTeam,
       date:(e.dateEvent||''),key:null,idx:null})); toast(t('saved')); }
-  else { APP._schedule=buildLocalSchedule(); toast(t('syncFail')); }
+  else { APP._schedule=(Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule(); toast(t('syncFail')); }
   APP._schedLoading=false; render();
 }
 
@@ -1564,6 +1782,7 @@ async function testApis(){
   const lines=[];
   lines.push('Origin: '+(location.origin||'null'));
   lines.push('Protocol: '+location.protocol);
+  lines.push('UAE today: '+uaeToday());
   lines.push('Sandbox/file origin: '+(isSandboxOrFile()?'YES':'NO'));
   try{
     const r=await fetchWithTimeout(API+'?id=eq.main&select=data',{headers:H},10000);
@@ -1594,7 +1813,7 @@ async function boot(){
   try{ const r=localStorage.getItem('wc2026_ranks'); if(r) APP.prevRanks=JSON.parse(r); }catch(_){}
   if(sessionStorage.getItem(ADMIN_FLAG)==='1') APP.isAdmin=true;
   await loadState();
-  APP._schedule=buildLocalSchedule();
+  APP._schedule=(Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule();
   render();
   loadToday();
 }
