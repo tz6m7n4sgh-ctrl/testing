@@ -223,7 +223,7 @@ details.acc .body{padding:0 12px 12px}
 
 /* --- Supabase (anon key is a public, RLS-protected placeholder) --- */
 const SB_URL='https://jrwkhogoewhlfrzlsmlh.supabase.co';
-const SB_KEY='MY_EXISTING_SUPABASE_ANON_KEY';
+const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impyd2tob2dvZXdobGZyemxzbWxoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNjU2MzEsImV4cCI6MjA5Njc0MTYzMX0.1TF9PSzu4t9661aDXfaqc1tZPZ5uxeAW6Q5hE2My6Qc';
 const API=SB_URL+'/rest/v1/wc2026';
 const H={apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'};
 const SPORTSDB='https://www.thesportsdb.com/api/v1/json/3/eventsday.php';
@@ -1393,7 +1393,7 @@ function askAI(q){ if(!q||!q.trim()) return;
 
 /* ================= admin auth ================= */
 function adminHash(s){ let h=0; for(let i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))>>>0; } return h.toString(16); }
-const ADMIN_HASH='6b8b4567'; // change to adminHash('yourPassword') to set a new password
+const ADMIN_HASH='13d38d1'; // hash of 'admin2026' — change via adminHash('newPassword') in console
 function openAdmin(){
   if(APP.isAdmin){ openMore(); return; }
   openSheet(`<h3 style="padding:0 8px">🔒 ${esc(t('pwPrompt'))}</h3>
