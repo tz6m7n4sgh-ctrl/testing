@@ -102,6 +102,50 @@ h1,h2,h3,h4{margin:0;line-height:1.2}
 .mv{font-family:var(--num);font-size:12px;font-weight:800;min-width:30px;text-align:center}
 .mv.up{color:var(--good)}.mv.dn{color:var(--bad)}.mv.eq{color:var(--muted)}
 
+/* Team flags + superhero avatars */
+.player-inline{display:inline-flex;align-items:center;gap:10px;min-width:0;max-width:100%}
+.player-inline .txt{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.avatar{display:inline-flex;align-items:center;justify-content:center;border-radius:50%;position:relative;flex:none;color:#fff;font-weight:900;text-transform:uppercase;box-shadow:0 8px 18px rgba(0,0,0,.14), inset 0 1px 0 rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.82);overflow:hidden}
+.avatar::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 28% 28%, rgba(255,255,255,.3), transparent 38%)}
+.avatar .hero-glyph{position:absolute;bottom:-2px;right:-2px;font-size:.72em;filter:drop-shadow(0 2px 2px rgba(0,0,0,.2))}
+.avatar .init{position:relative;z-index:1;letter-spacing:.04em}
+.avatar-sm{width:38px;height:38px;font-size:12px}
+.avatar-lg{width:72px;height:72px;font-size:22px}
+.avatar-theme-0{background:linear-gradient(135deg,#ef4444,#991b1b)}
+.avatar-theme-1{background:linear-gradient(135deg,#2563eb,#1e3a8a)}
+.avatar-theme-2{background:linear-gradient(135deg,#7c3aed,#4c1d95)}
+.avatar-theme-3{background:linear-gradient(135deg,#ea580c,#9a3412)}
+.avatar-theme-4{background:linear-gradient(135deg,#059669,#065f46)}
+.avatar-theme-5{background:linear-gradient(135deg,#db2777,#831843)}
+.avatar-theme-6{background:linear-gradient(135deg,#0891b2,#164e63)}
+.avatar-theme-7{background:linear-gradient(135deg,#ca8a04,#713f12)}
+.big-flag{font-size:1.55em;line-height:1;vertical-align:-0.12em;display:inline-block;margin-inline-end:3px;filter:drop-shadow(0 1px 1px rgba(0,0,0,.12))}
+.teams .big-flag{font-size:1.9em;vertical-align:-0.18em}
+.gtable .big-flag,.barrow .big-flag{font-size:1.45em}
+
+.pred-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:8px}
+.pred-box{background:linear-gradient(180deg,#ffffff,#f7fbf8);border:1px solid var(--border);border-radius:15px;padding:9px 8px;min-height:78px;display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center;text-align:center;box-shadow:0 3px 10px rgba(7,21,16,.04)}
+.pred-box .pred-pos{font-family:var(--num);font-size:11px;font-weight:900;color:var(--muted);background:var(--soft);border-radius:999px;padding:2px 8px}
+.pred-box .pred-team{font-weight:800;font-size:12.5px;line-height:1.25}
+.pred-box.first{border-color:rgba(247,201,72,.75);background:linear-gradient(180deg,#fff8db,#ffffff)}
+.pred-box.missing{border-style:dashed;color:var(--muted)}
+.pred-group-title{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:10px 0 6px}
+.compare-panel{display:grid;gap:10px}
+.compare-head{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center}
+.compare-player{background:linear-gradient(180deg,#fff,#f7fbf8);border:1px solid var(--border);border-radius:18px;padding:12px;display:flex;align-items:center;gap:10px;min-width:0}
+.compare-player .info{min-width:0}.compare-player .name{font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.compare-player .score{font-family:var(--num);font-weight:900;color:var(--grass-d)}
+.compare-vs{font-family:var(--num);font-weight:900;color:var(--muted);background:var(--soft);border-radius:999px;padding:7px 10px}
+.diff-card{border:1px solid var(--border);border-radius:16px;padding:11px;background:#fff}
+.diff-card.same{background:#f4fbf7}.diff-card.different{background:#fffaf0;border-color:#f1d997}
+.diff-title{font-weight:900;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.diff-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.diff-pick{background:var(--soft);border-radius:12px;padding:8px;font-size:12.5px;font-weight:700;min-height:42px}
+.diff-pick b{display:block;font-size:11px;color:var(--muted);margin-bottom:3px}
+@media(max-width:520px){.pred-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.compare-head{grid-template-columns:1fr}.compare-vs{text-align:center}.diff-row{grid-template-columns:1fr}}
+.player-head{display:flex;align-items:center;gap:14px}
+.player-meta{min-width:0;display:flex;flex-direction:column;gap:4px}
+.lb-row .nm{display:flex;align-items:center;gap:10px;min-width:0;overflow:hidden;white-space:nowrap}
+
 /* Bottom nav */
 .botnav{
   position:fixed;left:0;right:0;bottom:0;z-index:50;background:#fff;border-top:1px solid var(--border);
@@ -609,6 +653,30 @@ function canonTeam(team){
 function teamCompareKey(team){ return norm(canonTeam(team)); }
 function sameTeam(a,b){ return teamCompareKey(a)===teamCompareKey(b) && teamCompareKey(a)!==''; }
 
+const TEAM_FLAGS={
+  "Mexico":"🇲🇽","South Africa":"🇿🇦","South Korea":"🇰🇷","Korea Republic":"🇰🇷","Czechia":"🇨🇿",
+  "Canada":"🇨🇦","Switzerland":"🇨🇭","Bosnia-Herzegovina":"🇧🇦","Qatar":"🇶🇦",
+  "Brazil":"🇧🇷","Morocco":"🇲🇦","Scotland":"🏴","Haiti":"🇭🇹",
+  "Türkiye":"🇹🇷","Turkey":"🇹🇷","USA":"🇺🇸","United States":"🇺🇸","Australia":"🇦🇺","Paraguay":"🇵🇾",
+  "Germany":"🇩🇪","Ivory Coast":"🇨🇮","Ecuador":"🇪🇨","Curacao":"🇨🇼","Curaçao":"🇨🇼",
+  "Netherlands":"🇳🇱","Japan":"🇯🇵","Sweden":"🇸🇪","Tunisia":"🇹🇳",
+  "Belgium":"🇧🇪","Egypt":"🇪🇬","Iran":"🇮🇷","New Zealand":"🇳🇿",
+  "Spain":"🇪🇸","Uruguay":"🇺🇾","Saudi Arabia":"🇸🇦","Cabo Verde":"🇨🇻","Cape Verde":"🇨🇻",
+  "France":"🇫🇷","Norway":"🇳🇴","Senegal":"🇸🇳","Iraq":"🇮🇶",
+  "Argentina":"🇦🇷","Austria":"🇦🇹","Algeria":"🇩🇿","Jordan":"🇯🇴",
+  "Portugal":"🇵🇹","Colombia":"🇨🇴","DR Congo":"🇨🇩","Uzbekistan":"🇺🇿",
+  "England":"🏴","Panama":"🇵🇦","Ghana":"🇬🇭","Croatia":"🇭🇷",
+  "Honduras":"🇭🇳","Nigeria":"🇳🇬","Denmark":"🇩🇰","Costa Rica":"🇨🇷"
+};
+const HERO_GLYPHS=['🦸','⚡','🛡️','🔥','🌟','💥','🚀','🕶️'];
+function flagForTeam(team){ const c=canonTeam(team||''); return TEAM_FLAGS[c]||TEAM_FLAGS[String(team||'').trim()]||''; }
+function teamText(team, empty='—'){ if(team==null||team==='') return empty; const c=canonTeam(team); const f=flagForTeam(c); return (f?f+' ': '')+c; }
+function teamHtml(team, empty='—'){ if(team==null||team==='') return esc(empty); const c=canonTeam(team); const f=flagForTeam(c); return (f?`<span class="big-flag">${esc(f)}</span> `:'')+esc(c); }
+function playerInitials(name){ return String(name||'').trim().split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase()||'WC'; }
+function hashCode(s){ s=String(s||''); let h=0; for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0; return h>>>0; }
+function playerAvatar(name,size='sm'){ const h=hashCode(name||'player'); const theme=h%8, glyph=HERO_GLYPHS[h%HERO_GLYPHS.length], initials=playerInitials(name); return `<span class="avatar avatar-${size} avatar-theme-${theme}" title="${esc(name||'Player')}"><span class="init">${esc(initials)}</span><span class="hero-glyph">${glyph}</span></span>`; }
+function playerNameHtml(name,size='sm'){ return `<span class="player-inline">${playerAvatar(name,size)}<span class="txt">${esc(name||'')}</span></span>`; }
+
 /* normalize a prediction (array OR object {1:..}) → array length up to 4 */
 function normalizePrediction(pred){
   if(pred==null) return [];
@@ -1097,11 +1165,37 @@ function adminGate(){ return `<div class="card"><h3>🔒 ${esc(t('adminOnly'))}<
 
 /* ---- shared widgets ---- */
 function statTile(v,l,gold){ return `<div class="stat ${gold?'gold':''}"><div class="v num">${esc(v)}</div><div class="l">${esc(l)}</div></div>`; }
+function teamLabelMaybeHtml(v){ const s=String(v||''); const f=s.match(/^([\u{1F1E6}-\u{1F1FF}]{2}|🏴)\s+(.*)$/u); return f?`<span class="big-flag">${esc(f[1])}</span> ${esc(f[2])}`:esc(s); }
 function barChart(items){ const max=Math.max(1,...items.map(i=>i.v));
-  return items.map(i=>`<div class="barrow"><div class="bn">${esc(i.n)}</div>
+  return items.map(i=>`<div class="barrow"><div class="bn">${teamLabelMaybeHtml(i.n)}</div>
     <div class="bt"><div class="bf" style="width:${Math.round(i.v/max*100)}%"></div></div>
     <div class="bv num">${esc(i.v)}</div></div>`).join(''); }
 function mvArrow(m){ const sym=m.dir==='up'?'▲'+m.delta:m.dir==='dn'?'▼'+m.delta:'–'; return `<span class="mv ${m.dir}">${sym}</span>`; }
+function predictionBoxes(pred){
+  const arr=normalizePrediction(pred);
+  return `<div class="pred-grid">${[1,2,3,4].map(pos=>{
+    const tm=arr[pos-1];
+    return `<div class="pred-box ${pos===1?'first':''} ${tm?'':'missing'}"><div class="pred-pos">${esc(t('pos'+pos))}</div><div class="pred-team">${teamHtml(tm,'—')}</div></div>`;
+  }).join('')}</div>`;
+}
+function rawGroupPredictionPath(p,g){
+  if(p&&p.groupPreds&&p.groupPreds[g]!=null) return 'groupPreds.'+g;
+  if(p&&p.groups&&p.groups[g]!=null) return 'groups.'+g;
+  if(p&&p.predictions&&p.predictions[g]!=null) return 'predictions.'+g;
+  if(p&&p.groupPredictions&&p.groupPredictions[g]!=null) return 'groupPredictions.'+g;
+  if(p&&p[g]!=null) return g;
+  return '';
+}
+function comparePickBox(label, value){ return `<div class="diff-pick"><b>${esc(label)}</b>${teamHtml(value,'—')}</div>`; }
+function compareGroupCard(g,p1,p2,n1,n2){
+  const a1=playerGroupPred(p1,g), a2=playerGroupPred(p2,g);
+  const same=JSON.stringify(a1.map(teamCompareKey))===JSON.stringify(a2.map(teamCompareKey));
+  return `<div class="diff-card ${same?'same':'different'}"><div class="diff-title"><span>Group ${g}</span><span class="tag ${same?'paid':'adm'}">${esc(same?tl('Same','متشابه'):tl('Different','مختلف'))}</span></div>
+    <div class="pred-grid" style="grid-template-columns:repeat(4,minmax(0,1fr))">${[1,2,3,4].map(pos=>{
+      const x=a1[pos-1], y=a2[pos-1], eq=x&&y&&sameTeam(x,y);
+      return `<div class="pred-box ${pos===1?'first':''} ${eq?'':'missing'}"><div class="pred-pos">${esc(t('pos'+pos))}</div><div class="pred-team">${teamHtml(x,'—')}</div><div class="sub" style="font-size:10px">vs</div><div class="pred-team">${teamHtml(y,'—')}</div></div>`;
+    }).join('')}</div></div>`;
+}
 
 /* ================= DASHBOARD ================= */
 function viewDashboard(){
@@ -1130,9 +1224,9 @@ function viewDashboard(){
 
   <div class="card">
     <h3>🏆 ${esc(t('leader'))}</h3>
-    ${leader?`<div class="lb-row r1"><span class="rank num">1</span><span class="nm">${esc(leader.name)}</span><span class="pts num">${leader.total} ${esc(t('pts'))}</span></div>`:`<div class="sub">${esc(t('noLeader'))}</div>`}
+    ${leader?`<div class="lb-row r1"><span class="rank num">1</span><span class="nm">${playerNameHtml(leader.name,'sm')}</span><span class="pts num">${leader.total} ${esc(t('pts'))}</span></div>`:`<div class="sub">${esc(t('noLeader'))}</div>`}
     <div class="sub" style="margin:10px 0 4px">${esc(t('top3'))}</div>
-    ${lb.slice(0,3).map(r=>`<div class="lb-row ${r.rank===1?'r1':''}"><span class="rank num">${r.rank}</span>${mvArrow(rankMovement(r.name))}<span class="nm">${esc(r.name)}</span><span class="pts num">${r.total}</span></div>`).join('')||`<div class="sub">${esc(t('noData'))}</div>`}
+    ${lb.slice(0,3).map(r=>`<div class="lb-row ${r.rank===1?'r1':''}"><span class="rank num">${r.rank}</span>${mvArrow(rankMovement(r.name))}<span class="nm">${playerNameHtml(r.name,'sm')}</span><span class="pts num">${r.total}</span></div>`).join('')||`<div class="sub">${esc(t('noData'))}</div>`}
     <button class="btn ghost sm" style="margin-top:10px" onclick="go('leaderboard')">${esc(t('v_leaderboard'))} →</button>
   </div>
 
@@ -1160,7 +1254,7 @@ function viewDashboard(){
 
   <div class="card">
     <h3>👑 ${esc(t('champConsensus'))}</h3>
-    ${champCons.length?barChart(champCons.slice(0,5).map(c=>({n:c.key,v:c.count}))):`<div class="sub">${esc(t('noData'))}</div>`}
+    ${champCons.length?barChart(champCons.slice(0,5).map(c=>({n:teamText(c.key),v:c.count}))):`<div class="sub">${esc(t('noData'))}</div>`}
   </div>
 
   <div class="card">
@@ -1199,13 +1293,13 @@ function adminHealthPanel(){
 function miniMatch(m){ const r=m.idx!=null?matchResult(m.group,m.idx):null;
   const sc=r&&r.complete?`${r.hs}-${r.as}`:'vs';
   return `<div class="match"><div class="head"><span>${esc(m.group?('Group '+m.group):'')}</span><span>${esc(m.date||'')}</span></div>
-    <div class="teams"><span>${esc(canonTeam(m.home))}</span><span class="sc num">${sc}</span><span>${esc(canonTeam(m.away))}</span></div></div>`; }
+    <div class="teams"><span>${teamHtml(m.home)}</span><span class="sc num">${sc}</span><span>${teamHtml(m.away)}</span></div></div>`; }
 
 /* group winner pick frequency */
 function topGroupWinnerPicks(){ const c={};
   playerNames().forEach(n=>{ const p=getPlayer(n);
     GROUP_KEYS.forEach(g=>{ const w=groupPredPick(playerGroupPred(p,g),1); if(w){const k=canonTeam(w);c[k]=(c[k]||0)+1;} }); });
-  return Object.entries(c).map(([n,v])=>({n,v})).sort((a,b)=>b.v-a.v);
+  return Object.entries(c).map(([n,v])=>({n:teamText(n),v})).sort((a,b)=>b.v-a.v);
 }
 function consensusCount(getter){ const c={};
   playerNames().forEach(n=>{ const v=getter(getPlayer(n)); if(v){const k=canonTeam(v);c[k]=(c[k]||0)+1;} });
@@ -1237,7 +1331,7 @@ function renderMiniImpact(group,idx){
   const d=matchImpactData(group,idx), r=d.match;
   const score=r.complete?`${r.hs}-${r.as}`:'vs';
   return `<div class="insight"><div class="title">🔥 ${esc(tl('Latest match impact','تأثير آخر مباراة'))}</div>
-    <div class="teams"><span>${esc(canonTeam(r.home))}</span><span class="sc num">${score}</span><span>${esc(canonTeam(r.away))}</span></div>
+    <div class="teams"><span>${teamHtml(r.home)}</span><span class="sc num">${score}</span><span>${teamHtml(r.away)}</span></div>
     <div class="impact-list">
       <span class="impact-pill good">${esc(t('gotRight'))}: ${d.right.length}</span>
       <span class="impact-pill bad">${esc(t('gotWrong'))}: ${d.missed.length}</span>
@@ -1262,10 +1356,10 @@ function renderWhatCanChange(matches){
       else if(x.edge.status==='ok'&&sameTeam(x.edge.edge,m.away)) away.push(x.name);
       else none.push(x.name);
     });
-    return `<div class="insight"><div class="title">⚡ ${esc(canonTeam(m.home))} vs ${esc(canonTeam(m.away))}</div>
+    return `<div class="insight"><div class="title">⚡ ${teamHtml(m.home)} vs ${teamHtml(m.away)}</div>
       <div class="impact-list">
-        <span class="impact-pill good">${esc(canonTeam(m.home))}: ${home.length}</span>
-        <span class="impact-pill gold">${esc(canonTeam(m.away))}: ${away.length}</span>
+        <span class="impact-pill good">${teamHtml(m.home)}: ${home.length}</span>
+        <span class="impact-pill gold">${teamHtml(m.away)}: ${away.length}</span>
         <span class="impact-pill">${esc(t('noPred'))}: ${none.length}</span>
       </div>
       <div class="sub" style="margin-top:8px">${esc(tl('If this team wins, these players gain group-match points.','إذا فاز هذا الفريق، اللاعبون الذين اختاروا الأفضلية سيكسبون نقاط المباراة.'))}</div>
@@ -1275,18 +1369,34 @@ function renderWhatCanChange(matches){
 function renderRivalryCard(){
   const names=playerNames();
   if(names.length<2) return `<div class="sub">${esc(t('noData'))}</div>`;
-  const a=APP.sel.rivalA||names[0], b=APP.sel.rivalB||names.find(n=>n!==a)||names[0];
-  const ca=calcPlayerPoints(getPlayer(a),APP.data.groupResults,APP.data.knockoutResults,APP.data.champion);
-  const cb=calcPlayerPoints(getPlayer(b),APP.data.groupResults,APP.data.knockoutResults,APP.data.champion);
-  const diffs=[];
-  GROUP_KEYS.forEach(g=>{
-    const pa=playerGroupPred(getPlayer(a),g), pb=playerGroupPred(getPlayer(b),g);
-    if(JSON.stringify(pa)!==JSON.stringify(pb)) diffs.push(`Group ${g}: ${a} ${pa[0]||'—'} / ${b} ${pb[0]||'—'}`);
-  });
-  const caName=getPlayer(a)?.champion||'—', cbName=getPlayer(b)?.champion||'—';
-  return `<div class="vsbox"><select onchange="APP.sel.rivalA=this.value;render()">${names.map(n=>`<option ${n===a?'selected':''}>${esc(n)}</option>`).join('')}</select><div class="vs-mid">VS</div><select onchange="APP.sel.rivalB=this.value;render()">${names.map(n=>`<option ${n===b?'selected':''}>${esc(n)}</option>`).join('')}</select></div>
-    <div class="delta-card"><div class="side"><b>${esc(a)}</b><span class="num">${ca.total} ${esc(t('pts'))}</span><div class="sub">👑 ${esc(canonTeam(caName))}</div></div><div class="side"><b>${esc(b)}</b><span class="num">${cb.total} ${esc(t('pts'))}</span><div class="sub">👑 ${esc(canonTeam(cbName))}</div></div></div>
-    <details class="acc" style="margin-top:10px"><summary>${esc(tl('Different predictions','اختلافات التوقعات'))}<span class="sub">${diffs.length}</span></summary><div class="body">${diffs.slice(0,12).map(x=>`<div class="sub" style="padding:4px 0">${esc(x)}</div>`).join('')||`<div class="sub">${esc(t('none'))}</div>`}</div></details>`;
+  const n1=APP.sel.rival1||names[0], n2=APP.sel.rival2||names.find(n=>n!==n1)||names[0];
+  const p1=getPlayer(n1), p2=getPlayer(n2);
+  const lb=buildLeaderboard();
+  const r1=lb.find(x=>x.name===n1)||{total:0,rank:'-'}, r2=lb.find(x=>x.name===n2)||{total:0,rank:'-'};
+  const diffGroups=GROUP_KEYS.filter(g=>JSON.stringify(playerGroupPred(p1,g).map(teamCompareKey))!==JSON.stringify(playerGroupPred(p2,g).map(teamCompareKey)));
+  const sameChamp=(p1&&p2&&sameTeam(p1.champion,p2.champion));
+  return `<div class="compare-panel">
+    <div class="grid g2">
+      <select onchange="APP.sel.rival1=this.value;render()">${names.map(n=>`<option ${n===n1?'selected':''}>${esc(n)}</option>`).join('')}</select>
+      <select onchange="APP.sel.rival2=this.value;render()">${names.map(n=>`<option ${n===n2?'selected':''}>${esc(n)}</option>`).join('')}</select>
+    </div>
+    <div class="compare-head">
+      <div class="compare-player">${playerAvatar(n1,'sm')}<div class="info"><div class="name">${esc(n1)}</div><div class="score">#${r1.rank} · ${r1.total} ${esc(t('pts'))}</div></div></div>
+      <div class="compare-vs">VS</div>
+      <div class="compare-player">${playerAvatar(n2,'sm')}<div class="info"><div class="name">${esc(n2)}</div><div class="score">#${r2.rank} · ${r2.total} ${esc(t('pts'))}</div></div></div>
+    </div>
+    <div class="diff-card ${sameChamp?'same':'different'}">
+      <div class="diff-title"><span>👑 ${esc(t('champion'))}</span><span class="tag ${sameChamp?'paid':'adm'}">${esc(sameChamp?tl('Same','متشابه'):tl('Different','مختلف'))}</span></div>
+      <div class="diff-row">${comparePickBox(n1,p1&&p1.champion)}${comparePickBox(n2,p2&&p2.champion)}</div>
+    </div>
+    ${(diffGroups.length?diffGroups.slice(0,4):GROUP_KEYS.slice(0,2)).map(g=>compareGroupCard(g,p1,p2,n1,n2)).join('')}
+    ${diffGroups.length>4?`<div class="sub">+${diffGroups.length-4} ${esc(tl('more different groups','مجموعات مختلفة إضافية'))}</div>`:''}
+    <button class="btn ghost sm" onclick="copyText(buildRivalryShare('${esc(n1).replace(/'/g,'')}','${esc(n2).replace(/'/g,'')}'))">${esc(t('share'))}</button>
+  </div>`;
+}
+function buildRivalryShare(n1,n2){
+  const lb=buildLeaderboard(), a=lb.find(x=>x.name===n1), b=lb.find(x=>x.name===n2);
+  return `${n1} vs ${n2}\n${n1}: #${a?a.rank:'-'} · ${a?a.total:0} pts\n${n2}: #${b?b.rank:'-'} · ${b?b.total:0} pts`;
 }
 function buildTodayImpactText(){
   const ms=(APP._today&&APP._today.length?APP._today:upcomingGroupMatches(3)).filter(m=>m.group&&m.idx!=null);
@@ -1313,10 +1423,10 @@ function scenarioForMatch(m){
 }
 function scenarioCard(m){
   const sc=scenarioForMatch(m);
-  return `<div class="card"><div class="between"><h3>⚡ ${esc(canonTeam(m.home))} vs ${esc(canonTeam(m.away))}</h3><span class="chip">Group ${esc(m.group)}</span></div>
+  return `<div class="card"><div class="between"><h3>⚡ ${teamHtml(m.home)} vs ${teamHtml(m.away)}</h3><span class="chip">Group ${esc(m.group)}</span></div>
     <div class="grid g2">
-      <div class="insight"><div class="title">${esc(tl('If','إذا فاز'))} ${esc(canonTeam(m.home))}</div><div class="impact-list"><span class="impact-pill good">+${SCORING.edgeCorrect} ${esc(t('pts'))}: ${sc.home.length}</span></div><div class="sub">${esc(sc.home.slice(0,12).join(', ')||t('none'))}${sc.home.length>12?'…':''}</div></div>
-      <div class="insight"><div class="title">${esc(tl('If','إذا فاز'))} ${esc(canonTeam(m.away))}</div><div class="impact-list"><span class="impact-pill gold">+${SCORING.edgeCorrect} ${esc(t('pts'))}: ${sc.away.length}</span></div><div class="sub">${esc(sc.away.slice(0,12).join(', ')||t('none'))}${sc.away.length>12?'…':''}</div></div>
+      <div class="insight"><div class="title">${esc(tl('If','إذا فاز'))} ${teamHtml(m.home)}</div><div class="impact-list"><span class="impact-pill good">+${SCORING.edgeCorrect} ${esc(t('pts'))}: ${sc.home.length}</span></div><div class="sub">${esc(sc.home.slice(0,12).join(', ')||t('none'))}${sc.home.length>12?'…':''}</div></div>
+      <div class="insight"><div class="title">${esc(tl('If','إذا فاز'))} ${teamHtml(m.away)}</div><div class="impact-list"><span class="impact-pill gold">+${SCORING.edgeCorrect} ${esc(t('pts'))}: ${sc.away.length}</span></div><div class="sub">${esc(sc.away.slice(0,12).join(', ')||t('none'))}${sc.away.length>12?'…':''}</div></div>
     </div>
     ${sc.noEdge.length?`<div class="sub" style="margin-top:8px">${esc(t('noPred'))}: ${esc(sc.noEdge.slice(0,10).join(', '))}${sc.noEdge.length>10?'…':''}</div>`:''}
   </div>`;
@@ -1331,7 +1441,7 @@ function viewScenarios(){
 function impactSummaryCard(item){
   const d=matchImpactData(item.group,item.idx), r=d.match;
   const score=r.complete?`${r.hs}-${r.as}`:'vs';
-  return `<div class="card"><div class="between"><h3>🔥 ${esc(canonTeam(r.home))} ${score} ${esc(canonTeam(r.away))}</h3><span class="chip">${esc(item.key||matchKey(item.group,item.idx))}</span></div>
+  return `<div class="card"><div class="between"><h3>🔥 ${teamHtml(r.home)} ${score} ${teamHtml(r.away)}</h3><span class="chip">${esc(item.key||matchKey(item.group,item.idx))}</span></div>
     <div class="impact-list"><span class="impact-pill good">${esc(t('gotRight'))}: ${d.right.length}</span><span class="impact-pill bad">${esc(t('gotWrong'))}: ${d.missed.length}</span><span class="impact-pill gold">+${SCORING.edgeCorrect} ${esc(t('pts'))}</span></div>
     <div class="grid g2" style="margin-top:10px">
       <div class="insight"><div class="title">✅ ${esc(t('gotRight'))}</div><div class="sub">${esc(d.right.slice(0,16).map(x=>x.name).join(', ')||t('none'))}${d.right.length>16?'…':''}</div></div>
@@ -1356,7 +1466,7 @@ function viewLeaderboard(){
     ${lb.map(r=>{ const m=rankMovement(r.name);
       return `<div class="lb-row ${r.rank===1?'r1':''}" onclick="openPlayer('${esc(r.name).replace(/'/g,'')}')">
         <span class="rank num">${r.rank}</span>${mvArrow(m)}
-        <span class="nm">${esc(r.name)}</span>
+        <span class="nm">${playerNameHtml(r.name,'sm')}</span>
         <span class="pts num">${r.total}</span></div>`; }).join('')||`<div class="sub">${esc(t('noData'))}</div>`}
     <div class="sub" style="margin-top:8px">${esc(t('breakdown'))}: ${esc(t('groupMatchPts'))} · ${esc(t('groupRankPts'))} · ${esc(t('koPts'))} · ${esc(t('champPts'))}</div>
   </div>`;
@@ -1396,7 +1506,7 @@ function fullMatchCard(m){
   }
   return `<div class="match"><div class="head"><span>${esc(m.group?('Group '+m.group+' · '+m.key):'')}</span>
       <span class="tag ${srcTag}">${esc(t(srcTxt))}</span></div>
-    <div class="teams"><span>${esc(canonTeam(m.home))}</span><span class="sc num">${sc}</span><span>${esc(canonTeam(m.away))}</span></div>
+    <div class="teams"><span>${teamHtml(m.home)}</span><span class="sc num">${sc}</span><span>${teamHtml(m.away)}</span></div>
     ${impact}${complete?`<button class="btn ghost sm" style="margin-top:8px;width:100%" onclick="openMatchImpact('${m.group}',${m.idx})">${esc(t('matchImpact'))}</button>`:(m.group&&m.idx!=null?`<button class="btn ghost sm" style="margin-top:8px;width:100%" onclick="go('scenarios')">⚡ ${esc(t('v_scenarios'))}</button>`:'')}</div>`;
 }
 
@@ -1408,7 +1518,7 @@ function viewGroups(){
       <table class="gtable"><thead><tr><th style="text-align:start">${esc(t('player').slice(0,0))}Team</th>
         <th>${esc(t('played'))}</th><th>${esc(t('win'))}</th><th>${esc(t('drawSh')).slice(0,1)}</th><th>${esc(t('loss'))}</th>
         <th>${esc(t('gd'))}</th><th>${esc(t('pts'))}</th></tr></thead><tbody>
-        ${tb.map((r,i)=>`<tr class="${i===0?'q1':i===1?'q2':''}"><td class="tn"><span class="pos">${i+1}</span>${esc(r.team)}</td>
+        ${tb.map((r,i)=>`<tr class="${i===0?'q1':i===1?'q2':''}"><td class="tn"><span class="pos">${i+1}</span>${teamHtml(r.team)}</td>
           <td class="num">${r.P}</td><td class="num">${r.W}</td><td class="num">${r.D}</td><td class="num">${r.L}</td>
           <td class="num">${r.GD>0?'+':''}${r.GD}</td><td class="num"><b>${r.Pts}</b></td></tr>`).join('')}
       </tbody></table></div>`;
@@ -1423,7 +1533,7 @@ function viewPlayer(){
   const c=calcPlayerPoints(p,APP.data.groupResults,APP.data.knockoutResults,APP.data.champion);
   const lb=buildLeaderboard(); const me=lb.find(r=>r.name===name);
   const bd=[{n:t('groupMatchPts'),v:c.groupMatch},{n:t('groupRankPts'),v:c.groupRank},{n:t('koPts'),v:c.knockout},{n:t('champPts'),v:c.champ}];
-  return `<div class="card"><div class="between"><h3>👤 ${esc(name)}</h3>
+  return `<div class="card"><div class="between"><div class="player-head">${playerAvatar(name,'lg')}<div class="player-meta"><h3>${esc(name)}</h3><div class="sub">${esc(tl('Superhero avatar','صورة بطل'))}</div></div></div>
       <span class="chip on">#${me?me.rank:'-'} · ${c.total} ${esc(t('pts'))}</span></div>
     <select onchange="APP.sel.player=this.value;render()">${playerNames().map(n=>`<option ${n===name?'selected':''}>${esc(n)}</option>`).join('')}</select>
   </div>
@@ -1432,12 +1542,11 @@ function viewPlayer(){
   </div>
   <div class="card"><h3>📝 ${esc(t('v_predictions'))}</h3>
     ${GROUP_KEYS.map(g=>{ const pred=playerGroupPred(p,g); if(!pred.length) return '';
-      return `<details class="acc"><summary>Group ${g}</summary><div class="body">
-        ${[1,2,3,4].map(pos=>`<div class="between" style="padding:5px 0;border-bottom:1px solid var(--soft)">
-          <span><span class="pos">${pos}</span> ${esc(t('pos'+pos))}</span><b>${esc(pred[pos-1]||'—')}</b></div>`).join('')}
+      return `<details class="acc"><summary><span>Group ${g}</span><span class="sub">${esc(rawGroupPredictionPath(p,g))}</span></summary><div class="body">
+        ${predictionBoxes(pred)}
       </div></details>`; }).join('')||`<div class="sub">${esc(t('noData'))}</div>`}
     <div class="between" style="margin-top:10px;padding:8px;background:var(--soft);border-radius:10px">
-      <span>👑 ${esc(t('champion'))}</span><b>${esc(p&&p.champion?canonTeam(p.champion):'—')}</b></div>
+      <span>👑 ${esc(t('champion'))}</span><b>${teamHtml(p&&p.champion?p.champion:null,'—')}</b></div>
   </div>
   <div class="card"><button class="btn ghost" onclick="sharePlayer('${esc(name).replace(/'/g,'')}')">${esc(t('whatsapp'))}</button></div>`;
 }
@@ -1449,9 +1558,9 @@ function viewPredictions(){
   if(!names.length) return `<div class="card"><div class="state">${esc(t('noData'))}</div></div>`;
   return `<div class="card"><h3>📝 ${esc(t('v_predictions'))}</h3><div class="sub">${esc(t('consensusNote'))}</div></div>`+
   names.map(name=>{ const p=getPlayer(name);
-    return `<details class="acc"><summary>${esc(name)} <span class="sub">👑 ${esc(p.champion?canonTeam(p.champion):'—')}</span></summary><div class="body">
+    return `<details class="acc"><summary>${playerNameHtml(name,'sm')} <span class="sub">👑 ${teamHtml(p.champion,'—')}</span></summary><div class="body">
       ${GROUP_KEYS.map(g=>{ const pred=playerGroupPred(p,g); if(!pred.length) return '';
-        return `<div style="margin:6px 0"><b>Group ${g}:</b> ${[1,2,3,4].map(pos=>`${pos}.${esc(pred[pos-1]||'—')}`).join('  ')}</div>`;
+        return `<div class="pred-group-title"><b>Group ${g}</b><span class="sub">${esc(rawGroupPredictionPath(p,g))}</span></div>${predictionBoxes(pred)}`;
       }).join('')||`<div class="sub">${esc(t('noData'))}</div>`}
     </div></details>`; }).join('');
 }
@@ -1466,7 +1575,7 @@ function viewConsensus(){
     });
     return `<div class="card"><h3>Group ${g}</h3>
       ${[0,1,2,3].map(i=>`<div style="margin:8px 0"><div class="sub" style="margin-bottom:4px">${esc(t('pos'+(i+1)))}</div>
-        ${posCounts[i].length?barChart(posCounts[i].slice(0,4)):`<div class="sub">${esc(t('noData'))}</div>`}</div>`).join('')}
+        ${posCounts[i].length?barChart(posCounts[i].slice(0,4).map(x=>({n:teamText(x.n),v:x.v}))):`<div class="sub">${esc(t('noData'))}</div>`}</div>`).join('')}
     </div>`;
   }).join('');
 }
@@ -1517,7 +1626,7 @@ function openMatchImpact(group,idx){
       <div class="stat">${'<div class="v num">'+wrong.length+'</div><div class="l">'+esc(t('gotWrong'))+'</div>'}</div></div>
     <div class="sub" style="margin:10px 8px 4px">${esc(t('predictedEdge'))}</div>
     ${a.rows.map(x=>`<div class="between" style="padding:7px 8px;border-bottom:1px solid var(--soft)">
-      <span>${esc(x.name)}</span><span>${edgeLabel(x.edge)} ${x.got>0?'<span class="tag paid">+'+x.got+'</span>':''}</span></div>`).join('')}
+      <span>${playerNameHtml(x.name,'sm')}</span><span>${edgeLabel(x.edge)} ${x.got>0?'<span class="tag paid">+'+x.got+'</span>':''}</span></div>`).join('')}
     <button class="btn ghost" style="margin-top:10px" onclick="shareMatch('${group}',${idx})">${esc(t('whatsapp'))}</button>`);
 }
 function edgeLabel(e){
@@ -1619,7 +1728,7 @@ function auditSelectedMatchPanel(){
     <div class="match"><div class="teams"><span>${esc(r.home)}</span><span class="sc num">${r.complete?r.hs+'-'+r.as:'vs'}</span><span>${esc(r.away)}</span></div>
       <div class="edge">${esc(t('winner'))}: <b>${esc(r.complete?(r.outcome==='draw'?t('draw'):canonTeam(r.winner)):t('pending'))}</b></div></div>
     ${a.rows.map(x=>`<div class="between" style="padding:8px 0;border-bottom:1px solid var(--soft)">
-      <span>${esc(x.name)}</span><span>${edgeLabel(x.edge)} ${x.got?'<span class="tag paid">+'+x.got+'</span>':'<span class="tag pend">+0</span>'}</span></div>`).join('')}
+      <span>${playerNameHtml(x.name,'sm')}</span><span>${edgeLabel(x.edge)} ${x.got?'<span class="tag paid">+'+x.got+'</span>':'<span class="tag pend">+0</span>'}</span></div>`).join('')}
     <button class="btn ghost sm" style="margin-top:10px" onclick="shareMatch('${g}',${idx})">${esc(t('share'))}</button>
   </div>`;
 }
