@@ -392,6 +392,14 @@ body{
 
 
 
+
+/* ===== v31 result sync comparison ===== */
+.sync-row{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;border:1px solid var(--border);background:#fff;border-radius:16px;padding:10px;margin:8px 0}
+.sync-row .main{min-width:0}.sync-row .title{font-weight:1000}.sync-row .meta{font-size:12px;color:var(--muted);margin-top:2px}
+.sync-score{font-family:var(--num);font-weight:1000;border-radius:999px;padding:6px 10px;background:var(--soft);white-space:nowrap}
+.sync-score.ok{background:#e9fbf1;color:var(--good)}.sync-score.miss{background:#fff8df;color:#8a6100}.sync-score.bad{background:#fdecea;color:var(--bad)}
+.sync-tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+@media(max-width:560px){.sync-row{grid-template-columns:1fr}.sync-score{width:max-content}}
 /* ===== v29 complete polish: alerts, backup, share cards, health, cleaner nav ===== */
 .alert-card{border:1px solid var(--border);background:linear-gradient(180deg,#fff,#f7fbf8);border-radius:18px;padding:12px;margin:9px 0;display:grid;grid-template-columns:38px minmax(0,1fr) auto;gap:10px;align-items:center}
 .alert-card .emoji{font-size:24px}.alert-card .title{font-weight:1000}.alert-card .meta{font-size:12px;color:var(--muted);margin-top:2px}
@@ -546,6 +554,7 @@ body{
 const SB_URL='https://jrwkhogoewhlfrzlsmlh.supabase.co';
 const SB_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impyd2tob2dvZXdobGZyemxzbWxoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNjU2MzEsImV4cCI6MjA5Njc0MTYzMX0.1TF9PSzu4t9661aDXfaqc1tZPZ5uxeAW6Q5hE2My6Qc';
 const API=SB_URL+'/rest/v1/wc2026';
+const RESULTS_API=SB_URL+'/rest/v1/wc2026_match_results';
 const H={apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json',Accept:'application/json'};
 const SPORTSDB='https://www.thesportsdb.com/api/v1/json/3/eventsday.php';
 const WC_LEAGUE='4429';
@@ -596,7 +605,7 @@ const TEAM_ALIASES={
 const I18N={
   en:{
     brand:"WC2026 Pick'em", admin:"Admin", langName:"EN",
-    nav_dashboard:"Home", nav_today:"Today", nav_leaderboard:"Table", nav_matches:"Matches", nav_profile:"Profile", nav_more:"More", v_alerts:"Alerts", v_backup:"Backup / Restore", v_sharecards:"Share cards", v_health:"Health check",
+    nav_dashboard:"Home", nav_today:"Today", nav_leaderboard:"Table", nav_matches:"Matches", nav_profile:"Profile", nav_more:"More", v_alerts:"Alerts", v_backup:"Backup / Restore", v_sharecards:"Share cards", v_health:"Health check", v_syncResults:"Result sync check",
     v_dashboard:"Dashboard", v_today:"Today's matches", v_matches:"All matches", v_groups:"Group tables",
     v_predictions:"All predictions", v_consensus:"Group leaders consensus", v_knockout:"Knockout bracket",
     v_leaderboard:"Leaderboard", v_player:"Player details", v_audit:"Prediction audit",
@@ -642,7 +651,7 @@ const I18N={
   },
   ar:{
     brand:"توقعات كأس العالم 2026", admin:"المشرف", langName:"ع",
-    nav_dashboard:"الرئيسية", nav_today:"اليوم", nav_leaderboard:"الترتيب", nav_matches:"المباريات", nav_profile:"الملف", nav_more:"المزيد", v_alerts:"التنبيهات", v_backup:"النسخ والاستعادة", v_sharecards:"بطاقات المشاركة", v_health:"فحص النظام",
+    nav_dashboard:"الرئيسية", nav_today:"اليوم", nav_leaderboard:"الترتيب", nav_matches:"المباريات", nav_profile:"الملف", nav_more:"المزيد", v_alerts:"التنبيهات", v_backup:"النسخ والاستعادة", v_sharecards:"بطاقات المشاركة", v_health:"فحص النتائج", v_syncResults:"فحص مزامنة النتائج",
     v_dashboard:"لوحة التحكم", v_today:"مباريات اليوم", v_matches:"كل المباريات", v_groups:"جداول المجموعات",
     v_predictions:"كل التوقعات", v_consensus:"إجماع المجموعات", v_knockout:"خروج المغلوب",
     v_leaderboard:"الترتيب", v_player:"تفاصيل اللاعب", v_audit:"تدقيق التوقعات",
@@ -728,6 +737,94 @@ function ensureShape(d){
   return d;
 }
 
+
+function normalizedResultToApp(row){
+  if(!row||!row.match_key) return null;
+  if(row.status!=='final'||row.home_score==null||row.away_score==null) return null;
+  return {key:row.match_key,result:{home:String(row.home_score),away:String(row.away_score)},source:row.source||'api'};
+}
+async function loadNormalizedResultsIntoApp(){
+  APP._resultsTableStatus={ok:false, mode:'fallback-json'};
+  try{
+    const r=await fetchWithTimeout(RESULTS_API+'?select=match_key,group_key,match_idx,home_team,away_team,home_score,away_score,status,source,updated_at&order=match_key.asc',{headers:H},10000);
+    if(!r.ok){
+      let txt=''; try{txt=await r.text();}catch(_){}
+      throw new Error('Results table HTTP '+r.status+' '+txt.slice(0,160));
+    }
+    const rows=await r.json();
+    APP._matchResultRows=Array.isArray(rows)?rows:[];
+    APP.data.groupResults=APP.data.groupResults||{};
+    APP.data.resultMeta=APP.data.resultMeta||{};
+    let applied=0;
+    APP._matchResultRows.forEach(row=>{
+      const x=normalizedResultToApp(row);
+      if(x){ APP.data.groupResults[x.key]=x.result; APP.data.resultMeta[x.key]=x.source; applied++; }
+    });
+    APP._resultsTableStatus={ok:true, mode:'normalized-table', rows:APP._matchResultRows.length, applied};
+    return true;
+  }catch(e){
+    console.warn('Normalized results table unavailable. Falling back to wc2026.data.groupResults.',e);
+    APP._resultsTableStatus={ok:false, mode:'fallback-json', error:String(e&&e.message?e.message:e)};
+    return false;
+  }
+}
+function normalizedResultRow(g,i,homeScore,awayScore,source,status){
+  const [home,away]=matchTeams(g,i);
+  return {
+    match_key:matchKey(g,i),
+    group_key:g,
+    match_idx:i,
+    home_team:home,
+    away_team:away,
+    home_score:homeScore==null?null:Number(homeScore),
+    away_score:awayScore==null?null:Number(awayScore),
+    status:status||((homeScore!=null&&awayScore!=null)?'final':'scheduled'),
+    source:source||'admin',
+    updated_by:APP.isAdmin?'admin':'system'
+  };
+}
+async function upsertNormalizedResult(row){
+  try{
+    const r=await fetchWithTimeout(RESULTS_API+'?on_conflict=match_key',{
+      method:'POST',
+      headers:{...H,Prefer:'resolution=merge-duplicates,return=minimal'},
+      body:JSON.stringify(row)
+    },10000);
+    if(!r.ok){
+      let txt=''; try{txt=await r.text();}catch(_){}
+      throw new Error('Results upsert HTTP '+r.status+' '+txt.slice(0,160));
+    }
+    APP._resultsTableStatus={ok:true,mode:'normalized-table'};
+    return true;
+  }catch(e){
+    console.warn('Normalized result upsert failed; JSON fallback was still saved.',e);
+    APP._resultsTableStatus={ok:false,mode:'fallback-json',error:String(e&&e.message?e.message:e)};
+    toast(tl('Saved fallback, normalized table failed','تم حفظ الاحتياطي، فشل جدول النتائج'));
+    return false;
+  }
+}
+async function upsertNormalizedResults(rows){
+  if(!rows||!rows.length) return true;
+  try{
+    const r=await fetchWithTimeout(RESULTS_API+'?on_conflict=match_key',{
+      method:'POST',
+      headers:{...H,Prefer:'resolution=merge-duplicates,return=minimal'},
+      body:JSON.stringify(rows)
+    },15000);
+    if(!r.ok){
+      let txt=''; try{txt=await r.text();}catch(_){}
+      throw new Error('Results batch upsert HTTP '+r.status+' '+txt.slice(0,160));
+    }
+    APP._resultsTableStatus={ok:true,mode:'normalized-table'};
+    return true;
+  }catch(e){
+    console.warn('Normalized batch upsert failed; JSON fallback was still saved.',e);
+    APP._resultsTableStatus={ok:false,mode:'fallback-json',error:String(e&&e.message?e.message:e)};
+    toast(tl('Saved fallback, normalized table failed','تم حفظ الاحتياطي، فشل جدول النتائج'));
+    return false;
+  }
+}
+
 async function loadState(){
   APP.error=null; APP.apiStatus=null;
   try{
@@ -741,6 +838,7 @@ async function loadState(){
     const rows=await r.json();
     const row=Array.isArray(rows)?rows[0]:null;
     APP.data=ensureShape(row?row.data:{});
+    await loadNormalizedResultsIntoApp();
     APP.cached=false; APP.loaded=true;
     localStorage.setItem(CACHE_KEY, JSON.stringify(APP.data));
   }catch(e){
@@ -1242,6 +1340,7 @@ const ADMIN_ITEMS=[
   {id:'audit',ic:'🔎',key:'v_audit'},
   {id:'backup',ic:'💾',key:'v_backup'},
   {id:'health',ic:'🧪',key:'v_health'},
+  {id:'syncresults',ic:'🔄',key:'v_syncResults'},
   {id:'repair',ic:'🛠️',key:'v_repair'},
   {id:'settings',ic:'⚙️',key:'v_settings'}
 ];
@@ -1323,12 +1422,13 @@ function render(){
     backup:viewBackup,
     sharecards:viewShareCards,
     health:viewHealth,
+    syncresults:viewSyncResults,
     help:viewHelp,
     ai:viewAI
   };
 
   const fn=map[APP.view]||viewDashboard;
-  const adminViews=['audit','results','repair','settings','backup','health'];
+  const adminViews=['audit','results','repair','settings','backup','health','syncresults'];
 
   if(adminViews.includes(APP.view)&&!APP.isAdmin){
     $('view').innerHTML=banner+adminGate();
@@ -2277,10 +2377,12 @@ async function saveOneResult(g,i){
   const beforeLeader=beforeLb[0]&&beforeLb[0].name;
   snapshotRanks();
   const before=APP.data.groupResults[key];
+  const source=($('src_'+g+'_'+i)?.value)||(before?'corrected':'admin');
   APP.data.groupResults[key]={home:h,away:a};
-  APP.data.resultMeta[key]=($('src_'+g+'_'+i)?.value)||(before?'corrected':'admin');
+  APP.data.resultMeta[key]=source;
   APP._lastResultUndo={group:g,idx:i,key,beforeData,beforeMeta};
   logAction('result_edit','groupResults.'+key,before,{home:h,away:a});
+  await upsertNormalizedResult(normalizedResultRow(g,i,h,a,source,'final'));
   await saveState();
   const after=leaderboardSnapshot();
   showResultCelebration(g,i,beforeLb,after,beforeLeader);
@@ -2293,13 +2395,18 @@ async function clearOneResult(g,i){
   APP._lastResultUndo={group:g,idx:i,key,beforeData:JSON.parse(JSON.stringify(APP.data.groupResults||{})),beforeMeta:JSON.parse(JSON.stringify(APP.data.resultMeta||{}))};
   delete APP.data.groupResults[key]; if(APP.data.resultMeta) APP.data.resultMeta[key]='pending';
   logAction('result_clear','groupResults.'+key,before,null);
+  await upsertNormalizedResult(normalizedResultRow(g,i,null,null,'corrected','scheduled'));
   await saveState(); toast(t('saved')); render();
 }
 async function undoLastResult(){
   if(!APP._lastResultUndo){ toast(t('noData')); return; }
-  APP.data.groupResults=APP._lastResultUndo.beforeData||{};
-  APP.data.resultMeta=APP._lastResultUndo.beforeMeta||{};
-  logAction('result_undo','groupResults.'+APP._lastResultUndo.key,null,'restored');
+  const undo=APP._lastResultUndo;
+  APP.data.groupResults=undo.beforeData||{};
+  APP.data.resultMeta=undo.beforeMeta||{};
+  const prev=APP.data.groupResults[undo.key];
+  if(prev&&prev.home!=null&&prev.away!=null) await upsertNormalizedResult(normalizedResultRow(undo.group,undo.idx,prev.home,prev.away,APP.data.resultMeta[undo.key]||'corrected','final'));
+  else await upsertNormalizedResult(normalizedResultRow(undo.group,undo.idx,null,null,'corrected','scheduled'));
+  logAction('result_undo','groupResults.'+undo.key,null,'restored');
   APP._lastResultUndo=null;
   await saveState(); toast(tl('Undo complete','تم التراجع')); render();
 }
@@ -2606,6 +2713,145 @@ function buildShareMatch(g,i){ const a=auditMatch(g,i); const r=a.match; const r
 
 
 
+
+/* ================= V31 RESULT SYNC CHECK ================= */
+function sportsScore(e){
+  const hs=e&&(e.intHomeScore!==null&&e.intHomeScore!==undefined)?String(e.intHomeScore):'';
+  const as=e&&(e.intAwayScore!==null&&e.intAwayScore!==undefined)?String(e.intAwayScore):'';
+  if(hs!==''&&as!=='') return {home:hs,away:as};
+  return null;
+}
+function sportsEventComplete(e){
+  const sc=sportsScore(e);
+  if(!sc) return false;
+  const st=String((e&&e.strStatus)||'').toLowerCase();
+  return !st || st.includes('match finished') || st==='ft' || st.includes('full') || st.includes('finished') || st.includes('after');
+}
+function mapEventToGroupMatch(e){
+  const eh=e&&e.strHomeTeam, ea=e&&e.strAwayTeam;
+  if(!eh||!ea) return null;
+  for(const g of GROUP_KEYS){
+    for(let i=0;i<RR.length;i++){
+      const [h,a]=matchTeams(g,i);
+      if((sameTeam(eh,h)&&sameTeam(ea,a))||(sameTeam(eh,a)&&sameTeam(ea,h))){
+        const reversed=sameTeam(eh,a)&&sameTeam(ea,h);
+        return {group:g,idx:i,key:matchKey(g,i),home:h,away:a,reversed};
+      }
+    }
+  }
+  return null;
+}
+function compareApiEventToApp(e){
+  const m=mapEventToGroupMatch(e);
+  const sc=sportsScore(e);
+  if(!m||!sc) return {status:'unmapped',event:e,match:m,api:sc,app:null};
+  const api=m.reversed?{home:sc.away,away:sc.home}:sc;
+  const app=readScore((APP.data.groupResults||{})[m.key]);
+  let status='missing';
+  if(app.complete) status=(String(app.hs)===String(api.home)&&String(app.as)===String(api.away))?'match':'mismatch';
+  return {status,event:e,match:m,api,app};
+}
+async function fetchCompletedApiComparisons(){
+  const end=uaeToday()>WC_END?WC_END:uaeToday();
+  const dates=dateRange(WC_START,end);
+  const rows=[];
+  for(const d of dates){
+    const ev=await fetchDay(d);
+    ev.filter(sportsEventComplete).forEach(e=>rows.push(compareApiEventToApp(e)));
+  }
+  return rows;
+}
+async function runResultSyncCompare(){
+  APP._syncLoading=true; APP._syncRows=null; render();
+  try{
+    APP._syncRows=await fetchCompletedApiComparisons();
+    APP._lastSyncCheck=new Date().toISOString();
+  }catch(e){
+    APP._syncRows=[];
+    toast(t('syncFail'));
+    console.warn(e);
+  }
+  APP._syncLoading=false; render();
+}
+function syncStatusLabel(s){
+  if(s==='match') return tl('Synced','متطابق');
+  if(s==='missing') return tl('Missing in app','غير موجود في التطبيق');
+  if(s==='mismatch') return tl('Different score','نتيجة مختلفة');
+  if(s==='unmapped') return tl('Unmapped API event','مباراة API غير معروفة');
+  return s;
+}
+function renderSyncComparisonRows(rows){
+  if(!rows) return `<div class="state">${esc(tl('Press Compare API vs App to check completed matches.','اضغط مقارنة API مع التطبيق لفحص المباريات المكتملة.'))}</div>`;
+  if(!rows.length) return `<div class="state">${esc(tl('No completed API matches found yet.','لا توجد مباريات مكتملة من API حالياً.'))}</div>`;
+  return rows.map((r,idx)=>{
+    const cls=r.status==='match'?'ok':r.status==='missing'?'miss':r.status==='mismatch'?'bad':'';
+    const title=r.match?`${teamHtml(r.match.home)} vs ${teamHtml(r.match.away)}`:`${esc(r.event.strHomeTeam||'')} vs ${esc(r.event.strAwayTeam||'')}`;
+    const app=r.app&&r.app.complete?`${r.app.hs}-${r.app.as}`:'—';
+    const api=r.api?`${r.api.home}-${r.api.away}`:'—';
+    return `<div class="sync-row">
+      <div class="main"><div class="title">${title}</div><div class="meta">${esc((r.event.dateEvent||'')+' · '+(r.match?r.match.key:tl('not mapped','غير مرتبطة')))}</div></div>
+      <div class="sync-score ${cls}">API ${esc(api)} · App ${esc(app)}</div>
+      <div class="sync-tools">
+        <span class="tag ${r.status==='match'?'paid':r.status==='mismatch'?'corr':'pend'}">${esc(syncStatusLabel(r.status))}</span>
+        ${(r.status==='missing'||r.status==='mismatch')&&r.match?`<button class="btn sm" onclick="applyApiResult(${idx})">${esc(tl('Apply','تطبيق'))}</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+async function applyApiResult(idx){
+  const row=(APP._syncRows||[])[idx];
+  if(!row||!row.match||!row.api){ toast(t('noData')); return; }
+  APP.data.groupResults=APP.data.groupResults||{};
+  APP.data.resultMeta=APP.data.resultMeta||{};
+  snapshotRanks();
+  const key=row.match.key, before=APP.data.groupResults[key];
+  APP.data.groupResults[key]={home:String(row.api.home),away:String(row.api.away)};
+  APP.data.resultMeta[key]='api';
+  logAction('api_result_sync','groupResults.'+key,before,APP.data.groupResults[key]);
+  await upsertNormalizedResult(normalizedResultRow(row.match.group,row.match.idx,row.api.home,row.api.away,'api','final'));
+  await saveState();
+  toast(t('saved'));
+  await runResultSyncCompare();
+}
+async function applyAllApiResults(){
+  const rows=(APP._syncRows||[]).filter(r=>(r.status==='missing'||r.status==='mismatch')&&r.match&&r.api);
+  if(!rows.length){ toast(t('noData')); return; }
+  APP.data.groupResults=APP.data.groupResults||{};
+  APP.data.resultMeta=APP.data.resultMeta||{};
+  snapshotRanks();
+  const normRows=[];
+  rows.forEach(row=>{
+    const key=row.match.key, before=APP.data.groupResults[key];
+    APP.data.groupResults[key]={home:String(row.api.home),away:String(row.api.away)};
+    APP.data.resultMeta[key]='api';
+    normRows.push(normalizedResultRow(row.match.group,row.match.idx,row.api.home,row.api.away,'api','final'));
+    logAction('api_result_sync','groupResults.'+key,before,APP.data.groupResults[key]);
+  });
+  await upsertNormalizedResults(normRows);
+  await saveState();
+  toast(t('saved'));
+  await runResultSyncCompare();
+}
+function viewSyncResults(){
+  const rows=APP._syncRows;
+  const counts={match:0,missing:0,mismatch:0,unmapped:0};
+  (rows||[]).forEach(r=>counts[r.status]=(counts[r.status]||0)+1);
+  return `<div class="card"><div class="between"><h3>🔄 ${esc(t('v_syncResults'))}</h3><span class="chip">${APP._lastSyncCheck?esc(APP._lastSyncCheck.slice(0,16).replace('T',' ')):esc(tl('Not checked','لم يتم الفحص'))}</span></div>
+    <div class="banner warn">⚠️ ${esc(tl('The app now reads/writes the normalized wc2026_match_results table, while keeping the old JSON as fallback.','التطبيق الآن يقرأ ويكتب من جدول wc2026_match_results مع إبقاء JSON القديم كاحتياطي.'))}</div>
+    <div class="sync-tools">
+      <button class="btn" onclick="runResultSyncCompare()">🔎 ${esc(tl('Compare API vs App','مقارنة API مع التطبيق'))}</button>
+      <button class="btn gold" onclick="applyAllApiResults()">✅ ${esc(tl('Apply all missing/different','تطبيق كل الناقص/المختلف'))}</button>
+      <button class="btn ghost" onclick="go('results')">✏️ ${esc(t('v_results'))}</button>
+    </div>
+  </div>
+  <div class="card"><div class="grid g2">
+    ${statTile(counts.match||0,tl('Synced','متطابق'))}${statTile((counts.missing||0)+(counts.mismatch||0),tl('Need update','تحتاج تحديث'))}
+    ${statTile((APP._resultsTableStatus&&APP._resultsTableStatus.ok)?tl('Normalized','منظم'):tl('JSON fallback','JSON احتياطي'),tl('Storage','التخزين'))}
+    ${statTile((APP._resultsTableStatus&&APP._resultsTableStatus.applied)!=null?APP._resultsTableStatus.applied:'—',tl('Loaded results','نتائج محملة'))}
+  </div></div>
+  <div class="card">${APP._syncLoading?`<div class="state">${esc(t('loading'))}</div>`:renderSyncComparisonRows(rows)}</div>`;
+}
+
 /* ================= V29 ALERTS / BACKUP / SHARE / HEALTH / SCENARIO LAB ================= */
 function appAlerts(){
   const alerts=[];
@@ -2735,12 +2981,14 @@ function healthShapeReport(){
     {label:'Audit log',value:Array.isArray(d.auditLog)?d.auditLog.length:'Missing'},
     {label:'Data quality issues',value:auditDataQuality().length},
     {label:'Online',value:navigator.onLine?'YES':'NO'},
-    {label:'PWA mode',value:isStandalonePWA()?'Installed':'Browser'}
+    {label:'PWA mode',value:isStandalonePWA()?'Installed':'Browser'},
+    {label:'Results storage',value:(APP._resultsTableStatus&&APP._resultsTableStatus.ok)?'normalized table':'JSON fallback'},
+    {label:'Normalized rows',value:(APP._resultsTableStatus&&APP._resultsTableStatus.rows)!=null?APP._resultsTableStatus.rows:'—'}
   ];
 }
 function viewHealth(){
   const rows=healthShapeReport();
-  return `<div class="card"><div class="between"><h3>🧪 ${esc(t('v_health'))}</h3><button class="btn sm" onclick="testApis()">${esc(tl('Run API test','تشغيل فحص API'))}</button></div>
+  return `<div class="card"><div class="between"><h3>🧪 ${esc(t('v_health'))}</h3><button class="btn sm" onclick="testApis()">${esc(tl('Run API test','تشغيل فحص API'))}</button><button class="btn ghost sm" onclick="go('syncresults')">🔄 ${esc(t('v_syncResults'))}</button></div>
     <div class="sub">${esc(tl('Checks database shape, local status, PWA status, and external API connectivity.','يفحص شكل قاعدة البيانات وحالة الاتصال والتطبيق وواجهات API.'))}</div>
   </div>
   <div class="card"><div class="health-grid">${rows.map(r=>`<div class="health-tile"><div class="label">${esc(r.label)}</div><div class="value">${esc(String(r.value))}</div></div>`).join('')}</div></div>
@@ -2929,6 +3177,12 @@ async function testApis(){
     lines.push('Supabase: HTTP '+r.status+' '+r.statusText);
     const txt=await r.text();
     lines.push('Supabase body preview: '+txt.slice(0,160));
+    try{
+      const rr=await fetchWithTimeout(RESULTS_API+'?select=match_key,status,source&limit=3',{headers:H},10000);
+      lines.push('Results table: HTTP '+rr.status+' '+rr.statusText);
+      const rrt=await rr.text();
+      lines.push('Results table preview: '+rrt.slice(0,160));
+    }catch(ee){ lines.push('Results table failed: '+String(ee&&ee.message?ee.message:ee)); }
   }catch(e){
     lines.push('Supabase failed: '+String(e&&e.message?e.message:e));
     lines.push('Possible causes: CORS/preflight blocked, wrong key, RLS policy, DNS/network blocked, or sandbox/file origin.');
