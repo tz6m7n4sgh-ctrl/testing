@@ -522,6 +522,194 @@ body{
 #adminBtn{display:inline-flex!important;max-width:92px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media(max-width:420px){.topbar .brand span:last-child{max-width:155px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#adminBtn{min-width:66px;padding:0 9px}.iconbtn{min-width:40px}}
 
+
+/* ===== v35 desktop layout polish =====
+   Mobile stays the same. Desktop gets a stable left rail and max 2-column content,
+   so cards/tables do not become cramped or visually messy. */
+@media(min-width:980px){
+  body{
+    padding-bottom:0!important;
+    background:
+      radial-gradient(circle at 8% 0%, rgba(34,199,122,.14), transparent 28%),
+      radial-gradient(circle at 100% 0%, rgba(247,201,72,.12), transparent 26%),
+      linear-gradient(180deg,#f7faf8 0%,#eef5f1 100%)!important;
+  }
+
+  .topbar{
+    position:sticky!important;
+    top:0;
+    min-height:64px;
+    padding-left:28px!important;
+    padding-right:28px!important;
+  }
+
+  .phase.wrap,
+  main.wrap{
+    width:auto!important;
+    max-width:none!important;
+    margin-left:132px!important;
+    margin-right:28px!important;
+    padding-left:0!important;
+    padding-right:0!important;
+  }
+
+  .phase.wrap{
+    margin-top:14px!important;
+    border-radius:22px!important;
+  }
+
+  .botnav{
+    position:fixed!important;
+    left:22px!important;
+    right:auto!important;
+    top:92px!important;
+    bottom:auto!important;
+    transform:none!important;
+    width:88px!important;
+    max-width:88px!important;
+    height:auto!important;
+    max-height:calc(100vh - 120px);
+    overflow:auto;
+    flex-direction:column!important;
+    justify-content:flex-start!important;
+    gap:8px!important;
+    padding:10px!important;
+    border:1px solid rgba(16,32,25,.10)!important;
+    border-radius:28px!important;
+    background:rgba(255,255,255,.92)!important;
+    backdrop-filter:saturate(140%) blur(14px);
+    box-shadow:0 18px 55px rgba(7,21,16,.18)!important;
+  }
+  .botnav button{
+    width:100%!important;
+    min-height:62px!important;
+    padding:8px 4px!important;
+    flex:none!important;
+    flex-direction:column!important;
+    justify-content:center!important;
+    font-size:11px!important;
+    border-radius:20px!important;
+  }
+  .botnav button .ic{font-size:22px!important}
+  .botnav button.on{
+    background:linear-gradient(180deg,#eafff2,#fff)!important;
+    box-shadow:inset 0 0 0 1px rgba(34,199,122,.20);
+  }
+
+  main#view{
+    display:grid!important;
+    grid-template-columns:repeat(12,minmax(0,1fr))!important;
+    gap:18px!important;
+    align-items:start!important;
+    padding-top:16px!important;
+    padding-bottom:42px!important;
+  }
+
+  /* Default desktop card layout: readable two-column max. */
+  main#view>.card,
+  main#view>details.acc{
+    grid-column:span 6!important;
+    margin:0!important;
+    min-width:0!important;
+  }
+  main#view>.card:first-child{
+    grid-column:1/-1!important;
+  }
+
+  /* Tables, admin pages, and heavy forms need full width on desktop. */
+  body[data-view="leaderboard"] main#view>.card,
+  body[data-view="results"] main#view>.card,
+  body[data-view="audit"] main#view>.card,
+  body[data-view="repair"] main#view>.card,
+  body[data-view="settings"] main#view>.card,
+  body[data-view="backup"] main#view>.card,
+  body[data-view="health"] main#view>.card,
+  body[data-view="syncresults"] main#view>.card,
+  body[data-view="matches"] main#view>details.acc,
+  body[data-view="predictions"] main#view>details.acc,
+  main#view>.card:has(table),
+  main#view>.card:has(.gtable),
+  main#view>.card:has(.wide),
+  main#view>.card:has(.result-card),
+  main#view>.card:has(pre){
+    grid-column:1/-1!important;
+  }
+
+  /* Dashboard remains rich but not over-compressed. */
+  body[data-view="dashboard"] main#view>.card:first-child{grid-column:1/-1!important}
+  body[data-view="dashboard"] main#view>.card{grid-column:span 6!important}
+  body[data-view="dashboard"] main#view>.card:nth-child(2),
+  body[data-view="dashboard"] main#view>.card:nth-child(3){grid-column:span 6!important}
+
+  .card{
+    border-radius:24px!important;
+    padding:20px!important;
+  }
+
+  .sheet{
+    max-width:720px!important;
+    border-radius:26px!important;
+    margin-bottom:24px!important;
+  }
+
+  .gtable,
+  table{
+    width:100%;
+  }
+  .gtable-wrap,
+  .table-wrap{
+    overflow-x:auto;
+  }
+
+  .result-score-row,
+  .lab-score{
+    max-width:760px;
+  }
+
+  .hero-title{font-size:42px!important}
+}
+
+/* Very wide screens: keep content elegant, not stretched. */
+@media(min-width:1500px){
+  .phase.wrap,
+  main.wrap{
+    max-width:1320px!important;
+    margin-left:auto!important;
+    margin-right:auto!important;
+    transform:translateX(46px);
+  }
+}
+
+
+/* ===== v36 live date/time polish ===== */
+.clockpill{
+  display:none;
+  align-items:center;
+  gap:8px;
+  min-height:36px;
+  padding:0 12px;
+  border-radius:999px;
+  background:rgba(255,255,255,.12);
+  color:#fff;
+  font-weight:800;
+  font-size:12px;
+  white-space:nowrap;
+}
+.clockpill .date{opacity:.86;font-weight:700}
+.clockpill .time{font-family:var(--num);font-weight:1000;color:#f7c948}
+.match-time,.time-chip{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  white-space:nowrap;
+}
+@media(min-width:760px){
+  .clockpill{display:inline-flex}
+}
+@media(max-width:520px){
+  .topbar .brand{max-width:48vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+}
+
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DEDV833VML"></script>
@@ -538,6 +726,7 @@ body{
 <div class="topbar">
   <div class="brand"><span class="dot"></span><span id="brandTxt">WC2026 Pick'em</span></div>
   <div class="spacer"></div>
+  <div class="clockpill" id="clockPill"><span class="date">—</span><span class="time">—</span></div>
   <button class="iconbtn" id="langBtn" onclick="toggleLang()">EN</button>
   <button class="iconbtn gold hide" id="adminBtn" onclick="openAdmin()">Admin</button>
   <button class="iconbtn" id="installBtn" onclick="installPWA()" style="display:none">Install</button>
@@ -768,6 +957,33 @@ function trackPageView(view){
     });
   }catch(_){}
 }
+
+function formatUaeDateTimeParts(){
+  const now=new Date();
+  const d=new Intl.DateTimeFormat(LANG==='ar'?'ar-AE':'en-GB',{
+    timeZone:'Asia/Dubai',
+    weekday:'short',
+    day:'2-digit',
+    month:'short',
+    year:'numeric'
+  }).format(now);
+  const t=new Intl.DateTimeFormat('en-US',{
+    timeZone:'Asia/Dubai',
+    hour:'numeric',
+    minute:'2-digit',
+    hour12:true
+  }).format(now);
+  return {date:d,time:t};
+}
+function updateHeaderDateTime(){
+  const el=$('clockPill');
+  if(!el) return;
+  const p=formatUaeDateTimeParts();
+  const dateEl=el.querySelector('.date'), timeEl=el.querySelector('.time');
+  if(dateEl) dateEl.textContent=p.date+' UAE';
+  if(timeEl) timeEl.textContent=p.time;
+}
+
 
 
 function fetchWithTimeout(url, opts={}, ms=8000){
@@ -1219,11 +1435,13 @@ function buildLocalSchedule(){ // synthesize from GROUPS so All-Matches always h
 }
 function dateRange(a,b){ const out=[],d=new Date(a+'T00:00:00Z'),end=new Date(b+'T00:00:00Z');
   while(d<=end){ out.push(d.toISOString().slice(0,10)); d.setUTCDate(d.getUTCDate()+1);} return out; }
-function uaeToday(){ // UAE = UTC+4, no DST. Works correctly even when user's device is already in UAE timezone.
-  const n=new Date();
-  const utcMs=n.getTime() + n.getTimezoneOffset()*60000;
-  const uaeMs=utcMs + 4*60*60000;
-  return new Date(uaeMs).toISOString().slice(0,10);
+function uaeNowMs(){
+  return Date.now();
+}
+function uaeToday(){
+  const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Dubai',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());
+  const get=t=>parts.find(p=>p.type===t)?.value||'';
+  return `${get('year')}-${get('month')}-${get('day')}`;
 }
 function toAmPmFromHHMM(hhmm){
   if(!hhmm) return '';
@@ -1232,6 +1450,38 @@ function toAmPmFromHHMM(hhmm){
   let h=Number(m[1]), min=m[2], ampm=h>=12?'PM':'AM';
   h=h%12; if(h===0) h=12;
   return h+':'+min+' '+ampm;
+}
+function parseTimeTo24(time){
+  if(!time) return null;
+  const s=String(time).trim().toUpperCase();
+  let m=s.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/);
+  if(m){
+    let h=Number(m[1]), min=Number(m[2]);
+    if(m[3]==='PM'&&h<12) h+=12;
+    if(m[3]==='AM'&&h===12) h=0;
+    return {h,min};
+  }
+  m=s.match(/^(\d{1,2}):(\d{2})/);
+  if(m) return {h:Number(m[1]),min:Number(m[2])};
+  return null;
+}
+function matchUaeTimestamp(m){
+  if(!m||!m.date) return 0;
+  const tm=parseTimeTo24(m.time||m.strTime||'00:00');
+  const h=tm?tm.h:0, min=tm?tm.min:0;
+  return Date.UTC(Number(m.date.slice(0,4)),Number(m.date.slice(5,7))-1,Number(m.date.slice(8,10)),h-4,min,0);
+}
+function matchIsUpcoming(m){
+  if(!m||!m.group||m.idx==null) return false;
+  if(matchResult(m.group,m.idx).complete) return false;
+  const ts=matchUaeTimestamp(m);
+  if(!ts) return true;
+  return ts + 3*60*60*1000 >= uaeNowMs();
+}
+function pastUncompletedMatches(limit){
+  const sched=(Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule();
+  return sched.filter(m=>m.group&&m.idx!=null&&!matchResult(m.group,m.idx).complete&&matchUaeTimestamp(m)&&matchUaeTimestamp(m)+3*60*60*1000<uaeNowMs())
+    .sort((a,b)=>matchUaeTimestamp(a)-matchUaeTimestamp(b)).slice(0,limit||6);
 }
 function eventTimeUAE(e){
   try{
@@ -1437,7 +1687,7 @@ function go(view){ APP.view=view; closeSheet(); render(); window.scrollTo(0,0); 
 
 /* ---- top-level render ---- */
 function applyDir(){ document.documentElement.lang=LANG; document.documentElement.dir=LANG==='ar'?'rtl':'ltr';
-  $('langBtn').textContent=LANG==='ar'?'EN':'ع'; $('brandTxt').textContent=t('brand');
+  $('langBtn').textContent=LANG==='ar'?'EN':'ع'; $('brandTxt').textContent=t('brand'); updateHeaderDateTime();
   const ab=$('adminBtn');
   if(ab){
     ab.classList.remove('hide');
@@ -1458,8 +1708,9 @@ function render(){
     return;
   }
 
+  const dt=formatUaeDateTimeParts();
   $('phaseStrip').innerHTML=
-    `<span>⚽</span><b>${esc(t(currentPhase()))}</b><span>· ${completedMatchCount()}/72 ${esc(t('completedMatches'))}</span>`;
+    `<span>⚽</span><b>${esc(t(currentPhase()))}</b><span>· ${completedMatchCount()}/72 ${esc(t('completedMatches'))}</span><span>· 🕒 ${esc(dt.date)} ${esc(dt.time)} UAE</span>`;
 
   let banner='';
   if(APP.error==='load'){
@@ -1553,7 +1804,7 @@ function compareGroupCard(g,p1,p2,n1,n2){
 /* ================= DASHBOARD ================= */
 
 function dashboardNextMatch(todayList){
-  const today=(todayList||[]).filter(m=>m.group&&m.idx!=null&&!matchResult(m.group,m.idx).complete);
+  const today=(todayList||[]).filter(matchIsUpcoming).sort((a,b)=>matchUaeTimestamp(a)-matchUaeTimestamp(b));
   return today[0] || upcomingGroupMatches(1)[0] || null;
 }
 function renderHomeHero(lb,leader,next){
@@ -1586,7 +1837,11 @@ function renderPodium(lb){
   </div>`).join('')}</div>`;
 }
 function renderNextMatchImpact(m){
-  if(!m) return `<div class="sub">${esc(t('noData'))}</div>`;
+  if(!m){
+    const late=pastUncompletedMatches(3);
+    if(late.length) return `<div class="banner warn">⏰ ${esc(tl('Some past matches need results before the next match can be shown correctly.','بعض المباريات السابقة تحتاج إدخال النتائج قبل عرض المباراة القادمة بشكل صحيح.'))}<div style="margin-top:8px">${late.map(x=>`${teamHtml(x.home)} vs ${teamHtml(x.away)} · ${esc(matchDateTime(x))}`).join('<br>')}</div></div>`;
+    return `<div class="sub">${esc(t('noData'))}</div>`;
+  }
   const sc=scenarioForMatch(m);
   return `<div class="next-impact-card">
     <div class="between"><h3>⚡ ${teamHtml(m.home)} vs ${teamHtml(m.away)}</h3><span class="match-time">${esc(matchDateTime(m))}</span></div>
@@ -1760,7 +2015,9 @@ function renderMiniImpact(group,idx){
 }
 function upcomingGroupMatches(limit){
   const sched=(Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule();
-  return sched.filter(m=>m.group&&m.idx!=null&&!matchResult(m.group,m.idx).complete).slice(0,limit||6);
+  return sched.filter(matchIsUpcoming)
+    .sort((a,b)=>matchUaeTimestamp(a)-matchUaeTimestamp(b))
+    .slice(0,limit||6);
 }
 function renderWhatCanChange(matches){
   matches=matches||upcomingGroupMatches(3);
@@ -2941,6 +3198,10 @@ function appAlerts(){
   GROUP_KEYS.forEach(g=>{ if(groupComplete(g)) alerts.push({emoji:'✅',title:`Group ${g} ${tl('complete','مكتملة')}`,meta:tl('Group ranking points are active.','تم تفعيل نقاط ترتيب المجموعة.'),view:'groups'}); });
   const issues=auditDataQuality();
   if(issues.length) alerts.push({emoji:'⚠️',title:tl('Prediction data needs review','بيانات التوقعات تحتاج مراجعة'),meta:`${issues.length} ${tl('issues found','مشاكل')}`,level:'high',view:'audit'});
+  const late=pastUncompletedMatches(3);
+  if(late.length){
+    alerts.push({emoji:'⏰',title:tl('Past matches need results','مباريات سابقة تحتاج نتائج'),meta:`${late.length} ${tl('match(es) are past kick-off and not completed in the app','مباراة بعد موعدها ولم تُدخل نتيجتها')}`,level:'high',view:'results'});
+  }
   const latest=latestCompletedMatch();
   if(latest){
     const r=matchResult(latest.group,latest.idx);
@@ -3344,6 +3605,8 @@ async function boot(){
   trackEvent('app_open',{view:APP.view||'dashboard'});
   registerPWA();
   updateInstallUI();
+  updateHeaderDateTime();
+  if(!APP._clockTimer) APP._clockTimer=setInterval(updateHeaderDateTime,30000);
   loadToday();
 }
 window.addEventListener('online',()=>{ if(APP.cached) boot(); });
