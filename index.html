@@ -4484,7 +4484,6 @@ const MORE_ITEMS=[
   {id:'matches',ic:'⚽',key:'nav_matches'},
   {id:'alerts',ic:'🔔',key:'v_alerts'},
   {id:'scenarios',ic:'⚡',key:'v_scenarios'},
-  {id:'ai',ic:'🤖',key:'v_ai'},
   {id:'sharecards',ic:'📲',key:'v_sharecards'},
   {id:'predictions',ic:'📝',key:'v_predictions'},
   {id:'consensus',ic:'👥',key:'v_consensus'},
@@ -4582,8 +4581,7 @@ function render(){
     sharecards:viewShareCards,
     health:viewHealth,
     syncresults:viewSyncResults,
-    help:viewHelp,
-    ai:viewAI
+    help:viewHelp
   };
 
   const fn=map[APP.view]||viewDashboard;
@@ -4660,7 +4658,6 @@ function renderHomeHero(lb,leader,next){
       ${statTile(next?matchDateTime(next):completedMatchCount()+'/72',next?tl('Next match','المباراة القادمة'):t('completedMatches'))}
     </div>
     <div class="hero-actions">
-      <button class="btn gold sm" onclick="go('ai')">🤖 ${esc(t('v_ai'))}</button>
       <button class="btn ghost sm" onclick="go('scenarios')">⚡ ${esc(t('v_scenarios'))}</button>
       <button class="btn ghost sm" onclick="go('leaderboard')">🏆 ${esc(t('v_leaderboard'))}</button>
       <button class="btn ghost sm" onclick="shareLeaderboard()">📲 ${esc(t('share'))}</button>
@@ -4691,26 +4688,8 @@ function renderNextMatchImpact(m){
       <div class="insight"><div class="title">${esc(tl('If','إذا فاز'))} ${teamHtml(m.home)}</div><div class="impact-list"><span class="impact-pill good">+${SCORING.edgeCorrect}: ${sc.home.length}</span></div><div class="sub">${esc(sc.home.slice(0,8).join(', ')||t('none'))}${sc.home.length>8?'…':''}</div></div>
       <div class="insight"><div class="title">${esc(tl('If','إذا فاز'))} ${teamHtml(m.away)}</div><div class="impact-list"><span class="impact-pill gold">+${SCORING.edgeCorrect}: ${sc.away.length}</span></div><div class="sub">${esc(sc.away.slice(0,8).join(', ')||t('none'))}${sc.away.length>8?'…':''}</div></div>
     </div>
-    <div class="voice-row"><button class="btn sm" onclick="go('scenarios')">🤖 ${esc(tl('Simulate with AI','محاكاة بالذكاء'))}</button><button class="btn ghost sm" onclick="shareTodayImpact()">${esc(t('share'))}</button></div>
+    <div class="voice-row"><button class="btn sm" onclick="go('scenarios')">${esc(tl('Simulate scenario','محاكاة سيناريو'))}</button><button class="btn ghost sm" onclick="shareTodayImpact()">${esc(t('share'))}</button></div>
   </div>`;
-}
-function renderHomeAIQuick(next){
-  const ex=next?`${next.home} 2-1 ${next.away}`:tl('If Brazil beats Morocco 2-1','إذا فازت البرازيل على المغرب 2-1');
-  return `<div class="home-ai">
-    <textarea id="homeAiBox" placeholder="${esc(tl('Ask with voice or text: what changes if…','اسأل بالصوت أو الكتابة: ماذا يتغير إذا…'))}">${esc(ex)}</textarea>
-    <div class="voice-row">
-      <button class="micbtn" onclick="startVoiceInput('homeAiBox','ai')">🎙️ ${esc(tl('Speak','تحدث'))}</button>
-      <button class="btn sm" onclick="askAIFromHome()">🤖 ${esc(tl('Ask AI','اسأل الذكاء'))}</button>
-      <button class="btn ghost sm" onclick="$('homeAiBox').value='';$('homeAiAns').innerHTML=''">${esc(t('clear'))}</button>
-    </div>
-    <div id="homeAiAns"></div>
-  </div>`;
-}
-function askAIFromHome(){
-  const q=$('homeAiBox')?$('homeAiBox').value:'';
-  if(!q.trim()) return;
-  const ans=answerLocalAI(q,'scenario',LANG);
-  $('homeAiAns').innerHTML=`<div class="ai-ans">${esc(ans)}</div><button class="btn ghost sm" style="margin-top:8px" onclick='copyText(${JSON.stringify(ans)})'>${esc(t('copy'))}</button>`;
 }
 function renderBiggestMovers(latest){
   let rows=[];
@@ -5004,19 +4983,6 @@ function leaderboardNarrative(){
   const gap=lb[1] ? `${tl('The gap between first and second is','الفارق بين الأول والثاني')} ${lb[0].total-lb[1].total} ${t('pts')}.` : '';
   return `${top}. ${gap}`;
 }
-function aiSummaryInsightBadges(){
-  const today=matchesOnDate(uaeToday()).filter(m=>m.group&&m.idx!=null);
-  const y=completedMatchesOnDate(uaeDateOffset(-1));
-  const past=pastUncompletedMatches(20);
-  const activeGroups=GROUP_KEYS.filter(g=>computeGroupTable(g).some(x=>x.P>0)).length;
-  return [
-    {v:`${completedMatchCount()}/${totalGroupMatchCount()}`,l:tl('Completed','مكتملة')},
-    {v:String(y.length),l:tl('Yesterday results','نتائج أمس')},
-    {v:String(today.length),l:tl('Match Center','مركز المباريات')},
-    {v:String(activeGroups),l:tl('Active groups','مجموعات بدأت')},
-    {v:String(past.length),l:tl('Need results','تحتاج نتائج')}
-  ];
-}
 
 
 function allRelevantGroupsForHome(){
@@ -5225,7 +5191,7 @@ function renderCompleteGroupsCard(){
 function renderCompleteTodayCard(){
   const today=matchesOnDate(uaeToday()).filter(m=>m.group&&m.idx!=null);
   return `<section class="matchday-section">
-    <div class="section-title"><div><h3>📅 ${esc(tl('Today matches and all player predictions','مباريات اليوم وكل توقعات اللاعبين'))}</h3><p>${esc(uaeToday())} · ${esc(tl('UAE time','بتوقيت الإمارات'))}</p></div></div>
+    <div class="section-title"><div><h3>📅 ${esc(tl('Today matches and all player predictions','مباريات اليوم وكل توقعات اللاعبين'))}</h3><p>${esc(uaeToday())} · ${esc(tl('your time','بتوقيتك'))}</p></div></div>
     ${today.length?today.map(renderFullTodayMatchCard).join(''):`<div class="banner">${esc(t('noToday'))}</div>`}
   </section>`;
 }
@@ -5275,8 +5241,8 @@ function renderMatchdayStatusBar(){
     <div class="wc-card-head">
       <div>
         <div class="wc-kicker">⚽ ${esc(tl('WC Status','حالة كأس العالم'))}</div>
-        <h2>${esc(tl('Today · UAE time','اليوم · توقيت الإمارات'))}</h2>
-        <p>${esc(uaeToday())} · ${esc(formatUaeDateTimeParts().time)} UAE · ${esc(source)}</p>
+        <h2>${esc(tl('Today · your time','اليوم · بتوقيتك'))}</h2>
+        <p>${esc(uaeToday())} · ${esc(formatUaeDateTimeParts().time)} · ${esc(source)}</p>
       </div>
     </div>
     <div class="wc-status-grid">
@@ -5319,7 +5285,7 @@ function summaryResultBox(m){
   if(!m.api && !r.complete) return '';
   return `<div class="summary-result-box ${m.api?'api-live':''}">
     <div class="summary-result-teams">${teamHtml(r.home)} <b class="num">${r.hs}-${r.as}</b> ${teamHtml(r.away)}</div>
-    <div class="summary-result-meta">${esc(tl('Group','المجموعة'))} ${esc(m.group)} · ${esc(m.api?(m.date+' · '+m.time+' UAE · Live'):matchDateTime(m))}</div>
+    <div class="summary-result-meta">${esc(tl('Group','المجموعة'))} ${esc(m.group)} · ${esc(m.api?(m.date+' · '+m.time+' · Live'):matchDateTime(m))}</div>
   </div>`;
 }
 function summaryTodayMatchBox(m){
@@ -5341,61 +5307,6 @@ function summaryTodayMatchBox(m){
   </div>`;
 }
 
-function renderShortAISummary(){
-  const today=matchesOnDate(uaeToday()).filter(m=>m.group&&m.idx!=null);
-  const results=allCompletedResultsForHome().matches;
-  const groups=allRelevantGroupsForHome();
-  const lb=buildLeaderboard();
-  const past=pastUncompletedMatches(20);
-  const latest=results.length?results[results.length-1]:null;
-  const focus=today[0];
-
-  return `<div class="card short-ai-card summary-box-card">
-    <div class="between summary-box-head">
-      <div>
-        <div class="hero-kicker dark">🤖 ${esc(tl('AI Summary','ملخص ذكي'))}</div>
-        <h3>${esc(tl('What changed and what matters today','ما تغير وما يهم اليوم'))}</h3>
-      </div>
-      <div class="ai-summary-actions">
-        <button class="btn ghost sm" onclick="copyText(aiMatchdaySummaryText())">📋 ${esc(t('copy'))}</button>
-        <button class="btn ghost sm" onclick="shareText(aiMatchdaySummaryText())">📲 ${esc(t('share'))}</button>
-      </div>
-    </div>
-
-    <div class="summary-box-layout">
-      <section class="summary-panel">
-        <div class="summary-panel-title">🕘 ${esc(tl('Latest result','آخر نتيجة'))}</div>
-        ${latest?summaryResultBox(latest):`<div class="summary-empty">${esc(tl('No saved result yet.','لا توجد نتيجة محفوظة بعد.'))}</div>`}
-      </section>
-
-      <section class="summary-panel">
-        <div class="summary-panel-title">📊 ${esc(tl('Active groups','المجموعات النشطة'))}</div>
-        <div class="summary-groups-grid">
-          ${groups.length?groups.slice(0,4).map(summaryGroupBox).join(''):`<div class="summary-empty">${esc(tl('No active groups yet.','لا توجد مجموعات نشطة بعد.'))}</div>`}
-        </div>
-      </section>
-
-      <section class="summary-panel today-focus-panel">
-        <div class="summary-panel-title">📅 ${esc(tl('Today focus','محور اليوم'))}</div>
-        ${focus?summaryTodayMatchBox(focus):`<div class="summary-empty">${esc(tl('No matches are scheduled for today in the app schedule.','لا توجد مباريات مجدولة اليوم في التطبيق.'))}</div>`}
-      </section>
-
-      <section class="summary-panel">
-        <div class="summary-panel-title">👥 ${esc(tl('Players','اللاعبون'))}</div>
-        ${lb[0]?`<div class="summary-player-box">
-          <div class="summary-player-main">${playerNameHtml(lb[0].name,'sm')}</div>
-          <div class="summary-player-score num">${lb[0].total} ${esc(t('pts'))}</div>
-          <div class="summary-player-meta">${lb[1]?`${esc(tl('Chasing','يلاحق'))}: ${esc(lb[1].name)} · ${lb[1].total} ${esc(t('pts'))}`:esc(tl('Current leader','المتصدر الحالي'))}</div>
-        </div>`:`<div class="summary-empty">${esc(t('noData'))}</div>`}
-      </section>
-
-      ${past.length?`<section class="summary-panel warning">
-        <div class="summary-panel-title">⚠️ ${esc(tl('Action needed','إجراء مطلوب'))}</div>
-        <div class="summary-empty">${past.length} ${esc(tl('past match(es) need results.','مباراة سابقة تحتاج نتائج.'))}</div>
-      </section>`:''}
-    </div>
-  </div>`;
-}
 function wcSection(title,subtitle,body,cls){
   return `<div class="card wc-home-card ${cls||''}">
     <div class="wc-section-title"><div><h3>${title}</h3>${subtitle?`<p>${esc(subtitle)}</p>`:''}</div></div>
@@ -5497,7 +5408,7 @@ function homeAISummaryText(){
   if(today.length){
     lines.push(tl(`Match Center: ${today.length} live API match${today.length>1?'es':''}.`,`مركز المباريات: ${today.length} مباراة من API مباشر.`));
   }else{
-    lines.push(tl('Match Center: no live API matches in the current UAE window.','مركز المباريات: لا توجد مباريات من API مباشر ضمن نافذة الإمارات الحالية.'));
+    lines.push(tl('Match Center: no live API matches in the current match window.','مركز المباريات: لا توجد مباريات من API مباشر ضمن نافذة المباريات الحالية.'));
   }
   if(next){
     lines.push(tl(`Next live kickoff: ${teamText(next.home)} vs ${teamText(next.away)} at ${matchDateTime(next)}.`,`المباراة القادمة من API: ${teamText(next.home)} ضد ${teamText(next.away)} في ${matchDateTime(next)}.`));
@@ -5744,7 +5655,7 @@ function renderMatchCenterHub(){
       </div>
       ${pickRows}
     </div>`;
-  }).join(''):`<div class="hub-empty">${esc(tl('No live API matches in the current UAE window. Saved schedule is not used on Home.','لا توجد مباريات من الـ API المباشر ضمن نافذة الإمارات الحالية. لا يتم استخدام الجدول المحفوظ في الصفحة الرئيسية.'))}</div>`;
+  }).join(''):`<div class="hub-empty">${esc(tl('No live API matches in the current match window. Saved schedule is not used on Home.','لا توجد مباريات من الـ API المباشر ضمن نافذة المباريات الحالية. لا يتم استخدام الجدول المحفوظ في الصفحة الرئيسية.'))}</div>`;
   return `<div class="hub-panel">
     <h3>📅 ${esc(tl('Match Center','مركز المباريات'))}<span class="hint">${esc(tl('live API + prediction split','API مباشر + انقسام التوقعات'))}</span></h3>
     ${body}
@@ -5786,28 +5697,6 @@ function renderGroupPulseHub(){
   </div>`;
 }
 
-function renderHomeAISummary(){
-  const today=todayApiMatches();
-  const yesterday=apiYesterdayResults();
-  const latest=latestApiResults(1)[0]||null;
-  const next=nextApiMatch();
-  return `<div class="card wc-home-card wc-ai-summary-card">
-    <div class="wc-ai-head">
-      <div>
-        <div class="wc-kicker">🤖 ${esc(tl('Matchday Summary','ملخص يوم المباريات'))}</div>
-        <h2>${esc(tl('Yesterday + today status','حالة أمس واليوم'))}</h2>
-      </div>
-      <span class="wc-ai-source">${esc(homeUsesApiResults()?tl('Live data','بيانات مباشرة'):tl('Latest saved data','آخر بيانات محفوظة'))}</span>
-    </div>
-    <p class="wc-ai-copy">${esc(homeAISummaryText())}</p>
-    <div class="wc-ai-mini-grid">
-      <div><b class="num">${yesterday.length}</b><span>${esc(tl('Yesterday finals','نتائج أمس'))}</span></div>
-      <div><b class="num">${today.length}</b><span>${esc(tl('Match Center','مركز المباريات'))}</span></div>
-      <div><b>${latest?latest.hs+'-'+latest.as:'—'}</b><span>${esc(tl('Latest final','آخر نتيجة'))}</span></div>
-      <div><b>${next?next.time:'—'}</b><span>${esc(tl('Next UAE kickoff','القادمة بتوقيت الإمارات'))}</span></div>
-    </div>
-  </div>`;
-}
 function renderPredictionDashboard(){
   const today=todayApiMatches();
   if(!today.length) return wcSection(`📈 ${esc(tl('Prediction Dashboard','لوحة التوقعات'))}`,tl('Prediction split appears when matches are in the hub.','يظهر انقسام التوقعات عندما توجد مباريات في المركز.'),`<div class="wc-empty">${esc(APP._homeApiError?tl('Live match data is temporarily unavailable.','بيانات المباريات المباشرة غير متاحة مؤقتاً.'):t('noToday'))}</div>`,'wc-pred-dashboard');
@@ -5880,7 +5769,7 @@ function renderGroupsFeed(){
 function renderTodayFeed(){
   const today=todayApiMatches();
   const body=today.length?`<div class="wc-today-list">${today.map(renderTodayMatchFeedCard).join('')}</div>`:`<div class="wc-empty">${esc(t('noToday'))}</div>`;
-  return wcSection(`📅 ${esc(tl('Match Center','مركز المباريات'))}`,tl('Live match window · UAE time · player predictions','نافذة المباريات الحالية · توقيت الإمارات · توقعات اللاعبين'),body,'wc-today-card');
+  return wcSection(`📅 ${esc(tl('Match Center','مركز المباريات'))}`,tl('Current match window · your time · player predictions','نافذة المباريات الحالية · بتوقيتك · توقعات اللاعبين'),body,'wc-today-card');
 }
 function renderTodayMatchFeedCard(m){
   const split=playerPredictionSplit(m);
@@ -5924,67 +5813,6 @@ function renderTodayMatchFeedCard(m){
   </div>`;
 }
 
-function renderAIMatchdaySummary(){
-  const warnings=dataCompletenessWarnings();
-  const today=matchesOnDate(uaeToday()).filter(m=>m.group&&m.idx!=null);
-  const results=allCompletedResultsForHome();
-  const groups=allRelevantGroupsForHome();
-  return `<div class="card ai-complete-briefing">
-    <div class="briefing-hero">
-      <div>
-        <div class="hero-kicker dark">🤖 ${esc(tl('Complete Matchday Briefing','موجز كامل ليوم المباريات'))}</div>
-        <h2>${esc(tl('Results, groups, today matches, and player predictions','النتائج والمجموعات ومباريات اليوم وتوقعات اللاعبين'))}</h2>
-        <p>${esc(tl('This Home page is built from saved results, group tables, today schedule, and every player prediction.','هذه الصفحة مبنية من النتائج المحفوظة وجداول المجموعات وجدول اليوم وكل توقعات اللاعبين.'))}</p>
-      </div>
-      <div class="ai-summary-actions">
-        <button class="btn gold sm" onclick="copyText(aiMatchdaySummaryText())">📋 ${esc(t('copy'))}</button>
-        <button class="btn ghost sm" onclick="shareText(aiMatchdaySummaryText())">📲 ${esc(t('share'))}</button>
-        <button class="btn ghost sm" onclick="go('syncresults')">🔄 ${esc(tl('Sync','مزامنة'))}</button>
-      </div>
-    </div>
-
-    <div class="briefing-kpis">
-      <div><b class="num">${completedMatchCount()}/${totalGroupMatchCount()}</b><span>${esc(tl('Completed group matches','مباريات مجموعات مكتملة'))}</span></div>
-      <div><b class="num">${results.matches.length}</b><span>${esc(results.label)}</span></div>
-      <div><b class="num">${today.length}</b><span>${esc(tl('Match Center','مركز المباريات'))}</span></div>
-      <div><b class="num">${groups.length}</b><span>${esc(tl('Groups covered','مجموعات مشمولة'))}</span></div>
-      <div><b class="num">${playerNames().length}</b><span>${esc(tl('Players','لاعبون'))}</span></div>
-    </div>
-
-    ${warnings.length?`<div class="briefing-warning">⚠️ ${warnings.map(esc).join('<br>')}</div>`:''}
-
-    ${renderCompleteResultsCard()}
-    ${renderCompleteGroupsCard()}
-    ${renderCompleteTodayCard()}
-    ${renderCompletePlayersCard()}
-  </div>`;
-}
-function aiMatchdaySummaryText(){
-  const today=matchesOnDate(uaeToday()).filter(m=>m.group&&m.idx!=null);
-  const resultRows=latestResultNarrativeRows();
-  const groupRows=currentGroupNarrativeRows();
-  const todayRows=todayPredictionNarrativeRows();
-  const lines=[
-    tl('AI Matchday Briefing','موجز اليوم بالذكاء'),
-    `${uaeToday()} · UAE`,
-    '',
-    tl('WC2026 update','تحديث WC2026'),
-    `${completedMatchCount()}/${totalGroupMatchCount()} ${tl('group matches completed','مباراة مجموعات مكتملة')}. ${today.length} ${tl('matches today','مباريات اليوم')}.`,
-    '',
-    tl('Yesterday / latest results','نتائج أمس / آخر النتائج'),
-    resultRows.length?resultRows.map(r=>`- ${r.title} (${r.meta})${r.impact.length?' | '+r.impact.join(', '):''}`).join('\n'):tl('No saved results yet.','لا توجد نتائج محفوظة بعد.'),
-    '',
-    tl('Groups summary','ملخص المجموعات'),
-    groupRows.length?groupRows.map(g=>`- ${g.text}`).join('\n'):tl('No group has started yet.','لم تبدأ أي مجموعة بعد.'),
-    '',
-    tl('Players summary','ملخص اللاعبين'),
-    leaderboardNarrative(),
-    '',
-    tl('Today matches and prediction split','مباريات اليوم وانقسام التوقعات'),
-    todayRows.length?todayRows.map(m=>`- ${m.title} (${m.meta}): ${m.blocks.map(b=>`${b.label} ${b.count}`).join(' / ')}`).join('\n'):tl('No matches today.','لا مباريات اليوم.')
-  ];
-  return lines.join('\n');
-}
 function renderYesterdayResultsSection(){
   const y=uaeDateOffset(-1);
   let list=completedMatchesOnDate(y);
@@ -6258,47 +6086,6 @@ function mdhUaeTimeLabel(m){
 
   return tl('UAE conversion unavailable','تحويل الإمارات غير متوفر');
 }
-function mdhAiSummaryData(){
-  const matches=matchCenterMatches();
-  const latest=latestApiResults(1)[0]||null;
-  const yesterday=apiYesterdayResults();
-  const next=nextApiMatch?nextApiMatch():matches[0]||null;
-  const divided=typeof mostDividedTodayMatch==='function'?mostDividedTodayMatch():null;
-  const warnings=mdhWarningItems?mdhWarningItems():{total:0};
-
-  return [
-    {
-      title:tl('What happened','ماذا حدث'),
-      body:latest?tl(`${mdhLatestScoreLabel(latest)} was the latest final.`,`${mdhLatestScoreLabel(latest)} هي آخر نتيجة نهائية.`):tl('No final result has been saved yet.','لم يتم حفظ أي نتيجة نهائية بعد.')
-    },
-    {
-      title:tl('What is next','ما القادم'),
-      body:next?tl(`${mdhMatchName(next)} kicks off ${mdhUaeTimeLabel(next)}.`,`${mdhMatchName(next)} تنطلق ${mdhUaeTimeLabel(next)}.`):tl('No upcoming match is currently detected.','لا توجد مباراة قادمة حالياً.')
-    },
-    {
-      title:tl('Prediction watch','متابعة التوقعات'),
-      body:divided&&divided.match?tl(`${mdhMatchName(divided.match)} is the most divided pool pick.`,`${mdhMatchName(divided.match)} هي أكثر مباراة منقسمة في التوقعات.`):tl('Prediction split appears when match picks are available.','يظهر انقسام التوقعات عند توفر اختيارات اللاعبين.')
-    },
-    {
-      title:tl('Needs attention','يحتاج انتباه'),
-      body:warnings.total?tl(`${warnings.total} data/result item needs review.`,`${warnings.total} عنصر بيانات/نتائج يحتاج مراجعة.`):tl('No urgent data warnings.','لا توجد تنبيهات بيانات عاجلة.')
-    }
-  ];
-}
-function renderMdhAiSummary(){
-  const rows=mdhAiSummaryData();
-  return `<div class="mdh-card mdh-ai-structured">
-    <div class="mdh-section-head">
-      <div>
-        <h3>🤖 ${esc(tl('AI-style summary','ملخص ذكي منظم'))}</h3>
-        <p>${esc(tl('Structured view of what happened, what is next, and what matters for picks.','عرض منظم لما حدث، وما القادم، وما يهم للتوقعات.'))}</p>
-      </div>
-    </div>
-    <div class="mdh-ai-grid">
-      ${rows.map(x=>`<div class="mdh-ai-item"><strong>${esc(x.title)}</strong><p>${esc(x.body)}</p></div>`).join('')}
-    </div>
-  </div>`;
-}
 
 function renderMdhStatusHero(){
   const parts=formatUaeDateTimeParts();
@@ -6325,7 +6112,7 @@ function renderMdhStatusHero(){
         <div class="mdh-note">${esc(nextNote)}</div>
         ${next?`<div class="mdh-time-grid">
           <div class="mdh-time-cell"><span>${esc(tl('API / provider time','وقت API / المصدر'))}</span><b>${esc(mdhApiTimeLabel(next))}</b></div>
-          <div class="mdh-time-cell"><span>${esc(tl('Converted UAE time','الوقت المحول للإمارات'))}</span><b>${esc(mdhUaeTimeLabel(next))}</b></div>
+          <div class="mdh-time-cell"><span>${esc(tl('Your local time','وقتك المحلي'))}</span><b>${esc(mdhUaeTimeLabel(next))}</b></div>
         </div>`:''}
       </div>
       <div class="mdh-kpis">
@@ -6349,7 +6136,7 @@ function renderMdhMatchCard(m){
     </div>
     <div class="mdh-time-grid">
       <div class="mdh-time-cell"><span>${esc(tl('API / provider time','وقت API / المصدر'))}</span><b>${esc(mdhApiTimeLabel(m))}</b></div>
-      <div class="mdh-time-cell"><span>${esc(tl('Converted UAE time','الوقت المحول للإمارات'))}</span><b>${esc(mdhUaeTimeLabel(m))}</b></div>
+      <div class="mdh-time-cell"><span>${esc(tl('Your local time','وقتك المحلي'))}</span><b>${esc(mdhUaeTimeLabel(m))}</b></div>
     </div>
     ${renderMdhSplitBar(m)}
     ${renderMdhPlayerPicksTable(m)}
@@ -6357,7 +6144,7 @@ function renderMdhMatchCard(m){
 }
 function renderMdhTodayMatches(){
   const matches=matchCenterMatches();
-  const body=matches.length?matches.map(renderMdhMatchCard).join(''):`<div class="mdh-empty">${esc(tl('No match in the current UAE window. Check the full schedule for upcoming fixtures.','لا توجد مباراة ضمن نافذة الإمارات الحالية. راجع الجدول الكامل للمباريات القادمة.'))}</div>`;
+  const body=matches.length?matches.map(renderMdhMatchCard).join(''):`<div class="mdh-empty">${esc(tl('No match in the current match window. Check the full schedule for upcoming fixtures.','لا توجد مباراة ضمن نافذة المباريات الحالية. راجع الجدول الكامل للمباريات القادمة.'))}</div>`;
   return `<div class="mdh-card">
     <div class="mdh-section-head"><div><h3>📅 ${esc(tl('Today’s matches','مباريات اليوم'))}</h3><p>${esc(tl('Kickoff, group, status, and pool split.','وقت الانطلاق، المجموعة، الحالة، وانقسام التوقعات.'))}</p></div><button class="mdh-link" onclick="go('matches')">${esc(t('v_matches'))} →</button></div>
     ${body}
@@ -6606,8 +6393,8 @@ function scenarioCard(m){
     </div>
     ${sc.noEdge.length?`<div class="sub" style="margin-top:8px">${esc(t('noPred'))}: ${esc(sc.noEdge.slice(0,10).join(', '))}${sc.noEdge.length>10?'…':''}</div>`:''}
     <div class="voice-row">
-      <button class="btn ghost sm" onclick="renderScenarioSimulation('${esc(m.home).replace(/'/g,'')} 2-1 ${esc(m.away).replace(/'/g,'')}','scenarioAiOut');go('scenarios')">🤖 ${esc(tl('AI simulate home win','محاكاة فوز الأول'))}</button>
-      <button class="btn ghost sm" onclick="renderScenarioSimulation('${esc(m.home).replace(/'/g,'')} 1-2 ${esc(m.away).replace(/'/g,'')}','scenarioAiOut');go('scenarios')">🤖 ${esc(tl('AI simulate away win','محاكاة فوز الثاني'))}</button>
+      <button class="btn ghost sm" onclick="renderScenarioSimulation('${esc(m.home).replace(/'/g,'')} 2-1 ${esc(m.away).replace(/'/g,'')}','scenarioAiOut');go('scenarios')">${esc(tl('Simulate home win','محاكاة فوز الأول'))}</button>
+      <button class="btn ghost sm" onclick="renderScenarioSimulation('${esc(m.home).replace(/'/g,'')} 1-2 ${esc(m.away).replace(/'/g,'')}','scenarioAiOut');go('scenarios')">${esc(tl('Simulate away win','محاكاة فوز الثاني'))}</button>
     </div>
   </div>`;
 }
@@ -6617,7 +6404,7 @@ function viewScenarios(){
   return `<div class="card"><div class="between"><h3>⚡ ${esc(t('v_scenarios'))}</h3><button class="btn ghost sm" onclick="shareTodayImpact()">${esc(t('share'))}</button></div>
     <div class="sub">${esc(tl('Preview who gains points depending on upcoming match winners.','معاينة من سيكسب نقاطاً حسب الفائز في المباريات القادمة.'))}</div>
     <div class="scenario-ai-box">
-      <h3>🤖 ${esc(tl('AI scenario simulator','محاكي السيناريو بالذكاء'))}</h3>
+      <h3>⚡ ${esc(tl('Scenario simulator','محاكي السيناريو'))}</h3>
       <div class="sub">${esc(tl('Speak or type, for example: “If Brazil beats Morocco 2-1”.','تحدث أو اكتب مثلاً: إذا فازت البرازيل على المغرب 2-1.'))}</div>
       <textarea id="scenarioVoiceBox" placeholder="${esc(tl('Type or speak a scenario…','اكتب أو قل السيناريو…'))}" style="margin-top:10px"></textarea>
       <div class="voice-row">
@@ -6811,7 +6598,6 @@ function renderPlayerHero(name,p,c,me){
     <div class="profile-actions">
       <button class="btn gold sm" onclick="sharePlayer('${esc(name).replace(/'/g,'')}')">📲 ${esc(t('whatsapp'))}</button>
       <button class="btn ghost sm" onclick="go('scenarios')">⚡ ${esc(t('v_scenarios'))}</button>
-      <button class="btn ghost sm" onclick="go('ai')">🤖 ${esc(t('v_ai'))}</button>
     </div>
   </div>`;
 }
@@ -7428,32 +7214,8 @@ function buildSafeAIContext(){
     isAdmin:APP.isAdmin
   };
 }
-function aiSource(kind){ return `\n\n— ${t('answerFrom')}: ${t(kind)}`; }
 
 /* ---- routed Q&A ---- */
-function answerLeaderboardQuestion(ctx){
-  if(!ctx.players.length) return t('noData')+aiSource('from_appdata');
-  const top=ctx.players.slice(0,5).map(p=>`${p.rank}. ${p.name} — ${p.total} ${t('pts')}`).join('\n');
-  return `🏆 ${t('v_leaderboard')}\n${top}`+aiSource('from_calc');
-}
-function answerPlayerPointsQuestion(ctx,q){
-  const p=ctx.players.find(x=>q.toLowerCase().includes(x.name.toLowerCase()));
-  if(!p) return answerLeaderboardQuestion(ctx);
-  return `👤 ${p.name} — #${p.rank}, ${p.total} ${t('pts')}\n• ${t('groupMatchPts')}: ${p.groupMatch}\n• ${t('groupRankPts')}: ${p.groupRank}\n• ${t('koPts')}: ${p.knockout}\n• ${t('champPts')}: ${p.champ}`+aiSource('from_calc');
-}
-function answerPredictionQuestion(ctx){
-  const c=ctx.champConsensus.map(x=>`${x.key}: ${x.count}`).join('\n')||t('noData');
-  return `👑 ${t('champConsensus')}\n${c}`+aiSource('from_appdata');
-}
-function answerScheduleQuestion(ctx){
-  if(!ctx.today.length) return t('noToday')+aiSource('from_api');
-  return `📅 ${t('todayMatches')}\n`+ctx.today.map(m=>`${m.home} vs ${m.away} (${m.group})`).join('\n')+aiSource('from_api');
-}
-function answerWinnerQuestion(ctx){
-  if(!ctx.players.length) return t('noData')+aiSource('from_appdata');
-  const p=ctx.players[0];
-  return `🏆 ${t('projWinner')}: ${p.name} — ${p.total} ${t('pts')}`+aiSource('from_calc');
-}
 
 function scenarioMatchesPool(){
   const sched=(Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule();
@@ -7532,15 +7294,7 @@ function renderScenarioSimulation(q, targetId){
       ${top.map(r=>`<div class="sim-row"><div class="rank num">#${r.rank}</div><div class="name">${playerNameHtml(r.name,'sm')}</div><div class="num">${r.total} ${esc(t('pts'))}</div><div class="delta ${r.deltaRank>0?'up':r.deltaRank<0?'down':'same'}">${r.deltaRank>0?'▲'+r.deltaRank:r.deltaRank<0?'▼'+Math.abs(r.deltaRank):'–'} ${r.deltaPts?`+${r.deltaPts}`:''}</div></div>`).join('')}
     </div>
     <div class="sub" style="margin-top:10px">${esc(tl('Players affected','اللاعبون المتأثرون'))}: ${esc(movers.map(r=>`${r.name} +${r.deltaPts}`).join(', ')||t('none'))}</div>
-    <div class="voice-row"><button class="btn ghost sm" onclick="copyText(${JSON.stringify(summary)})">${esc(t('copy'))}</button><button class="btn ghost sm" onclick="askAI('explain scenario ${m.home} ${hs}-${as} ${m.away}')">🤖 ${esc(t('v_ai'))}</button></div>`;
-}
-function answerScenarioQuestion(question){
-  const parsed=parseScenarioCommand(question);
-  if(!parsed) return t('noData')+aiSource('from_calc');
-  const {match:m,hs,as}=parsed;
-  const rows=simulateLeaderboardForMatch(m,hs,as);
-  const top=rows.slice(0,5).map(r=>`${r.rank}. ${r.name} — ${r.total} ${t('pts')} (${r.deltaPts>=0?'+':''}${r.deltaPts})`).join('\n');
-  return `⚡ ${tl('Scenario simulation','محاكاة السيناريو')}\n${teamText(m.home)} ${hs}-${as} ${teamText(m.away)}\n${tl('Winner','الفائز')}: ${scenarioWinnerText(m,hs,as)}\n\n${top}`+aiSource('from_calc');
+    <div class="voice-row"><button class="btn ghost sm" onclick="copyText(${JSON.stringify(summary)})">${esc(t('copy'))}</button></div>`;
 }
 let VOICE_REC=null;
 function voiceSupported(){ return !!(window.SpeechRecognition||window.webkitSpeechRecognition); }
@@ -7555,27 +7309,11 @@ function startVoiceInput(targetId, autoAsk){
   rec.onresult=(e)=>{
     const text=(e.results&&e.results[0]&&e.results[0][0]&&e.results[0][0].transcript)||'';
     const el=$(targetId); if(el) el.value=(el.value?el.value+' ':'')+text;
-    if(autoAsk==='ai') askAI(text);
     if(autoAsk==='scenario') renderScenarioSimulation(text,'scenarioAiOut');
   };
   rec.onerror=(e)=>toast(tl('Voice error: ','خطأ في الصوت: ')+(e.error||''));
   rec.onend=()=>{VOICE_REC=null; if(btn)btn.classList.remove('listening');};
   rec.start();
-}
-function answerLocalAI(question,mode,language){
-  const ctx=buildSafeAIContext(); const q=(question||'').toLowerCase();
-  if(mode==='write') return generateWritingResponse(ctx,question,language);
-  if(mode==='scenario') return answerScenarioQuestion(question);
-  const has=(...ws)=>ws.some(w=>q.includes(w));
-  if(has('winner','projected','فائز','الفائز')) return answerWinnerQuestion(ctx);
-  if(has('lead','top','winning','first','متصدر','الأول','يتصدر')) return answerLeaderboardQuestion(ctx);
-  if(has('champion','winner pick','بطل','يتوقع البطل')) return answerPredictionQuestion(ctx);
-  if(has('scenario','simulate','simulation','what if','if ','beat','beats','win','wins','draw','سيناريو','محاكاة','إذا','لو','فاز','تعادل')) return answerScenarioQuestion(question);
-  if(has('impact','gain','gained','change','تأثير','تغير','كسب')) return buildTodayImpactText()+aiSource('from_calc');
-  if(has('today','match today','اليوم','مباريات اليوم')) return answerScheduleQuestion(ctx);
-  if(ctx.players.some(p=>q.includes(p.name.toLowerCase()))) return answerPlayerPointsQuestion(ctx,question);
-  if(has('point','score','نقاط','نقطة')) return answerLeaderboardQuestion(ctx);
-  return answerLeaderboardQuestion(ctx);
 }
 
 /* ---- writing mode ---- */
@@ -8033,29 +7771,6 @@ function viewHelp(){
 }
 
 /* ================= AI VIEW ================= */
-function viewAI(){
-  const mode=APP.sel.aiMode||'text';
-  return `<div class="card"><div class="between"><h3>🤖 ${esc(t('v_ai'))}</h3></div>
-    <div class="seg" style="margin-bottom:10px">
-      <button class="${mode==='text'?'on':''}" onclick="APP.sel.aiMode='text';render()">${esc(t('ai_text'))}</button>
-      <button class="${mode==='scenario'?'on':''}" onclick="APP.sel.aiMode='scenario';render()">${esc(tl('Scenario','سيناريو'))}</button>
-      <button class="${mode==='write'?'on':''}" onclick="APP.sel.aiMode='write';render()">${esc(t('ai_write'))}</button>
-    </div>
-    <div class="chips">${(I18N[LANG].ai_examples||[]).concat([tl('If Brazil beats Morocco 2-1, what changes?','إذا فازت البرازيل على المغرب 2-1 ماذا يتغير؟')]).map(x=>`<button onclick="askAI(${JSON.stringify(x).replace(/"/g,'&quot;')})">${esc(x)}</button>`).join('')}</div>
-    <textarea id="aiBox" placeholder="${esc(mode==='scenario'?tl('Ask a scenario: If team A beats team B 2-1…','اسأل سيناريو: إذا فاز فريق على فريق 2-1…'):t('ai_q'))}" style="margin-top:10px"></textarea>
-    <div class="voice-row">
-      <button class="micbtn" onclick="startVoiceInput('aiBox','ai')">🎙️ ${esc(tl('Speak','تحدث'))}</button>
-      <button class="btn sm" onclick="askAI($('aiBox').value)">${esc(t('v_ai'))}</button>
-      <button class="btn ghost sm" onclick="$('aiBox').value='';$('aiAns').innerHTML=''">${esc(t('clear'))}</button>
-    </div>
-    <div id="aiAns"></div>
-  </div>`;
-}
-function askAI(q){ if(!q||!q.trim()) return;
-  const ans=answerLocalAI(q,APP.sel.aiMode||'text',LANG);
-  $('aiAns').innerHTML=`<div class="ai-ans">${esc(ans)}</div>
-    <button class="btn ghost sm" style="margin-top:8px" onclick='copyText(${JSON.stringify(ans)})'>${esc(t('copy'))}</button>`;
-}
 
 /* ================= admin auth ================= */
 function adminHash(s){ let h=0; for(let i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))>>>0; } return h.toString(16); }
@@ -10049,6 +9764,46 @@ async function boot(){
   if(!APP._clockTimer) APP._clockTimer=setInterval(updateHeaderDateTime,30000);
   loadHomeApiUpdates().then(()=>{ render(); showTodayMatchesPopupOnce(); return loadToday(); }).catch(e=>{ APP._homeApiError=String(e&&e.message?e.message:e); render(); });
 }
+
+/* ===== v53 user-timezone display (authoritative overrides; display-only) ===== */
+function formatInstantUserTz(ts){
+  if(!ts) return '';
+  const d=new Date(ts); if(!Number.isFinite(d.getTime())) return '';
+  const tz=browserTimeZone(); const loc=LANG==='ar'?'ar-AE':'en-GB';
+  const date=new Intl.DateTimeFormat(loc,{timeZone:tz,weekday:'short',day:'2-digit',month:'short'}).format(d);
+  const time=new Intl.DateTimeFormat('en-US',{timeZone:tz,hour:'numeric',minute:'2-digit',hour12:true}).format(d);
+  return `${date} · ${time} ${timeZoneShortName(tz,d)}`;
+}
+function matchDateTime(m){
+  if(!m) return '';
+  const ts=matchUaeTimestamp(m);
+  if(ts) return formatInstantUserTz(ts);
+  const apiLike=!!(m.api||m.eventId||m.source==='live'||m.source==='api'||m.sourceDate||m.sourceTime||m.sourceTimestamp||m.strTimestamp||m.kickoffUtc);
+  if(apiLike) return sportsDbSourceDisplayLabel(m);
+  const date=(m&&m.uaeDate)||(m&&m.date)||'';
+  const time=(m&&m.uaeTime)||(m&&m.time)||(m&&m.strTime?toAmPmFromHHMM(m.strTime):'');
+  if(date&&time) return date+' · '+time+(m.tz?' '+m.tz:'');
+  return date||time||'';
+}
+function formatUaeDateTimeParts(){
+  const now=new Date(); const tz=browserTimeZone(); const loc=LANG==='ar'?'ar-AE':'en-GB';
+  const date=new Intl.DateTimeFormat(loc,{timeZone:tz,weekday:'short',day:'2-digit',month:'short',year:'numeric'}).format(now);
+  const time=new Intl.DateTimeFormat('en-US',{timeZone:tz,hour:'numeric',minute:'2-digit',hour12:true}).format(now);
+  return {date, time, tzLabel: timeZoneShortName(tz,now)};
+}
+function updateHeaderDateTime(){
+  const el=$('clockPill'); if(!el) return;
+  const p=formatUaeDateTimeParts();
+  const dateEl=el.querySelector('.date'), timeEl=el.querySelector('.time');
+  if(dateEl) dateEl.textContent=p.date+(p.tzLabel?' '+p.tzLabel:'');
+  if(timeEl) timeEl.textContent=p.time;
+}
+
+
+/* v53b: convert remaining time labels to the user's local timezone */
+function mdhUaeTimeLabel(m){ const ts=matchUaeTimestamp(m); return ts?formatInstantUserTz(ts):''; }
+function hubUaeTimeLabel(m){ const ts=matchUaeTimestamp(m); return ts?formatInstantUserTz(ts):sportsDbSourceDisplayLabel(m); }
+
 </script>
 </body>
 </html>
