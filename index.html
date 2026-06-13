@@ -4,8 +4,8 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
 <meta name="theme-color" content="#0a1f17"/>
-<meta name="application-name" content="WC2026 Pick'em"/>
-<meta name="apple-mobile-web-app-title" content="WC2026 Pick'em"/>
+<meta name="application-name" content="World Cup 2026"/>
+<meta name="apple-mobile-web-app-title" content="World Cup 2026"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="mobile-web-app-capable" content="yes"/>
@@ -14,7 +14,7 @@
 <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png"/>
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png"/>
 
-<title>WC2026 Pick'em</title>
+<title>World Cup 2026</title>
 <style>
 /* ===== Part 1: design tokens + mobile-first CSS (RTL-aware) ===== */
 :root{
@@ -3236,10 +3236,10 @@ body.no-voice .micbtn{display:none!important}
 .today-update-score{font-family:var(--num);font-size:22px;font-weight:1000;color:var(--pitch);white-space:nowrap;text-align:end}.today-update-score.pending{font-size:16px;color:var(--muted)}
 .today-update-status{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:1000;white-space:nowrap;background:var(--soft);color:var(--muted)}
 .today-update-status.final{background:#e5faef;color:#087343}.today-update-status.live{background:#fff2bf;color:#80600b}.today-update-status.soon{background:#e9fbf1;color:#087343}.today-update-status.upcoming{background:#edf2ef;color:#66766f}
-.today-update-time-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.today-update-time{border:1px solid var(--border);background:#fff;border-radius:13px;padding:8px;min-width:0}.today-update-time span{display:block;color:var(--muted);font-size:10.5px;font-weight:1000;text-transform:uppercase;letter-spacing:.04em}.today-update-time b{display:block;margin-top:3px;color:var(--ink);font-size:12px;font-weight:1000;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.today-update-time-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.today-update-time{border:1px solid var(--border);background:#fff;border-radius:13px;padding:8px;min-width:0}.today-update-time span{display:block;color:var(--muted);font-size:10.5px;font-weight:1000;text-transform:uppercase;letter-spacing:.04em}.today-update-time b{display:block;margin-top:3px;color:var(--ink);font-size:12px;font-weight:1000;white-space:normal;overflow-wrap:anywhere;line-height:1.35}
 .today-update-source{margin-top:9px;display:grid;gap:5px;border:1px dashed #dce6e1;background:#fbfdfc;border-radius:13px;padding:8px;color:var(--muted);font-size:11px;font-weight:850;line-height:1.35}.today-update-source b{color:var(--ink)}
 .today-update-picks{margin-top:9px}.today-update-split{height:8px;display:flex;overflow:hidden;border-radius:999px;background:var(--soft);box-shadow:inset 0 0 0 1px #e8edea}.today-update-split .home{background:var(--grass-d)}.today-update-split .away{background:#e7b94e}.today-update-split .none{background:#cfd8d3}
-.today-update-pick-labels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:6px;font-size:10.5px;color:var(--muted);font-weight:900}.today-update-pick-labels span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.today-update-pick-labels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:6px;font-size:10.5px;color:var(--muted);font-weight:900}.today-update-pick-labels span{white-space:normal;overflow-wrap:anywhere;line-height:1.3}
 .today-update-note{margin-top:8px;border-radius:12px;background:#f3f6f4;color:var(--muted);padding:8px;font-size:11px;font-weight:850;line-height:1.4}.today-update-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.today-update-empty{border:1px solid var(--border);border-radius:16px;padding:14px;background:#fff;color:var(--muted);font-weight:850}
 @media(max-width:680px){.today-update-summary{grid-template-columns:repeat(2,minmax(0,1fr))}.today-update-time-grid,.today-update-actions{grid-template-columns:1fr}.today-update-top{flex-direction:column}.today-update-score{text-align:start;width:max-content}}
 /* ===== v45 design round: readability, hierarchy & points chart ===== */
@@ -3269,27 +3269,22 @@ body.no-voice .micbtn{display:none!important}
 @media(max-width:560px){.pts-chart-row{grid-template-columns:minmax(64px,42%) 1fr auto}}
 
 .hub-brief-mini b,.hub-brief-mini span,.hub-brief-main,.hub-brief-sub,.wc-status-tile b,.wc-status-tile small{unicode-bidi:isolate}
+.sheet{position:relative}.sheet-close{position:absolute;top:10px;inset-inline-end:12px;z-index:6;width:34px;height:34px;border-radius:50%;border:none;background:var(--soft);color:var(--ink);font-size:22px;font-weight:700;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.12)}.sheet-close:active{background:var(--border)}
 </style>
 <!-- Analytics is initialized once in loadAnalytics() to avoid duplicate page_view hits. -->
 </head>
 <body>
 <div class="topbar">
-  <div class="brand"><span class="dot"></span><span id="brandTxt">WC2026 Pick'em</span></div>
+  <div class="brand"><span class="dot"></span><span id="brandTxt">World Cup 2026</span></div>
   <div class="spacer"></div>
   <div class="clockpill" id="clockPill"><span class="date">—</span><span class="time">—</span></div>
   <button class="iconbtn" id="langBtn" onclick="toggleLang()">EN</button>
   <button class="iconbtn gold hide" id="adminBtn" onclick="openAdmin()">Admin</button>
-  <button class="iconbtn" id="installBtn" onclick="installPWA()" title="Add to home screen" aria-label="Add to home screen" style="display:none">⬇️ Install</button>
 </div>
 <div class="phase wrap" id="phaseStrip"></div>
 <main class="wrap" id="view"></main>
 
 <nav class="botnav" id="botnav"></nav>
-<div class="install-banner" id="installBanner">
-  <div class="txt"><div class="title">📲 Install WC2026 Pick'em</div><div class="sub">Add it to your phone home screen for app-like access.</div></div>
-  <button class="btn gold sm" onclick="installPWA()">Install</button>
-  <button class="btn ghost sm" onclick="dismissInstallBanner()">Later</button>
-</div>
 
 <div class="sheet-bg" id="sheetBg" onclick="if(event.target===this)closeSheet()">
   <div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
@@ -3359,7 +3354,7 @@ const TEAM_ALIASES={
 /* --- i18n --- */
 const I18N={
   en:{
-    brand:"WC2026 Pick'em", admin:"Admin", langName:"EN",
+    brand:"World Cup 2026", admin:"Admin", langName:"EN",
     nav_dashboard:"Home", nav_today:"Today", nav_leaderboard:"Table", nav_matches:"Matches", nav_profile:"Profile", nav_more:"More", v_alerts:"Alerts", v_backup:"Backup / Restore", v_sharecards:"Share cards", v_health:"Health check", v_syncResults:"Result sync check",
     v_dashboard:"Dashboard", v_today:"Today's matches", v_matches:"All matches", v_groups:"Group tables",
     v_predictions:"All predictions", v_consensus:"Group leaders consensus", v_knockout:"Knockout bracket",
@@ -3498,7 +3493,7 @@ function trackPageView(view){
     if(!analyticsEnabled()) return;
     loadAnalytics();
     gtag('event','page_view',{
-      page_title:'WC2026 Pickem - '+(view||APP.view||'dashboard'),
+      page_title:'World Cup 2026 - '+(view||APP.view||'dashboard'),
       page_location:location.href.split('#')[0]+'#'+(view||APP.view||'dashboard'),
       page_path:'/'+(view||APP.view||'dashboard'),
       app_version:'v33',
@@ -4484,13 +4479,9 @@ const NAV=[
 const MORE_ITEMS=[
   {id:'today',ic:'📅',key:'nav_today'},
   {id:'matches',ic:'⚽',key:'nav_matches'},
-  {id:'alerts',ic:'🔔',key:'v_alerts'},
-  {id:'scenarios',ic:'⚡',key:'v_scenarios'},
-  {id:'sharecards',ic:'📲',key:'v_sharecards'},
   {id:'predictions',ic:'📝',key:'v_predictions'},
   {id:'consensus',ic:'👥',key:'v_consensus'},
   {id:'knockout',ic:'🎯',key:'v_knockout'},
-  {id:'impact',ic:'🔥',key:'v_impact'},
   {id:'help',ic:'❓',key:'v_help'}
 ];
 const ADMIN_ITEMS=[
@@ -4515,21 +4506,21 @@ function openMore(){
   let adminLogin = APP.isAdmin ? [] : [{id:'_adminLogin',ic:'🔒',key:'admin',adm:true,login:true}];
   let adm = APP.isAdmin ? ADMIN_ITEMS.map(i=>({...i,adm:true})) : [];
   const allItems=items.concat(adminLogin,adm);
-  $('sheet').innerHTML=`<div class="grab"></div>
+  $('sheet').innerHTML=`<div class="grab"></div><button class="sheet-close" onclick="closeSheet()" aria-label="Close">×</button>
     <h3 style="padding:0 8px 8px">${esc(t('nav_more'))}</h3>
     ${allItems.map(i=>`<div class="menu-item ${i.adm?'adm':''}" onclick="${i.login?'openAdmin()':`go('${i.id}')`};closeSheet()">
       <span class="ic">${i.ic}</span><span>${esc(t(i.key))}</span>${i.adm?`<span class="spacer" style="flex:1"></span><span class="tag adm">${esc(i.login?t('admin'):t('adminOnly'))}</span>`:''}</div>`).join('')}
     ${APP.isAdmin?`<div class="menu-item" onclick="logoutAdmin();closeSheet()"><span class="ic">🚪</span><span>${esc(t('logout'))}</span></div>`:''}`;
   $('sheetBg').classList.add('open');
 }
-function openSheet(html){ $('sheet').innerHTML='<div class="grab"></div>'+html; $('sheetBg').classList.add('open'); }
+function openSheet(html){ $('sheet').innerHTML='<div class="grab"></div><button class="sheet-close" onclick="closeSheet()" aria-label="Close">×</button>'+html; $('sheetBg').classList.add('open'); }
 function closeSheet(){ $('sheetBg').classList.remove('open'); }
 
 function go(view){ APP.view=view; closeSheet(); render(); window.scrollTo(0,0); trackPageView(view); trackEvent('nav_click',{view}); }
 
 /* ---- top-level render ---- */
 function applyDir(){ document.documentElement.lang=LANG; document.documentElement.dir=LANG==='ar'?'rtl':'ltr';
-  $('langBtn').textContent=LANG==='ar'?'EN':'ع'; $('brandTxt').textContent=t('brand'); updateHeaderDateTime(); if(typeof updateInstallUI==='function') updateInstallUI();
+  $('langBtn').textContent=LANG==='ar'?'EN':'ع'; $('brandTxt').textContent=t('brand'); updateHeaderDateTime();
   const ab=$('adminBtn');
   if(ab){
     ab.classList.remove('hide');
@@ -4576,11 +4567,7 @@ function render(){
     results:viewResults,
     repair:viewRepair,
     settings:viewSettings,
-    impact:viewImpact,
-    scenarios:viewScenarios,
-    alerts:viewAlerts,
     backup:viewBackup,
-    sharecards:viewShareCards,
     health:viewHealth,
     syncresults:viewSyncResults,
     help:viewHelp
@@ -4660,7 +4647,7 @@ function renderHomeHero(lb,leader,next){
       ${statTile(next?matchDateTime(next):completedMatchCount()+'/72',next?tl('Next match','المباراة القادمة'):t('completedMatches'))}
     </div>
     <div class="hero-actions">
-      <button class="btn ghost sm" onclick="go('scenarios')">⚡ ${esc(t('v_scenarios'))}</button>
+      
       <button class="btn ghost sm" onclick="go('leaderboard')">🏆 ${esc(t('v_leaderboard'))}</button>
       <button class="btn ghost sm" onclick="shareLeaderboard()">📲 ${esc(t('share'))}</button>
     </div>
@@ -4690,7 +4677,6 @@ function renderNextMatchImpact(m){
       <div class="insight"><div class="title">${esc(tl('If','إذا فاز'))} ${teamHtml(m.home)}</div><div class="impact-list"><span class="impact-pill good">+${SCORING.edgeCorrect}: ${sc.home.length}</span></div><div class="sub">${esc(sc.home.slice(0,8).join(', ')||t('none'))}${sc.home.length>8?'…':''}</div></div>
       <div class="insight"><div class="title">${esc(tl('If','إذا فاز'))} ${teamHtml(m.away)}</div><div class="impact-list"><span class="impact-pill gold">+${SCORING.edgeCorrect}: ${sc.away.length}</span></div><div class="sub">${esc(sc.away.slice(0,8).join(', ')||t('none'))}${sc.away.length>8?'…':''}</div></div>
     </div>
-    <div class="voice-row"><button class="btn sm" onclick="go('scenarios')">${esc(tl('Simulate scenario','محاكاة سيناريو'))}</button><button class="btn ghost sm" onclick="shareTodayImpact()">${esc(t('share'))}</button></div>
   </div>`;
 }
 function renderBiggestMovers(latest){
@@ -5146,7 +5132,7 @@ function renderFullTodayMatchCard(m){
         <div class="sub">${esc(tl('Group','المجموعة'))} ${esc(m.group)} · ${esc(matchDateTime(m))}</div>
       </div>
       <div class="today-actions">
-        <button class="btn ghost sm" onclick="go('scenarios')">⚡ ${esc(t('v_scenarios'))}</button>
+        
         ${APP.isAdmin?`<button class="btn ghost sm" onclick="go('results')">✏️ ${esc(t('v_results'))}</button>`:''}
       </div>
     </div>
@@ -5686,7 +5672,6 @@ function renderLatestResultsImpactHub(){
   return `<div class="hub-panel">
     <h3>🕘 ${esc(data.label||tl('Live results','النتائج المباشرة'))}<span class="hint">${esc(tl('live score + prediction impact','نتيجة مباشرة + تأثير التوقعات'))}</span></h3>
     ${body}
-    <div class="hub-actions"><button class="btn ghost sm" onclick="go('impact')">${esc(tl('Open impact','افتح التأثير'))}</button></div>
   </div>`;
 }
 function renderGroupPulseHub(){
@@ -5869,7 +5854,7 @@ function renderTodayPredictionCard(m){
   return `<div class="today-pred-card">
     <div class="today-pred-head">
       <div><b>${teamHtml(m.home)} vs ${teamHtml(m.away)}</b><div class="sub">${esc(tl('Group','المجموعة'))} ${esc(m.group)} · ${esc(matchDateTime(m))}</div></div>
-      <button class="btn ghost sm" onclick="go('scenarios')">⚡ ${esc(t('v_scenarios'))}</button>
+      
     </div>
     <div class="split-grid">
       <div class="split-box home"><b>${teamHtml(m.home)}</b><span class="num">${split.home.length}</span><small>${esc(split.home.map(x=>x.name).join(', ')||t('none'))}</small></div>
@@ -6170,7 +6155,7 @@ function renderMdhLatestResults(){
     </div>`;
   }).join(''):`<div class="mdh-empty">${esc(tl('No final results yet.','لا توجد نتائج نهائية بعد.'))}</div>`;
   return `<div class="mdh-card">
-    <div class="mdh-section-head"><div><h3>🕘 ${esc(tl('Latest results + gainers','آخر النتائج والرابحين'))}</h3><p>${esc(tl('Scores and prediction points impact.','النتائج وتأثير نقاط التوقعات.'))}</p></div><button class="mdh-link" onclick="go('impact')">${esc(tl('Impact','التأثير'))} →</button></div>
+    <div class="mdh-section-head"><div><h3>🕘 ${esc(tl('Latest results + gainers','آخر النتائج والرابحين'))}</h3><p>${esc(tl('Scores and prediction points impact.','النتائج وتأثير نقاط التوقعات.'))}</p></div></div>
     ${body}
   </div>`;
 }
@@ -6394,30 +6379,7 @@ function scenarioCard(m){
       <div class="insight"><div class="title">${esc(tl('If','إذا فاز'))} ${teamHtml(m.away)}</div><div class="impact-list"><span class="impact-pill gold">+${SCORING.edgeCorrect} ${esc(t('pts'))}: ${sc.away.length}</span></div><div class="sub">${esc(sc.away.slice(0,12).join(', ')||t('none'))}${sc.away.length>12?'…':''}</div></div>
     </div>
     ${sc.noEdge.length?`<div class="sub" style="margin-top:8px">${esc(t('noPred'))}: ${esc(sc.noEdge.slice(0,10).join(', '))}${sc.noEdge.length>10?'…':''}</div>`:''}
-    <div class="voice-row">
-      <button class="btn ghost sm" onclick="renderScenarioSimulation('${esc(m.home).replace(/'/g,'')} 2-1 ${esc(m.away).replace(/'/g,'')}','scenarioAiOut');go('scenarios')">${esc(tl('Simulate home win','محاكاة فوز الأول'))}</button>
-      <button class="btn ghost sm" onclick="renderScenarioSimulation('${esc(m.home).replace(/'/g,'')} 1-2 ${esc(m.away).replace(/'/g,'')}','scenarioAiOut');go('scenarios')">${esc(tl('Simulate away win','محاكاة فوز الثاني'))}</button>
-    </div>
   </div>`;
-}
-function viewScenarios(){
-  const today=(APP._today||[]).filter(m=>m.group&&m.idx!=null&&!matchResult(m.group,m.idx).complete);
-  const matches=(today.length?today:upcomingGroupMatches(12));
-  return `<div class="card"><div class="between"><h3>⚡ ${esc(t('v_scenarios'))}</h3><button class="btn ghost sm" onclick="shareTodayImpact()">${esc(t('share'))}</button></div>
-    <div class="sub">${esc(tl('Preview who gains points depending on upcoming match winners.','معاينة من سيكسب نقاطاً حسب الفائز في المباريات القادمة.'))}</div>
-    <div class="scenario-ai-box">
-      <h3>⚡ ${esc(tl('Scenario simulator','محاكي السيناريو'))}</h3>
-      <div class="sub">${esc(tl('Speak or type, for example: “If Brazil beats Morocco 2-1”.','تحدث أو اكتب مثلاً: إذا فازت البرازيل على المغرب 2-1.'))}</div>
-      <textarea id="scenarioVoiceBox" placeholder="${esc(tl('Type or speak a scenario…','اكتب أو قل السيناريو…'))}" style="margin-top:10px"></textarea>
-      <div class="voice-row">
-        <button class="micbtn" onclick="startVoiceInput('scenarioVoiceBox','scenario')">🎙️ ${esc(tl('Speak','تحدث'))}</button>
-        <button class="btn sm" onclick="renderScenarioSimulation($('scenarioVoiceBox').value,'scenarioAiOut')">⚡ ${esc(tl('Simulate','محاكاة'))}</button>
-        <button class="btn ghost sm" onclick="$('scenarioVoiceBox').value='';$('scenarioAiOut').innerHTML=''">${esc(t('clear'))}</button>
-      </div>
-      <div id="scenarioAiOut"></div>
-    </div>
-  </div>`+
-    (matches.length?matches.map(scenarioCard).join(''):`<div class="card"><div class="state">${esc(t('noData'))}</div></div>`);
 }
 function impactSummaryCard(item){
   const d=matchImpactData(item.group,item.idx), r=d.match;
@@ -6430,12 +6392,6 @@ function impactSummaryCard(item){
     </div>
     <div class="row" style="margin-top:8px;gap:8px"><button class="btn ghost sm" onclick="openMatchImpact('${item.group}',${item.idx})">${esc(t('whyPoints'))}</button><button class="btn ghost sm" onclick="shareMatch('${item.group}',${item.idx})">${esc(t('share'))}</button></div>
   </div>`;
-}
-function viewImpact(){
-  const list=completedMatchesList().reverse();
-  return `<div class="card"><div class="between"><h3>🔥 ${esc(t('v_impact'))}</h3><button class="btn ghost sm" onclick="shareTodayImpact()">${esc(t('share'))}</button></div>
-    <div class="sub">${esc(tl('Every completed match with who gained points and who missed.','كل مباراة مكتملة مع من كسب النقاط ومن خسر الفرصة.'))}</div></div>`+
-    (list.length?list.slice(0,40).map(impactSummaryCard).join(''):`<div class="card"><div class="state">${esc(t('noData'))}</div></div>`);
 }
 
 
@@ -6488,7 +6444,7 @@ function fullMatchCard(m){
   return `<div class="match"><div class="head"><span>${esc(m.group?('Group '+m.group+' · '+m.key):'')}</span>
       <span><span class="match-time">${esc(matchDateTime(m))}</span> <span class="tag ${srcTag}">${esc(t(srcTxt))}</span></span></div>
     <div class="teams"><span>${teamHtml(m.home)}</span><span class="sc num">${sc}</span><span>${teamHtml(m.away)}</span></div>
-    ${impact}${complete?`<button class="btn ghost sm" style="margin-top:8px;width:100%" onclick="openMatchImpact('${m.group}',${m.idx})">${esc(t('matchImpact'))}</button>`:(m.group&&m.idx!=null?`<button class="btn ghost sm" style="margin-top:8px;width:100%" onclick="go('scenarios')">⚡ ${esc(t('v_scenarios'))}</button>`:'')}</div>`;
+    ${impact}</div>`;
 }
 
 /* ================= GROUP TABLES ================= */
@@ -6599,7 +6555,7 @@ function renderPlayerHero(name,p,c,me){
     </div>
     <div class="profile-actions">
       <button class="btn gold sm" onclick="sharePlayer('${esc(name).replace(/'/g,'')}')">📲 ${esc(t('whatsapp'))}</button>
-      <button class="btn ghost sm" onclick="go('scenarios')">⚡ ${esc(t('v_scenarios'))}</button>
+      
     </div>
   </div>`;
 }
@@ -7273,50 +7229,8 @@ function simulateLeaderboardForMatch(m,hs,as){
     invalidateLeaderboardCache();
   }
 }
-function scenarioWinnerText(m,hs,as){
-  if(hs>as) return teamText(m.home);
-  if(as>hs) return teamText(m.away);
-  return tl('Draw','تعادل');
-}
-function renderScenarioSimulation(q, targetId){
-  const parsed=parseScenarioCommand(q);
-  const target=targetId?$(targetId):$('scenarioAiOut');
-  if(!target) return;
-  if(!parsed){ target.innerHTML=`<div class="banner warn">${esc(t('noData'))}</div>`; return; }
-  const {match:m,hs,as}=parsed;
-  const rows=simulateLeaderboardForMatch(m,hs,as);
-  const movers=rows.filter(r=>r.deltaPts!==0||r.deltaRank!==0).sort((a,b)=>b.deltaPts-a.deltaPts || b.deltaRank-a.deltaRank).slice(0,8);
-  const top=rows.slice(0,5);
-  const summary=tl(
-    `Scenario: ${teamText(m.home)} ${hs}-${as} ${teamText(m.away)}. Winner: ${scenarioWinnerText(m,hs,as)}.`,
-    `السيناريو: ${teamText(m.home)} ${hs}-${as} ${teamText(m.away)}. النتيجة: ${scenarioWinnerText(m,hs,as)}.`
-  );
-  target.innerHTML=`<div class="ai-ans">${summary}</div>
-    <div class="sim-table">
-      ${top.map(r=>`<div class="sim-row"><div class="rank num">#${r.rank}</div><div class="name">${playerNameHtml(r.name,'sm')}</div><div class="num">${r.total} ${esc(t('pts'))}</div><div class="delta ${r.deltaRank>0?'up':r.deltaRank<0?'down':'same'}">${r.deltaRank>0?'▲'+r.deltaRank:r.deltaRank<0?'▼'+Math.abs(r.deltaRank):'–'} ${r.deltaPts?`+${r.deltaPts}`:''}</div></div>`).join('')}
-    </div>
-    <div class="sub" style="margin-top:10px">${esc(tl('Players affected','اللاعبون المتأثرون'))}: ${esc(movers.map(r=>`${r.name} +${r.deltaPts}`).join(', ')||t('none'))}</div>
-    <div class="voice-row"><button class="btn ghost sm" onclick="copyText(${JSON.stringify(summary)})">${esc(t('copy'))}</button></div>`;
-}
 let VOICE_REC=null;
 function voiceSupported(){ return !!(window.SpeechRecognition||window.webkitSpeechRecognition); }
-function startVoiceInput(targetId, autoAsk){
-  const btn=event&&event.currentTarget?event.currentTarget:null;
-  if(!voiceSupported()){ toast(tl('Voice is not supported in this browser. Try Chrome or Edge.','الصوت غير مدعوم في هذا المتصفح. جرّب Chrome أو Edge.')); return; }
-  if(VOICE_REC){ try{VOICE_REC.stop();}catch(e){} VOICE_REC=null; if(btn)btn.classList.remove('listening'); return; }
-  const Rec=window.SpeechRecognition||window.webkitSpeechRecognition;
-  const rec=new Rec(); VOICE_REC=rec;
-  rec.lang=LANG==='ar'?'ar-AE':'en-US'; rec.interimResults=false; rec.continuous=false;
-  if(btn) btn.classList.add('listening');
-  rec.onresult=(e)=>{
-    const text=(e.results&&e.results[0]&&e.results[0][0]&&e.results[0][0].transcript)||'';
-    const el=$(targetId); if(el) el.value=(el.value?el.value+' ':'')+text;
-    if(autoAsk==='scenario') renderScenarioSimulation(text,'scenarioAiOut');
-  };
-  rec.onerror=(e)=>toast(tl('Voice error: ','خطأ في الصوت: ')+(e.error||''));
-  rec.onend=()=>{VOICE_REC=null; if(btn)btn.classList.remove('listening');};
-  rec.start();
-}
 
 /* ---- writing mode ---- */
 function generateWritingResponse(ctx,question,language){
@@ -7327,7 +7241,7 @@ function generateWritingResponse(ctx,question,language){
     return ar
       ? `🏆 *توقعات كأس العالم 2026*
 الفائز المتوقع حالياً: ${leader?leader.name:'—'} (${leader?leader.total:0} نقطة).`
-      : `🏆 *WC2026 Pick'em*
+      : `🏆 *World Cup 2026*
 Current projected winner: ${leader?leader.name:'—'} (${leader?leader.total:0} pts).`;
   }
   // default: leaderboard / matchday update
@@ -7548,12 +7462,6 @@ function appAlerts(){
   if(!navigator.onLine) alerts.push({emoji:'📴',title:tl('Offline mode','وضع عدم الاتصال'),meta:tl('Using cached data until connection returns.','يتم استخدام البيانات المحفوظة حتى عودة الاتصال.'),level:'high'});
   return alerts;
 }
-function viewAlerts(){
-  const alerts=appAlerts();
-  return `<div class="card"><div class="between"><h3>🔔 ${esc(t('v_alerts'))}</h3><span class="chip">${alerts.length}</span></div>
-    <div class="sub">${esc(tl('Live notes about leaders, match impact, completed groups and data quality.','ملاحظات مباشرة عن المتصدرين وتأثير المباريات والمجموعات المكتملة وجودة البيانات.'))}</div></div>
-    <div class="card">${alerts.map(a=>`<div class="alert-card ${a.level==='high'?'high':''}" onclick="${a.view?`go('${a.view}')`:''}"><div class="emoji">${a.emoji}</div><div><div class="title">${esc(a.title)}</div><div class="meta">${esc(a.meta)}</div></div><span class="tag">${esc(a.level==='high'?tl('Important','مهم'):tl('Info','معلومة'))}</span></div>`).join('')||`<div class="state">${esc(t('noData'))}</div>`}</div>`;
-}
 function renderScenarioLab(matches){
   const opts=(matches||upcomingGroupMatches(12)).filter(m=>m.group&&m.idx!=null&&!matchResult(m.group,m.idx).complete);
   const first=opts[0];
@@ -7637,16 +7545,6 @@ function shareCardText(type){
   if(latest){ const r=matchResult(latest.group,latest.idx); return `⚽ ${teamText(r.home)} ${r.hs}-${r.as} ${teamText(r.away)}\n🔥 ${buildTodayImpactText()}`; }
   return buildTodayImpactText();
 }
-function viewShareCards(){
-  const lb=buildLeaderboard().slice(0,5);
-  const n=APP.sel.player||localStorage.getItem('wc2026_last_profile')||playerNames()[0]||'';
-  const c=n?calcPlayerPoints(getPlayer(n),APP.data.groupResults,APP.data.knockoutResults,APP.data.champion):null;
-  return `<div class="card"><h3>📲 ${esc(t('v_sharecards'))}</h3><div class="sub">${esc(tl('Clean screenshot-ready cards plus copyable WhatsApp text.','بطاقات جاهزة للسكرين شوت مع نص واتساب قابل للنسخ.'))}</div></div>
-  <div class="card"><div class="share-preview"><h3>🏆 ${esc(t('v_leaderboard'))}</h3>${lb.map(r=>`<div class="lb-row"><span class="rank">#${r.rank}</span><span class="nm">${playerNameHtml(r.name,'sm')}</span><span class="pts">${r.total}</span></div>`).join('')}</div><button class="btn ghost sm" style="margin-top:10px" onclick="copyText(shareCardText('leaderboard'))">${esc(t('copy'))}</button></div>
-  <div class="card"><div class="share-preview"><h3>👤 ${esc(n||t('player'))}</h3>${n?`<div class="grid g2">${statTile(c.total,t('points'),true)}${statTile(getPlayer(n).champion||'—',t('champion'))}</div>`:`<div class="sub">${esc(t('noData'))}</div>`}</div><button class="btn ghost sm" style="margin-top:10px" onclick="copyText(shareCardText('player'))">${esc(t('copy'))}</button></div>
-  <div class="card"><div class="share-preview"><h3>🛣️ ${esc(tl('Road to win','طريق الفوز'))}</h3><pre style="white-space:pre-wrap">${esc(shareCardText('road'))}</pre></div><button class="btn ghost sm" style="margin-top:10px" onclick="copyText(shareCardText('road'))">${esc(t('copy'))}</button></div>
-  <div class="card"><div class="share-preview"><h3>🔥 ${esc(t('matchImpact'))}</h3><pre style="white-space:pre-wrap">${esc(shareCardText('match'))}</pre></div><button class="btn ghost sm" style="margin-top:10px" onclick="copyText(shareCardText('match'))">${esc(t('copy'))}</button></div>`;
-}
 
 function playerCount(){
   const players=APP&&APP.data?APP.data.players:null;
@@ -7665,7 +7563,7 @@ function healthShapeReport(){
     {label:'Audit log',value:Array.isArray(d.auditLog)?d.auditLog.length:'Missing'},
     {label:'Data quality issues',value:auditDataQuality().length},
     {label:'Online',value:navigator.onLine?'YES':'NO'},
-    {label:'PWA mode',value:isStandalonePWA()?'Installed':'Browser'},
+    {label:'PWA mode',value:(window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true)?'Installed':'Browser'},
     {label:'Results storage',value:(APP._resultsTableStatus&&APP._resultsTableStatus.ok)?'normalized table':'JSON fallback'},
     {label:'Normalized rows',value:(APP._resultsTableStatus&&APP._resultsTableStatus.rows)!=null?APP._resultsTableStatus.rows:'—'},
     {label:'Analytics',value:analyticsEnabled()?'GA4 enabled':'Disabled / missing ID'}
@@ -7971,65 +7869,6 @@ async function testApis(){
 }
 
 
-/* ================= PWA install ================= */
-let deferredInstallPrompt=null;
-function isStandalonePWA(){
-  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone===true;
-}
-function updateInstallUI(){
-  const btn=$('installBtn'), banner=$('installBanner');
-  const dismissed=localStorage.getItem('wc2026_install_dismissed')==='1';
-  const standalone=isStandalonePWA();
-  // Header shortcut button: offered on every phone — installPWA() shows iOS steps when no native prompt
-  if(btn){
-    btn.style.display=standalone?'none':'inline-flex';
-    btn.textContent='⬇️ '+((typeof tl==='function')?tl('Install','تثبيت'):'Install');
-    const label=(typeof tl==='function')?tl('Add to home screen','أضف إلى الشاشة الرئيسية'):'Add to home screen';
-    btn.title=label; btn.setAttribute('aria-label',label);
-  }
-  // Auto banner: only when a native install prompt is available and not dismissed
-  const canBanner=!!deferredInstallPrompt && !standalone && !dismissed;
-  if(banner){
-    banner.classList.toggle('show',canBanner);
-    if(canBanner && typeof tl==='function'){
-      const ti=banner.querySelector('.title'), su=banner.querySelector('.sub');
-      const bs=banner.querySelectorAll('button');
-      if(ti) ti.textContent='📲 '+tl("Install WC2026 Pick'em",'ثبّت تطبيق توقعات كأس العالم');
-      if(su) su.textContent=tl('Add it to your home screen for app-like access.','أضفه إلى الشاشة الرئيسية لتجربة تشبه التطبيق.');
-      if(bs[0]) bs[0].textContent=tl('Install','تثبيت');
-      if(bs[1]) bs[1].textContent=tl('Later','لاحقاً');
-    }
-  }
-}
-window.addEventListener('beforeinstallprompt',(e)=>{
-  e.preventDefault();
-  deferredInstallPrompt=e;
-  updateInstallUI();
-});
-window.addEventListener('appinstalled',()=>{
-  deferredInstallPrompt=null;
-  localStorage.setItem('wc2026_install_dismissed','1');
-  toast('Installed');
-  updateInstallUI();
-});
-async function installPWA(){
-  if(!deferredInstallPrompt){
-    openSheet(`<h3 style="padding:0 8px">📲 ${esc(tl('Add to your phone','أضف إلى هاتفك'))}</h3>
-      <div class="card flat"><b>${esc(tl('iPhone / iPad (Safari)','آيفون / آيباد (سفاري)'))}</b><div class="sub">${esc(tl('Tap the Share button, then “Add to Home Screen”.','اضغط زر المشاركة ثم «أضف إلى الشاشة الرئيسية».'))}</div></div>
-      <div class="card flat"><b>${esc(tl('Android / Chrome','أندرويد / كروم'))}</b><div class="sub">${esc(tl('Open the menu ⋮, then “Install app” or “Add to Home screen”.','افتح القائمة ⋮ ثم «تثبيت التطبيق» أو «أضف إلى الشاشة الرئيسية».'))}</div></div>
-      <div class="banner cache">${esc(tl('Tip: installing works when the app is opened from its web link (https), not from a file.','ملاحظة: التثبيت يعمل عند فتح التطبيق من رابطه على الإنترنت (https) وليس من ملف.'))}</div>
-      <button class="btn ghost" onclick="closeSheet()">${esc(t('close'))}</button>`);
-    return;
-  }
-  deferredInstallPrompt.prompt();
-  await deferredInstallPrompt.userChoice;
-  deferredInstallPrompt=null;
-  updateInstallUI();
-}
-function dismissInstallBanner(){
-  localStorage.setItem('wc2026_install_dismissed','1');
-  updateInstallUI();
-}
 async function registerPWA(){
   try{
     if('serviceWorker' in navigator && location.protocol.startsWith('http')){
@@ -8597,7 +8436,6 @@ async function boot(){
   trackEvent('app_open',{view:APP.view||'dashboard'});
   trackPageView(APP.view||'dashboard');
   registerPWA();
-  updateInstallUI();
   document.body.classList.toggle('no-voice', !voiceSupported());
   updateHeaderDateTime();
   if(!APP._clockTimer) APP._clockTimer=setInterval(updateHeaderDateTime,30000);
@@ -9422,7 +9260,6 @@ async function boot(){
   trackEvent('app_open',{view:APP.view||'dashboard'});
   trackPageView(APP.view||'dashboard');
   registerPWA();
-  updateInstallUI();
   document.body.classList.toggle('no-voice', !voiceSupported());
   updateHeaderDateTime();
   if(!APP._clockTimer) APP._clockTimer=setInterval(updateHeaderDateTime,30000);
@@ -9739,7 +9576,7 @@ function renderTodayMatchesPopup(){
   if(!rows.length){
     return `<div class="today-update-shell"><div class="today-update-head"><span class="today-update-kicker">⚽ ${esc(tl('Today Update','تحديث اليوم'))}</span><h3>${esc(tl('No matches today','لا توجد مباريات اليوم'))}</h3><div class="today-update-sub">${esc(todayInZone(tz))} · ${esc(tz)}</div></div><div class="today-update-empty">${esc(tl('No source matches found for your local today.','لم يتم العثور على مباريات من المصدر ليومك المحلي.'))}</div><button class="btn" onclick="closeSheet()">${esc(t('close'))}</button></div>`;
   }
-  return `<div class="today-update-shell"><div class="today-update-head"><span class="today-update-kicker">⚽ ${esc(tl('Today Update','تحديث اليوم'))}</span><h3>${esc(tl('Matches, results and times','المباريات والنتائج والأوقات'))}</h3><div class="today-update-sub">${esc(todayInZone(tz))} · ${esc(tz)} · ${esc(tl('Source time plus your local time','وقت المصدر بالإضافة إلى وقتك المحلي'))}</div></div><div class="today-update-summary"><div class="today-update-stat"><b class="num">${rows.length}</b><span>${esc(tl('Matches','مباريات'))}</span></div><div class="today-update-stat"><b class="num">${stats.finals}</b><span>${esc(tl('Results','نتائج'))}</span></div><div class="today-update-stat"><b class="num">${stats.live}</b><span>${esc(tl('Live','مباشرة'))}</span></div><div class="today-update-stat"><b class="num">${stats.upcoming}</b><span>${esc(tl('Upcoming','قادمة'))}</span></div></div><div class="today-update-list">${rows.map(m=>{const status=popupMatchStatus(m);const group=m.group?`${esc(tl('Group','المجموعة'))} ${esc(m.group)}`:'—';return `<div class="today-update-card ${esc(status.key)}"><div class="today-update-top"><div class="today-update-main"><div class="today-update-teams">${teamHtml(m.home)} <span class="vs">vs</span> ${teamHtml(m.away)}</div><div class="today-update-meta">${group}</div></div><div>${popupMatchScoreHtml(m)}<div style="margin-top:5px"><span class="today-update-status ${esc(status.key)}">${esc(status.label)}</span></div></div></div><div class="today-update-time-grid"><div class="today-update-time"><span>${esc(tl('Original source time','وقت المصدر الأصلي'))}</span><b>${esc(shortSourceDateTime(m))}</b></div><div class="today-update-time"><span>${esc(tl('Your time','وقتك'))}</span><b>${esc(shortUserDateTime(m))}</b></div></div>${popupSourceInfoHtml(m)}${popupSplitHtml(m)}<div class="today-update-note">${esc(popupMatchNote(m))}</div></div>`;}).join('')}</div><div class="today-update-actions"><button class="btn ghost" onclick="go('matches');closeSheet()">${esc(t('v_matches'))}</button><button class="btn" onclick="closeSheet()">${esc(t('close'))}</button></div></div>`;
+  return `<div class="today-update-shell"><div class="today-update-head"><span class="today-update-kicker">⚽ ${esc(tl('Today Update','تحديث اليوم'))}</span><h3>${esc(tl('Matches, results and times','المباريات والنتائج والأوقات'))}</h3><div class="today-update-sub">${esc(todayInZone(tz))} · ${esc(tz)} · ${esc(tl('Source time plus your local time','وقت المصدر بالإضافة إلى وقتك المحلي'))}</div></div><div class="today-update-list">${rows.map(m=>{const status=popupMatchStatus(m);const group=m.group?`${esc(tl('Group','المجموعة'))} ${esc(m.group)}`:'—';return `<div class="today-update-card ${esc(status.key)}"><div class="today-update-top"><div class="today-update-main"><div class="today-update-teams">${teamHtml(m.home)} <span class="vs">vs</span> ${teamHtml(m.away)}</div><div class="today-update-meta">${group}</div></div><div>${popupMatchScoreHtml(m)}<div style="margin-top:5px"><span class="today-update-status ${esc(status.key)}">${esc(status.label)}</span></div></div></div><div class="today-update-time-grid"><div class="today-update-time"><span>${esc(tl('Original source time','وقت المصدر الأصلي'))}</span><b>${esc(shortSourceDateTime(m))}</b></div><div class="today-update-time"><span>${esc(tl('Your time','وقتك'))}</span><b>${esc(shortUserDateTime(m))}</b></div></div>${popupSplitHtml(m)}<div class="today-update-note">${esc(popupMatchNote(m))}</div></div>`;}).join('')}</div><div class="today-update-actions"><button class="btn ghost" onclick="go('matches');closeSheet()">${esc(t('v_matches'))}</button><button class="btn" onclick="closeSheet()">${esc(t('close'))}</button></div></div>`;
 }
 function showTodayMatchesPopupOnce(){
   try{
@@ -9778,7 +9615,6 @@ async function boot(){
   trackEvent('app_open',{view:APP.view||'dashboard'});
   trackPageView(APP.view||'dashboard');
   registerPWA();
-  updateInstallUI();
   document.body.classList.toggle('no-voice', !voiceSupported());
   updateHeaderDateTime();
   if(!APP._clockTimer) APP._clockTimer=setInterval(updateHeaderDateTime,30000);
