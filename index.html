@@ -2313,17 +2313,175 @@ body[data-view="dashboard"] .priority-today{
   }
 }
 
+
+/* ===== v63 live-time foundation ===== */
+.wc-live-warning{
+  border:1px solid rgba(239,68,68,.25);
+  background:#fff7f7;
+  color:#9f1239;
+  border-radius:14px;
+  padding:10px;
+  font-size:12px;
+  font-weight:900;
+}
+
+body.no-voice .micbtn{display:none!important}
+
+
+/* ===== v43 Matchday Hub UX upgrade ===== */
+.hub-hero{
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 8% 0%,rgba(34,199,122,.24),transparent 32%),
+    radial-gradient(circle at 100% 0%,rgba(247,201,72,.22),transparent 30%),
+    linear-gradient(135deg,#071510,#123c2c 62%,#1b4a35)!important;
+  color:#fff;
+  border-color:rgba(255,255,255,.12)!important;
+}
+.hub-hero .sub,.hub-hero p{color:#d8f5e6}
+.hub-hero h2{font-size:clamp(24px,4vw,44px);letter-spacing:-.035em;margin:6px 0}
+.hub-source-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.hub-pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:6px 10px;font-size:12px;font-weight:900;background:rgba(255,255,255,.12);color:#e9fff3;border:1px solid rgba(255,255,255,.14)}
+.hub-pill.good{background:rgba(34,199,122,.18)}
+.hub-pill.warn{background:rgba(247,201,72,.20);color:#fff8d8}
+.hub-kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:16px}
+.hub-kpi{border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.10);border-radius:18px;padding:12px;min-width:0}
+.hub-kpi b{display:block;font-family:var(--num);font-size:23px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hub-kpi span{display:block;color:#c7eadb;font-size:12px;font-weight:800;margin-top:4px}
+.hub-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:14px;align-items:start}
+.hub-panel{border:1px solid rgba(16,32,25,.08);background:rgba(255,255,255,.90);border-radius:24px;padding:16px;box-shadow:0 8px 24px rgba(7,21,16,.06)}
+.hub-panel h3{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.hub-panel .hint{font-size:12px;color:var(--muted);font-weight:700}
+.hub-leader-row,.hub-player-row,.hub-result-row,.hub-lock-row{
+  display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;
+  border:1px solid var(--border);background:#fff;border-radius:16px;padding:10px;margin:8px 0;
+}
+.hub-leader-rank{font-family:var(--num);font-weight:1000;width:34px;height:34px;border-radius:12px;background:var(--soft);display:flex;align-items:center;justify-content:center}
+.hub-leader-row.me{border-color:rgba(34,199,122,.45);background:linear-gradient(180deg,#f2fff8,#fff)}
+.hub-name{font-weight:1000;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hub-meta{font-size:12px;color:var(--muted);margin-top:2px}
+.hub-pts{font-family:var(--num);font-weight:1000;color:var(--grass-d);white-space:nowrap}
+.hub-match-card{
+  border:1px solid rgba(16,32,25,.08);background:linear-gradient(180deg,#fff,#f7fbf8);
+  border-radius:20px;padding:13px;margin:10px 0;
+}
+.hub-match-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.hub-match-title{font-weight:1000;line-height:1.3}
+.hub-status{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:1000;white-space:nowrap;background:var(--soft);color:var(--muted)}
+.hub-status.live{background:#e5faef;color:#087343}
+.hub-status.soon{background:#fff2bf;color:#80600b}
+.hub-status.final{background:#eef3ff;color:#3158a8}
+.hub-status.upcoming{background:#edf2ef;color:#66766f}
+.hub-split{display:grid;gap:7px;margin-top:10px}
+.hub-split-line{display:grid;grid-template-columns:minmax(88px,1fr) minmax(80px,2fr) auto;gap:8px;align-items:center;font-size:12px}
+.hub-split-label{font-weight:900;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hub-split-track{height:10px;border-radius:999px;background:var(--soft);overflow:hidden}
+.hub-split-fill{height:100%;border-radius:999px;background:var(--grass)}
+.hub-split-value{font-family:var(--num);font-weight:1000;color:var(--muted);white-space:nowrap}
+.hub-empty{border:1px dashed var(--border);background:#fff;border-radius:18px;padding:14px;color:var(--muted);font-weight:800}
+.hub-impact-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.hub-impact{display:inline-flex;border-radius:999px;padding:5px 9px;background:#e9fbf1;color:#087343;font-size:12px;font-weight:900}
+.hub-impact.miss{background:#fdeceb;color:#b53a2e}
+.hub-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+@media(max-width:900px){
+  .hub-grid{grid-template-columns:1fr}
+  .hub-kpi-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){
+  .hub-kpi-grid{grid-template-columns:1fr 1fr}
+  .hub-split-line{grid-template-columns:1fr}
+  .hub-leader-row,.hub-player-row,.hub-result-row,.hub-lock-row{grid-template-columns:auto minmax(0,1fr)}
+  .hub-pts{grid-column:2}
+  .hub-match-top{flex-direction:column}
+}
+
+
+/* ===== v44 Structured Matchday Hero clarity fix ===== */
+.hub-brief-grid{
+  display:grid;
+  grid-template-columns:1.3fr .9fr;
+  gap:12px;
+  margin-top:16px;
+}
+.hub-brief-card{
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.10);
+  border-radius:20px;
+  padding:14px;
+  min-width:0;
+}
+.hub-brief-card.primary{
+  background:rgba(255,255,255,.14);
+  border-color:rgba(247,201,72,.35);
+}
+.hub-brief-label{
+  color:#b8f7d5;
+  font-size:11px;
+  font-weight:1000;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  margin-bottom:6px;
+}
+.hub-brief-main{
+  color:#fff;
+  font-size:clamp(18px,2.8vw,30px);
+  font-weight:1000;
+  line-height:1.15;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.hub-brief-sub{
+  color:#d8f5e6;
+  font-size:13px;
+  font-weight:800;
+  margin-top:7px;
+}
+.hub-brief-stack{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.hub-brief-mini{
+  border:1px solid rgba(255,255,255,.13);
+  background:rgba(255,255,255,.08);
+  border-radius:18px;
+  padding:12px;
+  min-width:0;
+}
+.hub-brief-mini b{
+  display:block;
+  color:#fff;
+  font-size:18px;
+  font-weight:1000;
+  line-height:1.15;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.hub-brief-mini span{
+  display:block;
+  color:#c7eadb;
+  font-size:12px;
+  font-weight:800;
+  margin-top:5px;
+}
+.hub-brief-nextline{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+@media(max-width:820px){
+  .hub-brief-grid{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .hub-brief-stack{grid-template-columns:1fr}
+  .hub-brief-main{font-size:22px}
+}
+
 </style>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-DEDV833VML"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-DEDV833VML');
-</script>
-
+<!-- Analytics is initialized once in loadAnalytics() to avoid duplicate page_view hits. -->
 </head>
 <body>
 <div class="topbar">
@@ -2345,7 +2503,7 @@ body[data-view="dashboard"] .priority-today{
 </div>
 
 <div class="sheet-bg" id="sheetBg" onclick="if(event.target===this)closeSheet()">
-  <div class="sheet" id="sheet"></div>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true"></div>
 </div>
 
 <script>
@@ -2689,9 +2847,6 @@ async function loadNormalizedResultsIntoApp(){
     const rows=await r.json();
     APP._matchResultRows=Array.isArray(rows)?rows:[];
 
-    // Normalized result table is the source of truth.
-    // Rebuild groupResults from it instead of merging into old JSON results.
-    // This removes stale scores that were saved against the old fixture order.
     const rebuiltResults={};
     const rebuiltMeta={};
     let applied=0, remapped=0, skipped=0;
@@ -2707,15 +2862,10 @@ async function loadNormalizedResultsIntoApp(){
       }
     });
 
-    if(APP._matchResultRows.length){
-      APP.data.groupResults=rebuiltResults;
-      APP.data.resultMeta=rebuiltMeta;
-    } else {
-      APP.data.groupResults=APP.data.groupResults||{};
-      APP.data.resultMeta=APP.data.resultMeta||{};
-    }
+    APP.data.groupResults={...(APP.data.groupResults||{}),...rebuiltResults};
+    APP.data.resultMeta={...(APP.data.resultMeta||{}),...rebuiltMeta};
 
-    APP._resultsTableStatus={ok:true, mode:'normalized-table', rows:APP._matchResultRows.length, applied, remapped, skipped, cleaned:true};
+    APP._resultsTableStatus={ok:true, mode:'normalized-table', rows:APP._matchResultRows.length, applied, remapped, skipped, merged:true};
     return true;
   }catch(e){
     console.warn('Normalized results table unavailable. Falling back to wc2026.data.groupResults.',e);
@@ -2799,8 +2949,9 @@ async function loadState(){
   }catch(e){
     console.error('Supabase load failed. This may be network, CORS, RLS, wrong key, or sandbox/file origin.', e);
     APP.apiStatus={name:'supabase', ok:false, error:String(e&&e.message?e.message:e), sandbox:isSandboxOrFile()};
-    const c=localStorage.getItem(CACHE_KEY);
-    if(c){ APP.data=ensureShape(JSON.parse(c)); APP.cached=true; APP.loaded=true; APP.error=navigator.onLine?'sync':'offline'; }
+    let c=null; try{ c=localStorage.getItem(CACHE_KEY); }catch(_){ c=null; }
+    let parsed=null; if(c){ try{ parsed=JSON.parse(c); }catch(_){ parsed=null; } }
+    if(parsed){ APP.data=ensureShape(parsed); APP.cached=true; APP.loaded=true; APP.error=navigator.onLine?'sync':'offline'; }
     else { APP.data=ensureShape({}); APP.loaded=true; APP.error='load'; }
   }
 }
@@ -2808,14 +2959,23 @@ async function loadState(){
 async function saveState(actionLabel,beforePath){
   localStorage.setItem(CACHE_KEY, JSON.stringify(APP.data)); // local-first
   try{
-    const r=await fetchWithTimeout(API+'?id=eq.main',{method:'PATCH',
-      headers:{...H,Prefer:'return=minimal'}, body:JSON.stringify({data:APP.data})},10000);
+    const r=await fetchWithTimeout(API,{
+      method:'POST',
+      headers:{...H,Prefer:'resolution=merge-duplicates,return=minimal'},
+      body:JSON.stringify({id:'main',data:APP.data})
+    },10000);
     if(!r.ok){
       let txt=''; try{txt=await r.text();}catch(_){}
       throw new Error('Supabase save HTTP '+r.status+' '+txt.slice(0,180));
     }
-    APP.cached=false; return true;
-  }catch(e){ console.error('Supabase save failed.', e); APP.cached=true; APP.apiStatus={name:'supabase-save', ok:false, error:String(e&&e.message?e.message:e), sandbox:isSandboxOrFile()}; return false; }
+    APP.cached=false;
+    return true;
+  }catch(e){
+    console.error('Supabase save failed.', e);
+    APP.cached=true;
+    APP.apiStatus={name:'supabase-save', ok:false, error:String(e&&e.message?e.message:e), sandbox:isSandboxOrFile()};
+    return false;
+  }
 }
 
 /* ---- audit log + local backup snapshot ---- */
@@ -2957,13 +3117,27 @@ function getPlayer(name){ const d=APP.data||defaultData(); return (d.players||{}
 
 /* ---- group match model ---- */
 function matchTeams(group,idx){
-  // Prefer saved/fetched schedule because the real WC2026 fixture order can differ from simple RR fallback.
-  try{
-    const sched=(APP&&APP.data&&Array.isArray(APP.data.scheduleMatches))?APP.data.scheduleMatches:null;
-    const m=sched&&sched.find(x=>x&&x.group===group&&Number(x.idx)===Number(idx)&&x.home&&x.away);
-    if(m) return [canonTeam(m.home),canonTeam(m.away)];
-  }catch(_){}
-  const g=GROUPS[group]||[]; const p=RR[idx]; return p?[g[p[0]],g[p[1]]]:[null,null];
+  // Prefer saved/fetched schedule (real fixture order can differ from RR fallback).
+  // Memoized by schedule-array reference and length, so it rebuilds only when the schedule changes.
+  const sched=(APP&&APP.data&&Array.isArray(APP.data.scheduleMatches))?APP.data.scheduleMatches:null;
+  if(sched){
+    if(APP._mtSchedRef!==sched || APP._mtSchedLen!==sched.length){
+      const map={};
+      sched.forEach(x=>{
+        if(x&&x.group!=null&&x.idx!=null&&x.home&&x.away){
+          map[x.group+'_'+x.idx]=[canonTeam(x.home),canonTeam(x.away)];
+        }
+      });
+      APP._mtMap=map;
+      APP._mtSchedRef=sched;
+      APP._mtSchedLen=sched.length;
+    }
+    const hit=APP._mtMap&&APP._mtMap[group+'_'+idx];
+    if(hit) return hit;
+  }
+  const g=GROUPS[group]||[];
+  const p=RR[idx];
+  return p?[g[p[0]],g[p[1]]]:[null,null];
 }
 function matchKey(group,idx){ return group+'_'+idx; }
 function readScore(res){
@@ -2983,21 +3157,62 @@ function matchResult(group,idx){
   if(sc.hs>sc.as){winner=home;outcome='home';} else if(sc.as>sc.hs){winner=away;outcome='away';}
   return {home,away,hs:sc.hs,as:sc.as,winner,outcome,complete:true};
 }
-function groupComplete(group){ for(let i=0;i<6;i++) if(!matchResult(group,i).complete) return false; return true; }
+function groupComplete(group){
+  const matches=allSchedule().filter(m=>m&&m.group===group&&m.idx!==undefined&&m.idx!==null);
+  if(matches.length>=6){
+    return matches.every(m=>matchResult(group,m.idx).complete);
+  }
+  for(let i=0;i<6;i++) if(!matchResult(group,i).complete) return false;
+  return true;
+}
 function completedMatchCount(){ if(!APP.data) return 0; let n=0; for(const g of GROUP_KEYS) for(let i=0;i<6;i++) if(matchResult(g,i).complete) n++; return n; }
+
+
+function getGroupTeams(group){
+  const teams=[];
+  allSchedule().filter(m=>m&&m.group===group).forEach(m=>{
+    if(m.home&&!teams.some(t=>sameTeam(t,m.home))) teams.push(canonTeam(m.home));
+    if(m.away&&!teams.some(t=>sameTeam(t,m.away))) teams.push(canonTeam(m.away));
+  });
+  if(teams.length>=4) return teams.slice(0,4);
+  return (GROUPS[group]||[]).filter(t=>t&&t!=='TBD');
+}
 
 /* ---- actual standings for a group ---- */
 function computeGroupTable(group){
-  const teams=GROUPS[group]||[];
-  const row={}; teams.forEach(tm=>row[tm]={team:tm,P:0,W:0,D:0,L:0,GF:0,GA:0,GD:0,Pts:0});
-  for(let i=0;i<6;i++){ const r=matchResult(group,i); if(!r.complete) continue;
-    const H=row[r.home],A=row[r.away]; if(!H||!A) continue;
-    H.P++;A.P++; H.GF+=r.hs;H.GA+=r.as; A.GF+=r.as;A.GA+=r.hs;
-    if(r.outcome==='home'){H.W++;A.L++;H.Pts+=3;}
-    else if(r.outcome==='away'){A.W++;H.L++;A.Pts+=3;}
-    else {H.D++;A.D++;H.Pts++;A.Pts++;}
+  const row={};
+  function ensure(team){
+    const tm=canonTeam(team);
+    if(!tm) return null;
+    const k=teamCompareKey(tm);
+    if(!row[k]) row[k]={team:tm,P:0,W:0,D:0,L:0,GF:0,GA:0,GD:0,Pts:0};
+    return row[k];
   }
-  const arr=Object.values(row); arr.forEach(x=>x.GD=x.GF-x.GA);
+
+  getGroupTeams(group).forEach(ensure);
+
+  let matches=allSchedule().filter(m=>m&&m.group===group&&m.idx!==undefined&&m.idx!==null);
+  if(!matches.length){
+    matches=RR.map((_,i)=>{ const [home,away]=matchTeams(group,i); return {group,idx:i,home,away}; });
+  }
+
+  matches.forEach(m=>{
+    const r=matchResult(group,m.idx);
+    if(!r.complete) return;
+    const H=ensure(m.home||r.home), A=ensure(m.away||r.away);
+    if(!H||!A) return;
+    const hs=Number(r.hs), as=Number(r.as);
+    if(!Number.isFinite(hs)||!Number.isFinite(as)) return;
+    H.P++;A.P++;
+    H.GF+=hs;H.GA+=as; A.GF+=as;A.GA+=hs;
+    if(hs>as){H.W++;A.L++;H.Pts+=3;}
+    else if(as>hs){A.W++;H.L++;A.Pts+=3;}
+    else {H.D++;A.D++;H.Pts++;A.Pts++;}
+    H.GD=H.GF-H.GA;
+    A.GD=A.GF-A.GA;
+  });
+
+  const arr=Object.values(row);
   arr.sort((a,b)=> b.Pts-a.Pts || b.GD-a.GD || b.GF-a.GF || a.team.localeCompare(b.team));
   return arr;
 }
@@ -3071,7 +3286,9 @@ function calcPlayerPoints(playerData,groupResults,knockoutResults,champion){
 }
 
 /* ---- leaderboard (uses calcPlayerPoints) ---- */
+function invalidateLeaderboardCache(){ APP._lbCache=null; }
 function buildLeaderboard(){
+  if(APP._lbCache) return APP._lbCache;
   const rows=playerNames().map(name=>{
     const p=getPlayer(name);
     const c=calcPlayerPoints(p,APP.data.groupResults,APP.data.knockoutResults,APP.data.champion);
@@ -3079,6 +3296,7 @@ function buildLeaderboard(){
   });
   rows.sort((a,b)=> b.total-a.total || a.name.localeCompare(b.name));
   rows.forEach((r,i)=>r.rank=i+1);
+  APP._lbCache=rows;
   return rows;
 }
 function rankMovement(name){
@@ -3114,6 +3332,13 @@ function buildLocalSchedule(){ // synthesize from GROUPS so All-Matches always h
   }});
   return out;
 }
+
+function stableFixtureKey(group,home,away,eventId){
+  if(eventId) return 'api_'+String(eventId);
+  const pair=[teamCompareKey(home),teamCompareKey(away)].sort();
+  return String(group)+'_'+pair[0]+'_'+pair[1];
+}
+
 function dateRange(a,b){ const out=[],d=new Date(a+'T00:00:00Z'),end=new Date(b+'T00:00:00Z');
   while(d<=end){ out.push(d.toISOString().slice(0,10)); d.setUTCDate(d.getUTCDate()+1);} return out; }
 function uaeNowMs(){
@@ -3147,14 +3372,30 @@ function parseTimeTo24(time){
   return null;
 }
 function matchUaeTimestamp(m){
-  if(!m||!m.date) return 0;
+  if(!m) return 0;
+  m=normalizeScheduleRowForGst(m);
+  if(m.kickoffUtc){
+    const ts=Date.parse(m.kickoffUtc);
+    if(Number.isFinite(ts)) return ts;
+  }
+  if(!m.date) return 0;
   const tm=parseTimeTo24(m.time||m.strTime||'00:00');
   const h=tm?tm.h:0, min=tm?tm.min:0;
   return Date.UTC(Number(m.date.slice(0,4)),Number(m.date.slice(5,7))-1,Number(m.date.slice(8,10)),h-4,min,0);
 }
+function liveStatusText(s){
+  s=String(s||'').toLowerCase();
+  if(['ft','aet','pen','complete','completed','finished','match finished','final'].includes(s)) return 'final';
+  if(['live','in play','1h','2h','ht','halftime'].includes(s)) return 'live';
+  return 'scheduled';
+}
+function matchIsFinalStatus(m){ return liveStatusText(m&&m.status)==='final'; }
+function matchIsLiveStatus(m){ return liveStatusText(m&&m.status)==='live'; }
 function matchIsUpcoming(m){
-  if(!m||!m.group||m.idx==null) return false;
-  if(matchResult(m.group,m.idx).complete) return false;
+  if(!m) return false;
+  if(m.api){
+    if(matchIsFinalStatus(m)) return false;
+  }else if(m.group&&m.idx!=null&&matchResult(m.group,m.idx).complete) return false;
   const ts=matchUaeTimestamp(m);
   if(!ts) return true;
   return ts + 3*60*60*1000 >= uaeNowMs();
@@ -3164,47 +3405,160 @@ function pastUncompletedMatches(limit){
   return sched.filter(m=>m.group&&m.idx!=null&&!matchResult(m.group,m.idx).complete&&matchUaeTimestamp(m)&&matchUaeTimestamp(m)+3*60*60*1000<uaeNowMs())
     .sort((a,b)=>matchUaeTimestamp(a)-matchUaeTimestamp(b)).slice(0,limit||6);
 }
-function eventInstantFromSportsEvent(e){
-  if(!e) return null;
+function wcApiSourceInstant(m){
+  if(!m) return null;
 
-  // The World Cup schedule API exposes match wall-clock times in US Eastern time.
-  // Do not treat strTime as UTC. During the 2026 World Cup window this is EDT
-  // (UTC-04:00), so 3:00 PM ET becomes 11:00 PM UAE.
-  if(e.dateEvent && e.strTime){
-    const raw=String(e.strTime).slice(0,5);
-    const d=new Date(e.dateEvent+'T'+raw+':00-04:00');
-    return isNaN(d)?null:d;
+  if(m.sourceTimestamp){
+    const d=new Date(m.sourceTimestamp);
+    if(Number.isFinite(d.getTime())) return d;
+  }
+  if(m.strTimestamp){
+    const d=new Date(m.strTimestamp);
+    if(Number.isFinite(d.getTime())) return d;
   }
 
-  // Fallback only. Some providers send strTimestamp inconsistently.
-  if(e.strTimestamp){
-    const d=new Date(e.strTimestamp);
-    return isNaN(d)?null:d;
+  const sourceDate=m.sourceDate||m.dateEvent||m.apiDate||m.rawDate||'';
+  const sourceTime=m.sourceTime||m.strTime||m.apiTime||m.rawTime||'';
+  if(sourceDate&&sourceTime){
+    const tm=parseTimeTo24(sourceTime);
+    if(tm){
+      const d=new Date(sourceDate+'T'+String(tm.h).padStart(2,'0')+':'+String(tm.min).padStart(2,'0')+':00Z');
+      if(Number.isFinite(d.getTime())) return d;
+    }
   }
+
+  if(m.kickoffUtc){
+    const d=new Date(m.kickoffUtc);
+    if(Number.isFinite(d.getTime())) return d;
+  }
+
   return null;
 }
-function eventDateUAE(e){
-  const d=eventInstantFromSportsEvent(e);
-  if(d){
-    const parts=new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Dubai',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(d);
-    const get=t=>parts.find(p=>p.type===t)?.value||'';
-    return `${get('year')}-${get('month')}-${get('day')}`;
+function wcFormatUaeInstant(d){
+  if(!d||!Number.isFinite(d.getTime())) return null;
+  const parts=new Intl.DateTimeFormat('en-CA',{
+    timeZone:'Asia/Dubai',
+    year:'numeric',
+    month:'2-digit',
+    day:'2-digit'
+  }).formatToParts(d);
+  const get=t=>parts.find(p=>p.type===t)?.value||'';
+  const date=`${get('year')}-${get('month')}-${get('day')}`;
+  const time=new Intl.DateTimeFormat('en-US',{
+    timeZone:'Asia/Dubai',
+    hour:'numeric',
+    minute:'2-digit',
+    hour12:true
+  }).format(d);
+  return {date,time,label:`${date} · ${time} UAE`};
+}
+function wcApiTimeToUaeLabel(m){
+  const fmt=wcFormatUaeInstant(wcApiSourceInstant(m));
+  if(fmt) return fmt.label;
+  const date=(m&&m.uaeDate)||'';
+  const time=(m&&m.uaeTime)||'';
+  if(date||time) return `${date}${time?' · '+time:''} UAE`;
+  return tl('UAE conversion unavailable','تحويل الإمارات غير متوفر');
+}
+function wcApiSourceTimeLabel(m){
+  if(!m) return '—';
+  if(m.sourceTimestamp) return `${m.sourceTimestamp} (${m.sourceTimeZone||'provider timestamp'})`;
+  if(m.strTimestamp) return `${m.strTimestamp} (${m.sourceTimeZone||'provider timestamp'})`;
+  const sourceDate=m.sourceDate||m.dateEvent||m.apiDate||m.rawDate||'';
+  const sourceTime=m.sourceTime||m.strTime||m.apiTime||m.rawTime||'';
+  if(sourceDate||sourceTime) return `${sourceDate}${sourceTime?' '+sourceTime:''} (UTC/GMT)`.trim();
+  if(m.kickoffUtc) return `${m.kickoffUtc} (instant)`;
+  return tl('Not provided by API','غير متوفر من API');
+}
+function wcNormalizeApiScheduleRow(row){
+  if(!row||typeof row!=='object') return row;
+  const m={...row};
+  const apiLike=!!(m.api||m.eventId||m.source==='live'||m.source==='api'||m.sourceDate||m.sourceTime||m.sourceTimestamp||m.strTimestamp);
+  if(!apiLike) return m;
+  const d=wcApiSourceInstant(m);
+  const fmt=wcFormatUaeInstant(d);
+  if(fmt){
+    m.kickoffUtc=d.toISOString();
+    m.uaeDate=fmt.date;
+    m.uaeTime=fmt.time;
+    m.date=fmt.date;
+    m.time=fmt.time;
+    m.tz='UAE';
+    if(!m.sourceTimeZone && (m.sourceDate||m.sourceTime)) m.sourceTimeZone='UTC/GMT';
+    if(!m.sourceLabel && (m.sourceDate||m.sourceTime)) m.sourceLabel=`${m.sourceDate||''}${m.sourceTime?' '+m.sourceTime:''}`.trim();
   }
-  return e&&e.dateEvent?e.dateEvent:'';
+  return m;
 }
-function eventTimeUAE(e){
-  try{
-    const d=eventInstantFromSportsEvent(e);
-    if(d){
-      return new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Dubai',hour:'numeric',minute:'2-digit',hour12:true}).format(d);
+function normalizeScheduleRowsForGst(rows){
+  return (Array.isArray(rows)?rows:[]).map(wcNormalizeApiScheduleRow);
+}
+function apiEventKickoffMeta(e){
+  if(!e) return {
+    kickoffUtc:null,uaeDate:'',uaeTime:'',date:'',time:'',
+    sourceDate:'',sourceTime:'',sourceTimeZone:'',sourceTimestamp:'',sourceLabel:''
+  };
+
+  const sourceDate=e.dateEvent||'';
+  const sourceTime=e.strTime||'';
+  const sourceTimestamp=e.strTimestamp||'';
+  let d=null, sourceTimeZone='', sourceLabel='';
+
+  if(sourceTimestamp){
+    const parsed=new Date(sourceTimestamp);
+    if(Number.isFinite(parsed.getTime())){
+      d=parsed;
+      sourceTimeZone='provider timestamp';
+      sourceLabel=sourceTimestamp;
     }
-  }catch(err){}
-  return '';
+  }
+
+  // SportsDB dateEvent + strTime are treated as UTC/GMT for this app.
+  // Example: 19:00 API time => 23:00 GST/UAE.
+  if(!d && sourceDate && sourceTime){
+    const raw=String(sourceTime).slice(0,5);
+    const parsed=new Date(sourceDate+'T'+raw+':00Z');
+    if(Number.isFinite(parsed.getTime())){
+      d=parsed;
+      sourceTimeZone='UTC/GMT fallback';
+      sourceLabel=`${sourceDate} ${sourceTime}`;
+    }
+  }
+
+  if(!d){
+    return {
+      kickoffUtc:null,uaeDate:sourceDate,uaeTime:'',date:sourceDate,time:'',
+      sourceDate,sourceTime,sourceTimeZone,sourceTimestamp,
+      sourceLabel:sourceLabel||`${sourceDate}${sourceTime?' '+sourceTime:''}`.trim()
+    };
+  }
+
+  const dateParts=new Intl.DateTimeFormat('en-CA',{
+    timeZone:'Asia/Dubai',year:'numeric',month:'2-digit',day:'2-digit'
+  }).formatToParts(d);
+  const get=t=>dateParts.find(p=>p.type===t)?.value||'';
+  const uaeDate=`${get('year')}-${get('month')}-${get('day')}`;
+  const uaeTime=new Intl.DateTimeFormat('en-US',{
+    timeZone:'Asia/Dubai',hour:'numeric',minute:'2-digit',hour12:true
+  }).format(d);
+
+  return {
+    kickoffUtc:d.toISOString(),
+    uaeDate,uaeTime,date:uaeDate,time:uaeTime,
+    sourceDate,sourceTime,sourceTimeZone,sourceTimestamp,
+    sourceLabel:sourceLabel||sourceTimestamp||`${sourceDate}${sourceTime?' '+sourceTime:''}`.trim()
+  };
 }
+function eventInstantFromSportsEvent(e){
+  const m=apiEventKickoffMeta(e);
+  return m.kickoffUtc?new Date(m.kickoffUtc):null;
+}
+function eventDateUAE(e){ return apiEventKickoffMeta(e).uaeDate; }
+function eventTimeUAE(e){ return apiEventKickoffMeta(e).uaeTime; }
 function matchDateTime(m){
-  const date=m&&m.date?m.date:'';
-  const time=m&&m.time?m.time:(m&&m.strTime?toAmPmFromHHMM(m.strTime):'');
-  if(date&&time) return date+' · '+time+(m.tz?' '+m.tz:' UAE');
+  m=normalizeScheduleRowForGst(m);
+  const date=(m&&m.uaeDate)||m&&m.date?((m&&m.uaeDate)||m.date):'';
+  const time=(m&&m.uaeTime)||m&&m.time?((m&&m.uaeTime)||m.time):(m&&m.strTime?toAmPmFromHHMM(m.strTime):'');
+  if(date&&time) return date+' · '+time+(m.tz?' '+m.tz:' GST');
   return date||time||'';
 }
 function addHoursToDisplayTime(time,hours){
@@ -3214,26 +3568,6 @@ function addHoursToDisplayTime(time,hours){
   const ampm=h>=12?'PM':'AM';
   let hh=h%12; if(hh===0) hh=12;
   return hh+':'+String(tm.min).padStart(2,'0')+' '+ampm;
-}
-function migrateScheduleToEasternUaeTime(){
-  if(!APP||!APP.data) return;
-  APP.data.settings=APP.data.settings||{};
-  if(APP.data.settings.easternUaeTimeFixV58) return;
-  const sched=Array.isArray(APP.data.scheduleMatches)?APP.data.scheduleMatches:null;
-  if(!sched||!sched.length) return;
-  let changed=0;
-  sched.forEach(m=>{
-    if(!m||m.source!=='api'||!m.time) return;
-    // Old saved API schedule was converted as UTC, making 3:00 PM EDT show as 7:00 PM UAE.
-    // Correct display is 11:00 PM UAE, so migrate existing saved schedule rows by +4 hours once.
-    m.time=addHoursToDisplayTime(m.time,4);
-    m.tz='UAE';
-    changed++;
-  });
-  if(changed){
-    APP.data.settings.easternUaeTimeFixV58=true;
-    try{ localStorage.setItem(CACHE_KEY, JSON.stringify(APP.data)); }catch(_){}
-  }
 }
 
 async function fetchDay(date){
@@ -3351,6 +3685,12 @@ function exportAudit(type){
 function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 const $=id=>document.getElementById(id);
 
+
+function totalGroupMatchCount(){
+  const scheduled=allSchedule().filter(m=>m&&m.group&&m.idx!==undefined&&m.idx!==null).length;
+  return scheduled>=72?scheduled:GROUP_KEYS.length*6;
+}
+
 function currentPhase(){
   const d=APP.data||defaultData();
   if(d.champion) return 'phase_done';
@@ -3428,6 +3768,7 @@ function applyDir(){ document.documentElement.lang=LANG; document.documentElemen
 }
 
 function render(){
+  invalidateLeaderboardCache();
   applyDir();
   document.body.dataset.view=APP.view||'dashboard';
   renderNav();
@@ -3442,7 +3783,7 @@ function render(){
 
   const dt=formatUaeDateTimeParts();
   $('phaseStrip').innerHTML=
-    `<span>⚽</span><b>${esc(t(currentPhase()))}</b><span>· ${completedMatchCount()}/72 ${esc(t('completedMatches'))}</span><span>· 🕒 ${esc(dt.date)} ${esc(dt.time)} UAE</span>`;
+    `<span>⚽</span><b>${esc(t(currentPhase()))}</b><span>· ${completedMatchCount()}/${totalGroupMatchCount()} ${esc(t('completedMatches'))}</span><span>· 🕒 ${esc(dt.date)} ${esc(dt.time)} UAE</span>`;
 
   let banner='';
   if(APP.error==='load'){
@@ -3615,20 +3956,117 @@ function renderBiggestMovers(latest){
   return rows.map(x=>`<div class="mover-row"><div class="who">${playerAvatar(x.name,'sm')}<span>${esc(x.name)}</span></div><div class="change ${x.dir==='dn'?'down':'up'}">${typeof x.label==='string'?esc(x.label):x.label}</div></div>`).join('');
 }
 
+function parseDisplayTimeToUtcInstant(date,time){
+  if(!date||!time) return null;
+  const tm=parseTimeTo24(time);
+  if(!tm) return null;
+  const d=new Date(date+'T'+String(tm.h).padStart(2,'0')+':'+String(tm.min).padStart(2,'0')+':00Z');
+  return Number.isFinite(d.getTime())?d:null;
+}
+function formatInstantInGst(d){
+  if(!d||!Number.isFinite(d.getTime())) return null;
+  const parts=new Intl.DateTimeFormat('en-CA',{
+    timeZone:'Asia/Dubai',year:'numeric',month:'2-digit',day:'2-digit'
+  }).formatToParts(d);
+  const get=t=>parts.find(p=>p.type===t)?.value||'';
+  const date=`${get('year')}-${get('month')}-${get('day')}`;
+  const time=new Intl.DateTimeFormat('en-US',{
+    timeZone:'Asia/Dubai',hour:'numeric',minute:'2-digit',hour12:true
+  }).format(d);
+  return {date,time,kickoffUtc:d.toISOString()};
+}
+function normalizeScheduleRowForGst(row){
+  if(!row||typeof row!=='object') return row;
+  const m={...row};
+
+  // API/live rows from older saved data may have raw UTC in m.date/m.time and no source fields.
+  // Convert those persisted rows before any UI or window logic uses them.
+  const isApiLike=!!(m.api||m.eventId||m.source==='live'||m.source==='api');
+  if(!isApiLike) return m;
+
+  if(m.sourceTimestamp){
+    const d=new Date(m.sourceTimestamp);
+    const fmt=formatInstantInGst(d);
+    if(fmt){
+      m.kickoffUtc=fmt.kickoffUtc;
+      m.uaeDate=fmt.date; m.uaeTime=fmt.time;
+      m.date=fmt.date; m.time=fmt.time;
+      m.tz='GST';
+      return m;
+    }
+  }
+
+  if(m.kickoffUtc){
+    const d=new Date(m.kickoffUtc);
+    const fmt=formatInstantInGst(d);
+    if(fmt){
+      m.uaeDate=fmt.date; m.uaeTime=fmt.time;
+      m.date=fmt.date; m.time=fmt.time;
+      m.tz='GST';
+      return m;
+    }
+  }
+
+  // Source fields exist: use API source date/time as UTC.
+  if(m.sourceDate&&m.sourceTime){
+    const d=parseDisplayTimeToUtcInstant(m.sourceDate,m.sourceTime);
+    const fmt=formatInstantInGst(d);
+    if(fmt){
+      m.kickoffUtc=fmt.kickoffUtc;
+      m.uaeDate=fmt.date; m.uaeTime=fmt.time;
+      m.date=fmt.date; m.time=fmt.time;
+      m.sourceTimeZone=m.sourceTimeZone||'UTC/GMT fallback';
+      m.sourceLabel=m.sourceLabel||`${m.sourceDate} ${m.sourceTime}`;
+      m.tz='GST';
+      return m;
+    }
+  }
+
+  // Last resort for old persisted API rows:
+  // if a row is marked API/live but only has date/time, treat that date/time as raw UTC.
+  if(m.date&&m.time){
+    const originalDate=m.date, originalTime=m.time;
+    const d=parseDisplayTimeToUtcInstant(originalDate,originalTime);
+    const fmt=formatInstantInGst(d);
+    if(fmt){
+      m.kickoffUtc=fmt.kickoffUtc;
+      m.sourceDate=m.sourceDate||originalDate;
+      m.sourceTime=m.sourceTime||originalTime;
+      m.sourceTimeZone=m.sourceTimeZone||'UTC/GMT fallback';
+      m.sourceLabel=m.sourceLabel||`${originalDate} ${originalTime}`;
+      m.uaeDate=fmt.date; m.uaeTime=fmt.time;
+      m.date=fmt.date; m.time=fmt.time;
+      m.tz='GST';
+    }
+  }
+  return m;
+}
+function normalizeScheduleRowsForGst(rows){
+  return (Array.isArray(rows)?rows:[]).map(normalizeScheduleRowForGst);
+}
+
 function allSchedule(){
-  return (Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule();
+  const rows=(Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule();
+  return normalizeScheduleRowsForGst(rows);
 }
 function homeSchedule(){
-  return (Array.isArray(APP._homeApiSchedule)&&APP._homeApiSchedule.length)?APP._homeApiSchedule:allSchedule();
+  // Use live API schedule when available, otherwise fall back to the app's saved/local schedule.
+  // Always normalize API-like rows so raw UTC source times display as GST/UAE.
+  if(Array.isArray(APP._homeApiSchedule)&&APP._homeApiSchedule.length) return normalizeScheduleRowsForGst(APP._homeApiSchedule);
+  return allSchedule();
 }
 function homeMatchesOnDate(date){
   return homeSchedule().filter(m=>m.date===date).sort((a,b)=>matchUaeTimestamp(a)-matchUaeTimestamp(b));
 }
 
 function uaeDateOffset(days){
-  const d=new Date(uaeToday()+'T00:00:00Z');
-  d.setUTCDate(d.getUTCDate()+days);
-  return d.toISOString().slice(0,10);
+  const now=new Date();
+  const uae=new Date(now.toLocaleString('en-US',{timeZone:'Asia/Dubai'}));
+  uae.setDate(uae.getDate()+Number(days||0));
+  const y=uae.getFullYear();
+  const m=String(uae.getMonth()+1).padStart(2,'0');
+  const d=String(uae.getDate()).padStart(2,'0');
+  return `${y}-${m}-${d}`;
 }
 function matchesOnDate(date){
   return allSchedule().filter(m=>m.date===date).sort((a,b)=>matchUaeTimestamp(a)-matchUaeTimestamp(b));
@@ -3734,7 +4172,7 @@ function aiSummaryInsightBadges(){
   const past=pastUncompletedMatches(20);
   const activeGroups=GROUP_KEYS.filter(g=>computeGroupTable(g).some(x=>x.P>0)).length;
   return [
-    {v:`${completedMatchCount()}/72`,l:tl('Completed','مكتملة')},
+    {v:`${completedMatchCount()}/${totalGroupMatchCount()}`,l:tl('Completed','مكتملة')},
     {v:String(y.length),l:tl('Yesterday results','نتائج أمس')},
     {v:String(today.length),l:tl('Match Center','مركز المباريات')},
     {v:String(activeGroups),l:tl('Active groups','مجموعات بدأت')},
@@ -3755,7 +4193,7 @@ function apiHomeMatches(){
   return Array.isArray(APP._homeApiResults)?APP._homeApiResults:[];
 }
 function homeUsesApiResults(){
-  return APP._homeApiLoaded && apiHomeMatches().length>0;
+  return !!(APP._homeApiLoaded && ((Array.isArray(APP._homeApiSchedule)&&APP._homeApiSchedule.length>0) || apiHomeMatches().length>0));
 }
 function homeCompletedCount(){
   return homeUsesApiResults()?apiHomeMatches().length:completedMatchCount();
@@ -3763,24 +4201,15 @@ function homeCompletedCount(){
 function homeApiResultFor(group,idx){
   return apiHomeMatches().find(m=>m.group===group&&Number(m.idx)===Number(idx))||null;
 }
+function ensureStandingRow(row,team){
+  const tm=canonTeam(team);
+  if(!tm) return null;
+  const k=teamCompareKey(tm);
+  if(!row[k]) row[k]={team:tm,P:0,W:0,D:0,L:0,GF:0,GA:0,GD:0,Pts:0};
+  return row[k];
+}
 function computeGroupTableHome(group){
-  if(!homeUsesApiResults()) return computeGroupTable(group);
-  const teams=GROUPS[group]||[];
-  const row={}; teams.forEach(tm=>row[tm]={team:tm,P:0,W:0,D:0,L:0,GF:0,GA:0,GD:0,Pts:0});
-  apiHomeMatches().filter(m=>m.group===group).forEach(m=>{
-    const H=row[m.home], A=row[m.away];
-    if(!H||!A) return;
-    const hs=Number(m.hs), as=Number(m.as);
-    if(!Number.isFinite(hs)||!Number.isFinite(as)) return;
-    H.P++; A.P++;
-    H.GF+=hs; H.GA+=as; A.GF+=as; A.GA+=hs;
-    if(hs>as){H.W++;A.L++;H.Pts+=3;}
-    else if(as>hs){A.W++;H.L++;A.Pts+=3;}
-    else {H.D++;A.D++;H.Pts++;A.Pts++;}
-  });
-  const arr=Object.values(row); arr.forEach(x=>x.GD=x.GF-x.GA);
-  arr.sort((a,b)=> b.Pts-a.Pts || b.GD-a.GD || b.GF-a.GF || a.team.localeCompare(b.team));
-  return arr;
+  return computeGroupTable(group);
 }
 function matchImpactDataForHome(m){
   if(!m||!m.api) return matchImpactData(m.group,m.idx);
@@ -3804,7 +4233,6 @@ async function loadHomeApiUpdates(){
   APP._homeApiError=null;
   APP._homeApiDebug={days:0,events:0,completed:0,mapped:0,schedule:0};
   try{
-    // Home must use current API games, not stale saved schedule/results.
     const ev=await fetchFullSchedule();
     APP._homeApiDebug.events=ev.length;
     APP._homeApiDebug.days=dateRange(WC_START,WC_END).length;
@@ -3813,33 +4241,40 @@ async function loadHomeApiUpdates(){
     APP._homeApiSchedule=rows;
     APP._homeApiDebug.schedule=rows.length;
 
-    if(rows.length){
-      // In-memory only: makes all Home match/team mapping use current API game info.
-      APP.data.scheduleMatches=rows;
-      APP._schedule=rows;
-      APP._apiScheduleIndexed=true;
-    }
-
     const out=[];
     ev.filter(sportsEventComplete).forEach(e=>{
       APP._homeApiDebug.completed++;
+      const sched=rows.find(m=>m.eventId && String(m.eventId)===String(e.idEvent||e.idSoccerXML)) || null;
       const row=compareApiEventToApp(e);
-      if(row&&row.match&&row.api){
+      const m=(row&&row.match)?row.match:sched;
+      const api=row&&row.api?row.api:sportsScore(e);
+      if(m&&api){
         APP._homeApiDebug.mapped++;
-        const hs=Number(row.api.home), as=Number(row.api.away);
+        const hs=Number(api.home), as=Number(api.away);
         let winner=null,outcome='draw';
-        if(hs>as){winner=row.match.home;outcome='home';}
-        else if(as>hs){winner=row.match.away;outcome='away';}
+        if(hs>as){winner=m.home;outcome='home';}
+        else if(as>hs){winner=m.away;outcome='away';}
+        const meta=apiEventKickoffMeta(e);
         out.push({
           api:true,
-          group:row.match.group,
-          idx:row.match.idx,
-          key:row.match.key,
-          home:row.match.home,
-          away:row.match.away,
+          group:m.group||'TBD',
+          idx:m.idx,
+          key:m.key||matchKey(m.group||'TBD',m.idx||0),
+          home:m.home||canonTeam(e.strHomeTeam),
+          away:m.away||canonTeam(e.strAwayTeam),
           hs,as,winner,outcome,
-          date:eventDateUAE(e),
-          time:eventTimeUAE(e),
+          date:meta.uaeDate,
+          time:meta.uaeTime,
+          uaeDate:meta.uaeDate,
+          uaeTime:meta.uaeTime,
+          kickoffUtc:meta.kickoffUtc,
+          sourceDate:meta.sourceDate,
+          sourceTime:meta.sourceTime,
+          sourceTimeZone:meta.sourceTimeZone,
+          sourceTimestamp:meta.sourceTimestamp,
+          sourceLabel:meta.sourceLabel,
+          sourceTimestamp:meta.sourceTimestamp,
+          sourceLabel:meta.sourceLabel,
           tz:'UAE',
           eventId:e.idEvent||null,
           status:e.strStatus||'Final',
@@ -3847,7 +4282,7 @@ async function loadHomeApiUpdates(){
         });
       }
     });
-    out.sort((a,b)=>(a.date||'').localeCompare(b.date||'') || matchUaeTimestamp(a)-matchUaeTimestamp(b));
+    out.sort((a,b)=>matchUaeTimestamp(a)-matchUaeTimestamp(b));
     APP._homeApiResults=out;
     APP._homeApiLoaded=true;
   }catch(e){
@@ -3855,21 +4290,25 @@ async function loadHomeApiUpdates(){
     APP._homeApiResults=[];
     APP._homeApiLoaded=false;
     APP._homeApiError=String(e&&e.message?e.message:e);
-    console.warn('Home API update failed',e);
+    console.warn('Home live update failed',e);
   }
 }
 
 function allCompletedResultsForHome(){
-  if(homeUsesApiResults()){
-    const y=uaeDateOffset(-1);
-    const yesterday=apiHomeMatches().filter(m=>m.date===y);
-    if(yesterday.length) return {label:tl('Yesterday results','نتائج أمس'),date:y,matches:yesterday,api:true};
-    return {label:tl('Latest results','آخر النتائج'),date:'Live data',matches:apiHomeMatches().slice(-6),api:true};
-  }
-  const yesterday=completedMatchesOnDate(uaeDateOffset(-1));
-  if(yesterday.length) return {label:tl('Yesterday saved results','نتائج أمس المحفوظة'),date:uaeDateOffset(-1),matches:yesterday};
-  const latest=completedMatchesList().slice(-6);
-  return {label:tl('Latest saved results','آخر النتائج المحفوظة'),date:'',matches:latest};
+  const y=uaeDateOffset(-1);
+  const liveYesterday=apiHomeMatches().filter(m=>m.date===y);
+  if(liveYesterday.length) return {label:tl('Yesterday results','نتائج أمس'),date:y,matches:liveYesterday,api:true};
+
+  const savedYesterday=apiYesterdayResults();
+  if(savedYesterday.length) return {label:tl('Yesterday results','نتائج أمس'),date:y,matches:savedYesterday,api:false};
+
+  const live=apiHomeMatches();
+  if(live.length) return {label:tl('Latest results','آخر النتائج'),date:tl('Live data','بيانات مباشرة'),matches:live.slice(-6),api:true};
+
+  const saved=latestApiResults(6);
+  if(saved.length) return {label:tl('Latest saved results','آخر النتائج المحفوظة'),date:tl('Saved data','بيانات محفوظة'),matches:saved,api:false};
+
+  return {label:tl('Latest Finals','آخر النتائج النهائية'),date:'',matches:[],api:false};
 }
 function homeGroupCard(g){
   const table=computeGroupTableHome(g);
@@ -4152,10 +4591,50 @@ function playerNamesLine(arr,limit){
 }
 function apiYesterdayResults(){
   const y=uaeDateOffset(-1);
-  return apiHomeMatches().filter(m=>m.date===y);
+  const live=apiHomeMatches().filter(m=>m.date===y);
+  if(live.length) return live;
+
+  // Fallback to saved/admin-entered results for yesterday.
+  return completedMatchesOnDate(y).map(m=>{
+    const r=matchResult(m.group,m.idx);
+    return {
+      api:false,
+      group:m.group,
+      idx:m.idx,
+      key:matchKey(m.group,m.idx),
+      home:r.home||m.home,
+      away:r.away||m.away,
+      hs:r.hs,
+      as:r.as,
+      winner:r.winner,
+      outcome:r.outcome,
+      date:m.date,
+      time:m.time,
+      tz:'UAE'
+    };
+  });
 }
 function latestApiResults(limit){
-  return apiHomeMatches().slice(-(limit||4)).reverse();
+  const n=limit||4;
+  const live=apiHomeMatches();
+  if(live.length) return live.slice(-n).reverse();
+
+  // Fallback to saved/admin-entered completed results.
+  return completedMatchesList().slice(-n).reverse().map(m=>({
+    api:false,
+    group:m.group,
+    idx:m.idx,
+    key:m.key||matchKey(m.group,m.idx),
+    home:m.home,
+    away:m.away,
+    hs:m.hs,
+    as:m.as,
+    winner:m.winner,
+    outcome:m.outcome,
+    date:m.date,
+    time:m.time,
+    tz:'UAE'
+  }));
 }
 function matchCenterMatches(){
   const now=uaeNowMs();
@@ -4215,7 +4694,7 @@ function homeAISummaryText(){
   if(yesterday.length){
     lines.push(tl(`Yesterday: ${yesterday.length} final result${yesterday.length>1?'s':''} loaded.`,`أمس: ${yesterday.length} نتيجة نهائية.`));
   }else{
-    lines.push(tl('Yesterday: no final results are available yet.','أمس: لا توجد نتائج نهائية حالياً.'));
+    lines.push(tl('Yesterday: no final results are saved or available yet.','أمس: لا توجد نتائج نهائية محفوظة أو مباشرة حالياً.'));
   }
   if(latest){
     lines.push(tl(`Latest final: ${teamText(latest.home)} ${latest.hs}-${latest.as} ${teamText(latest.away)}.`,`آخر نتيجة: ${teamText(latest.home)} ${latest.hs}-${latest.as} ${teamText(latest.away)}.`));
@@ -4223,7 +4702,7 @@ function homeAISummaryText(){
   if(today.length){
     lines.push(tl(`Match Center: ${today.length} match${today.length>1?'es':''} in the live UAE window.`,`مركز المباريات: ${today.length} مباراة ضمن نافذة الإمارات الحالية.`));
   }else{
-    lines.push(tl('Match Center: no games are currently listed in the live UAE window.','مركز المباريات: لا توجد مباريات ضمن نافذة الإمارات الحالية.'));
+    lines.push(tl('Match Center: no games are currently listed in the UAE window; showing the next scheduled matches when available.','مركز المباريات: لا توجد مباريات حالياً ضمن نافذة الإمارات؛ سيتم عرض المباريات القادمة عند توفرها.'));
   }
   if(next){
     lines.push(tl(`Next kickoff: ${teamText(next.home)} vs ${teamText(next.away)} at ${next.time} UAE.`,`المباراة القادمة: ${teamText(next.home)} ضد ${teamText(next.away)} الساعة ${next.time} بتوقيت الإمارات.`));
@@ -4234,6 +4713,291 @@ function homeAISummaryText(){
   }
   return lines.join(' ');
 }
+function dataFreshnessLabel(){
+  const now=formatUaeDateTimeParts();
+  if(homeUsesApiResults()) return tl('Live data · updated now','بيانات مباشرة · محدثة الآن');
+  if(APP._homeApiError) return tl('Saved data · live API unavailable','بيانات محفوظة · البيانات المباشرة غير متاحة');
+  return tl('Saved data','بيانات محفوظة');
+}
+function hubMatchStatus(m){
+  if(!m) return {key:'upcoming',label:tl('Upcoming','قادمة')};
+  const r=m.group&&m.idx!=null?matchResult(m.group,m.idx):null;
+  const status=String(m.status||'').toLowerCase();
+  const hasApiScore=m.hs!==undefined&&m.as!==undefined&&m.hs!==null&&m.as!==null&&m.hs!==''&&m.as!=='';
+
+  if((r&&r.complete) || (hasApiScore && /(final|ft|finished|match finished)/i.test(status))){
+    return {key:'final',label:tl('Final','نهائية')};
+  }
+
+  const ts=matchUaeTimestamp(m);
+  const now=uaeNowMs();
+  if(ts && now>=ts && now<=ts+130*60*1000) return {key:'live',label:tl('Live / in window','مباشرة / ضمن النافذة')};
+  if(ts && ts-now<=2*60*60*1000 && ts>now) return {key:'soon',label:tl('Starts soon','تبدأ قريباً')};
+  return {key:'upcoming',label:tl('Upcoming','قادمة')};
+}
+function countdownText(m){
+  const ts=matchUaeTimestamp(m);
+  if(!ts) return '';
+  const diff=ts-uaeNowMs();
+  if(diff<=-130*60*1000) return tl('Finished / past window','انتهت / خارج النافذة');
+  if(diff<=0) return tl('Kickoff window','نافذة الانطلاق');
+  const mins=Math.round(diff/60000);
+  const h=Math.floor(mins/60), mm=mins%60;
+  if(h>=24) return tl(`in ${Math.round(h/24)}d`,`بعد ${Math.round(h/24)} يوم`);
+  if(h>0) return tl(`in ${h}h ${mm}m`,`بعد ${h}س ${mm}د`);
+  return tl(`in ${mm}m`,`بعد ${mm}د`);
+}
+function currentPlayerName(){
+  return APP.selectedPlayer || APP.profileName || localStorage.getItem('wc2026_profile') || playerNames()[0] || '';
+}
+function playerRankInfo(name){
+  const rows=buildLeaderboard();
+  const row=rows.find(x=>x.name===name)||null;
+  if(!row) return null;
+  const ahead=rows.find(x=>x.rank===row.rank-1)||null;
+  const behind=rows.find(x=>x.rank===row.rank+1)||null;
+  return {row,ahead,behind,rows};
+}
+function playerPickForMatch(playerName,m){
+  const p=getPlayer(playerName);
+  if(!p||!m||m.group==null||m.idx==null) return null;
+  const pred=(p.groups||{})[m.group];
+  if(!Array.isArray(pred)) return null;
+  const [home,away]=matchTeams(m.group,m.idx);
+  if(!home||!away) return null;
+  const hp=pred.findIndex(x=>sameTeam(x,home));
+  const ap=pred.findIndex(x=>sameTeam(x,away));
+  let edge=tl('No clear edge','لا توجد أفضلية واضحة');
+  if(hp>=0&&ap>=0){
+    if(hp<ap) edge=teamText(home);
+    else if(ap<hp) edge=teamText(away);
+  }else if(hp>=0) edge=teamText(home);
+  else if(ap>=0) edge=teamText(away);
+  return {home,away,edge,hp,ap};
+}
+function availablePointsForMatch(m){
+  if(!m||m.group==null||m.idx==null) return 0;
+  const [home,away]=matchTeams(m.group,m.idx);
+  if(!home||!away) return 0;
+  return 6; // 3 points per correctly ordered team edge in this pick'em scoring model.
+}
+function playerTodayOpportunity(name){
+  const matches=todayApiMatches().filter(m=>m.group&&m.idx!=null&&!matchResult(m.group,m.idx).complete);
+  const picks=matches.map(m=>({m,pick:playerPickForMatch(name,m),pts:availablePointsForMatch(m)}));
+  return {matches,picks,total:picks.reduce((a,x)=>a+(x.pick?x.pts:0),0),submitted:picks.filter(x=>!!x.pick).length};
+}
+function splitPercent(count,total){
+  if(!total) return '0%';
+  return Math.round((count/total)*100)+'%';
+}
+function splitRowsForMatch(m){
+  const sp=playerPredictionSplit(m);
+  const total=sp.home.length+sp.away.length+sp.none.length;
+  return [
+    {label:teamText(m.home),count:sp.home.length,pct:splitPercent(sp.home.length,total)},
+    {label:teamText(m.away),count:sp.away.length,pct:splitPercent(sp.away.length,total)},
+    {label:tl('No edge','بدون أفضلية'),count:sp.none.length,pct:splitPercent(sp.none.length,total)}
+  ];
+}
+function renderHubSplit(m){
+  const rows=splitRowsForMatch(m);
+  const total=Math.max(1,rows.reduce((a,x)=>a+x.count,0));
+  return `<div class="hub-split">${rows.map(x=>`<div class="hub-split-line">
+    <div class="hub-split-label">${esc(x.label)}</div>
+    <div class="hub-split-track"><div class="hub-split-fill" style="width:${Math.round((x.count/total)*100)}%"></div></div>
+    <div class="hub-split-value">${esc(x.pct)} · ${x.count}</div>
+  </div>`).join('')}</div>`;
+}
+function latestResultImpact(m){
+  if(!m) return {right:[],missed:[]};
+  try{ return matchImpactDataForHome(m); }catch(_){}
+  if(m.group!=null&&m.idx!=null) return matchImpactData(m.group,m.idx);
+  return {right:[],missed:[]};
+}
+function renderYourMatchdayCard(){
+  const name=currentPlayerName();
+  const info=name?playerRankInfo(name):null;
+  const opp=name?playerTodayOpportunity(name):{matches:[],picks:[],total:0,submitted:0};
+  const next=nextApiMatch();
+  const nextPick=name&&next?playerPickForMatch(name,next):null;
+  const gap=info&&info.ahead?Math.max(0,info.ahead.total-info.row.total):null;
+  return `<div class="hub-panel">
+    <h3>🧑‍🚀 ${esc(tl('Your Matchday','يومك في التوقعات'))}<span class="hint">${esc(name||tl('No player selected','لم يتم اختيار لاعب'))}</span></h3>
+    ${info?`<div class="hub-player-row">
+      <div class="hub-leader-rank">#${info.row.rank}</div>
+      <div><div class="hub-name">${esc(info.row.name)}</div><div class="hub-meta">${gap!==null?esc(tl(`${gap} pts behind next rank`,`يبعد ${gap} نقطة عن المركز التالي`)):esc(tl('Leading or tied at the top','في الصدارة أو متعادل'))}</div></div>
+      <div class="hub-pts">${info.row.total} pts</div>
+    </div>`:`<div class="hub-empty">${esc(tl('Choose a player profile to see your rank, risk, and opportunity.','اختر ملف لاعب لرؤية ترتيبك والمخاطر والفرص.'))}</div>`}
+    <div class="hub-lock-row">
+      <div class="hub-leader-rank">🎯</div>
+      <div><div class="hub-name">${esc(tl('Today opportunity','فرصة اليوم'))}</div><div class="hub-meta">${esc(tl(`${opp.submitted}/${opp.matches.length} match picks detected`,`تم العثور على ${opp.submitted}/${opp.matches.length} توقعات لمباريات اليوم`))}</div></div>
+      <div class="hub-pts">+${opp.total}</div>
+    </div>
+    ${next?`<div class="hub-lock-row">
+      <div class="hub-leader-rank">⏱</div>
+      <div><div class="hub-name">${teamHtml(next.home)} vs ${teamHtml(next.away)}</div><div class="hub-meta">${esc(tl('Next lock / kickoff','القفل / الانطلاق القادم'))}: ${esc(countdownText(next))} · ${esc(next.time||'')} UAE${nextPick?` · ${esc(tl('Your edge','أفضليتك'))}: ${esc(nextPick.edge)}`:''}</div></div>
+      <div class="hub-pts">${esc(hubMatchStatus(next).label)}</div>
+    </div>`:''}
+    <div class="hub-actions">
+      <button class="btn sm" onclick="go('profile')">${esc(tl('Open profile','افتح الملف'))}</button>
+      <button class="btn ghost sm" onclick="go('leaderboard')">${esc(t('v_leaderboard'))}</button>
+    </div>
+  </div>`;
+}
+function renderLeaderboardPulseCard(){
+  const rows=buildLeaderboard();
+  const name=currentPlayerName();
+  const top=rows.slice(0,3);
+  const me=rows.find(r=>r.name===name);
+  return `<div class="hub-panel">
+    <h3>🏆 ${esc(tl('Leaderboard Pulse','نبض الترتيب'))}<span class="hint">${esc(tl('Top + your position','الأوائل + مركزك'))}</span></h3>
+    ${top.map(r=>`<div class="hub-leader-row ${r.name===name?'me':''}">
+      <div class="hub-leader-rank">${r.rank}</div>
+      <div><div class="hub-name">${esc(r.name)}</div><div class="hub-meta">${esc(r.paid?tl('Paid','مدفوع'):tl('Unpaid','غير مدفوع'))}</div></div>
+      <div class="hub-pts">${r.total}</div>
+    </div>`).join('')}
+    ${me&&!top.some(r=>r.name===me.name)?`<div class="hub-leader-row me">
+      <div class="hub-leader-rank">${me.rank}</div>
+      <div><div class="hub-name">${esc(me.name)}</div><div class="hub-meta">${esc(tl('Your current position','مركزك الحالي'))}</div></div>
+      <div class="hub-pts">${me.total}</div>
+    </div>`:''}
+    ${rows.length?`<div class="hub-actions"><button class="btn ghost sm" onclick="go('leaderboard')">${esc(tl('Full leaderboard','الترتيب الكامل'))}</button></div>`:`<div class="hub-empty">${esc(tl('No players yet.','لا يوجد لاعبون بعد.'))}</div>`}
+  </div>`;
+}
+function hubMatchName(m){
+  if(!m) return '—';
+  return `${teamText(m.home)} vs ${teamText(m.away)}`;
+}
+function latestScoreLabel(m){
+  if(!m) return '—';
+  return `${teamText(m.home)} ${m.hs}-${m.as} ${teamText(m.away)}`;
+}
+
+function renderMatchdayHero(){
+  const today=todayApiMatches();
+  const yesterday=apiYesterdayResults();
+  const latest=latestApiResults(1)[0]||null;
+  const next=nextApiMatch();
+  const source=dataFreshnessLabel();
+  const nextStatus=next?hubMatchStatus(next):null;
+  const nextLine=next
+    ? `${hubMatchName(next)}`
+    : tl('No upcoming match found','لا توجد مباراة قادمة حالياً');
+  const nextSub=next
+    ? `${esc(next.time||'')} UAE · ${esc(countdownText(next))} · ${esc(nextStatus.label)}`
+    : tl('Check the full schedule for all fixtures.','راجع الجدول الكامل لكل المباريات.');
+  const latestLine=latest?latestScoreLabel(latest):tl('No final result yet','لا توجد نتيجة نهائية بعد');
+  const latestSub=latest
+    ? `${latest.date?esc(latest.date):''}${latest.time?' · '+esc(latest.time)+' UAE':''}`
+    : tl('Results will appear after admin sync or saved final scores.','تظهر النتائج بعد المزامنة أو حفظ النتائج النهائية.');
+  const hubText=today.length
+    ? tl(`${today.length} match${today.length>1?'es':''} currently relevant`,`هناك ${today.length} مباراة مهمة حالياً`)
+    : tl('No active match window','لا توجد نافذة مباريات نشطة');
+  const yesterdayText=yesterday.length
+    ? tl(`${yesterday.length} final${yesterday.length>1?'s':''}`,`${yesterday.length} نتيجة نهائية`)
+    : tl('No finals saved','لا توجد نتائج محفوظة');
+
+  return `<div class="card hub-hero">
+    <div class="hero-kicker">⚽ ${esc(tl('World Cup Pick’em Matchday Hub','مركز يوم مباريات كأس العالم للتوقعات'))}</div>
+    <h2>${esc(tl('Today’s briefing','ملخص اليوم'))}</h2>
+    <p>${esc(tl('A quick view of the next match, latest result, prediction activity, and data freshness.','نظرة سريعة على المباراة القادمة، آخر نتيجة، نشاط التوقعات، وحالة البيانات.'))}</p>
+
+    <div class="hub-brief-grid">
+      <div class="hub-brief-card primary">
+        <div class="hub-brief-label">${esc(tl('Next match','المباراة القادمة'))}</div>
+        <div class="hub-brief-main">${esc(nextLine)}</div>
+        <div class="hub-brief-sub">${nextSub}</div>
+        <div class="hub-brief-nextline">
+          <span class="hub-pill ${homeUsesApiResults()?'good':'warn'}">${esc(source)}</span>
+          <span class="hub-pill">${esc(uaeToday())} · ${esc(formatUaeDateTimeParts().time)} UAE</span>
+          ${APP._homeApiError?`<span class="hub-pill warn">${esc(tl('API fallback active','تم تفعيل البيانات المحفوظة'))}</span>`:''}
+        </div>
+      </div>
+
+      <div class="hub-brief-stack">
+        <div class="hub-brief-mini">
+          <div class="hub-brief-label">${esc(tl('Latest final','آخر نتيجة'))}</div>
+          <b>${esc(latestLine)}</b>
+          <span>${latestSub}</span>
+        </div>
+        <div class="hub-brief-mini">
+          <div class="hub-brief-label">${esc(tl('Match center','مركز المباريات'))}</div>
+          <b>${esc(hubText)}</b>
+          <span>${esc(tl('Includes status + prediction split','يشمل الحالة وانقسام التوقعات'))}</span>
+        </div>
+        <div class="hub-brief-mini">
+          <div class="hub-brief-label">${esc(tl('Yesterday','أمس'))}</div>
+          <b>${esc(yesterdayText)}</b>
+          <span>${esc(tl('Finals saved or loaded','نتائج محفوظة أو مباشرة'))}</span>
+        </div>
+        <div class="hub-brief-mini">
+          <div class="hub-brief-label">${esc(tl('Data source','مصدر البيانات'))}</div>
+          <b>${esc(homeUsesApiResults()?tl('Live','مباشر'):tl('Saved','محفوظ'))}</b>
+          <span>${esc(APP._homeApiError?tl('Using fallback where needed','استخدام البيانات المحفوظة عند الحاجة'):tl('Updated for UAE view','محدث لعرض الإمارات'))}</span>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+function renderMatchCenterHub(){
+  const rows=todayApiMatches();
+  const body=rows.length?rows.map(m=>{
+    const st=hubMatchStatus(m);
+    const pickRows=renderHubSplit(m);
+    const user=currentPlayerName();
+    const pick=user?playerPickForMatch(user,m):null;
+    return `<div class="hub-match-card">
+      <div class="hub-match-top">
+        <div>
+          <div class="hub-match-title">${teamHtml(m.home)} vs ${teamHtml(m.away)}</div>
+          <div class="hub-meta">${esc(matchDateTime(m))} · ${esc(countdownText(m))}${pick?` · ${esc(tl('Your edge','أفضليتك'))}: ${esc(pick.edge)}`:''}</div>
+        </div>
+        <span class="hub-status ${st.key}">${esc(st.label)}</span>
+      </div>
+      ${pickRows}
+    </div>`;
+  }).join(''):`<div class="hub-empty">${esc(tl('No match in the current UAE window. Showing next scheduled matches when available.','لا توجد مباراة ضمن نافذة الإمارات الحالية. يتم عرض المباريات القادمة عند توفرها.'))}</div>`;
+  return `<div class="hub-panel">
+    <h3>📅 ${esc(tl('Match Center','مركز المباريات'))}<span class="hint">${esc(tl('status + prediction split','الحالة + انقسام التوقعات'))}</span></h3>
+    ${body}
+    <div class="hub-actions"><button class="btn ghost sm" onclick="go('matches')">${esc(t('v_matches'))}</button></div>
+  </div>`;
+}
+function renderLatestResultsImpactHub(){
+  const data=allCompletedResultsForHome();
+  const rows=(data.matches||[]).slice(-4).reverse();
+  const body=rows.length?rows.map(m=>{
+    const r=m.api?m:matchResult(m.group,m.idx);
+    const imp=latestResultImpact(m);
+    return `<div class="hub-result-row">
+      <div class="hub-leader-rank">🏁</div>
+      <div>
+        <div class="hub-name">${teamHtml(r.home)} <b class="num">${r.hs}-${r.as}</b> ${teamHtml(r.away)}</div>
+        <div class="hub-meta">${esc(tl('Group','المجموعة'))} ${esc(m.group||'')} · ${esc(m.api?(m.date+' · '+m.time+' UAE'):matchDateTime(m))}</div>
+        <div class="hub-impact-list">
+          ${imp.right&&imp.right.length?imp.right.slice(0,5).map(x=>`<span class="hub-impact">+${x.got||''} ${esc(x.name||x)}</span>`).join(''):`<span class="hub-impact miss">${esc(tl('No player edge points','لا نقاط أفضلية للاعبين'))}</span>`}
+          ${imp.missed&&imp.missed.length?`<span class="hub-impact miss">${esc(tl('Missed','أخطأوا'))}: ${imp.missed.length}</span>`:''}
+        </div>
+      </div>
+      <div class="hub-pts">${esc(m.status||tl('Final','نهائية'))}</div>
+    </div>`;
+  }).join(''):`<div class="hub-empty">${esc(tl('No final results yet. Admin can use Result Sync once matches finish.','لا توجد نتائج نهائية بعد. يمكن للمدير استخدام مزامنة النتائج بعد انتهاء المباريات.'))}</div>`;
+  return `<div class="hub-panel">
+    <h3>🕘 ${esc(data.label||tl('Latest Finals','آخر النتائج'))}<span class="hint">${esc(tl('score + player impact','النتيجة + تأثير اللاعبين'))}</span></h3>
+    ${body}
+    <div class="hub-actions"><button class="btn ghost sm" onclick="go('impact')">${esc(tl('Open impact','افتح التأثير'))}</button></div>
+  </div>`;
+}
+function renderGroupPulseHub(){
+  const relevant=[...new Set([...groupKeysFromMatches(todayApiMatches()),...groupKeysFromMatches(latestApiResults(4)),...allRelevantGroupsForHome()])].slice(0,4);
+  const body=relevant.length?`<div class="wc-groups-grid">${relevant.map(compactGroupStatusCard).join('')}</div>`:`<div class="hub-empty">${esc(t('noData'))}</div>`;
+  return `<div class="hub-panel">
+    <h3>📊 ${esc(tl('Group Pulse','نبض المجموعات'))}<span class="hint">${esc(tl('top two + next match','أول مركزين + المباراة القادمة'))}</span></h3>
+    ${body}
+    <div class="hub-actions"><button class="btn ghost sm" onclick="go('groups')">${esc(t('v_groups'))}</button></div>
+  </div>`;
+}
+
 function renderHomeAISummary(){
   const today=todayApiMatches();
   const yesterday=apiYesterdayResults();
@@ -4258,19 +5022,20 @@ function renderHomeAISummary(){
 }
 function renderPredictionDashboard(){
   const today=todayApiMatches();
-  if(!today.length) return wcSection(`📈 ${esc(tl('Prediction Dashboard','لوحة التوقعات'))}`,tl('Appears when API today matches are available.','تظهر عند توفر مباريات اليوم من API.'),`<div class="wc-empty">${esc(t('noToday'))}</div>`,'wc-pred-dashboard');
+  if(!today.length) return wcSection(`📈 ${esc(tl('Prediction Dashboard','لوحة التوقعات'))}`,tl('Prediction split appears when matches are in the hub.','يظهر انقسام التوقعات عندما توجد مباريات في المركز.'),`<div class="wc-empty">${esc(APP._homeApiError?tl('Live match data is temporarily unavailable; saved schedule is being used where possible.','بيانات المباريات المباشرة غير متاحة مؤقتاً؛ يتم استخدام الجدول المحفوظ عند الإمكان.'):t('noToday'))}</div>`,'wc-pred-dashboard');
   const divided=mostDividedTodayMatch();
   const edge=biggestPredictionEdgeToday();
   const totalPlayers=playerNames().length;
   const chartCards=today.map(m=>{
     const sp=playerPredictionSplit(m);
+    const total=sp.home.length+sp.away.length+sp.none.length;
     return `<div class="wc-pred-widget">
       <div class="wc-pred-title">${teamHtml(m.home)} <span>vs</span> ${teamHtml(m.away)}</div>
       ${splitBar(sp.home.length,sp.away.length,sp.none.length)}
       <div class="wc-mini-legend">
-        <span>${teamHtml(m.home)} <b>${sp.home.length}</b></span>
-        <span>${teamHtml(m.away)} <b>${sp.away.length}</b></span>
-        <span>${esc(tl('No edge','بدون أفضلية'))} <b>${sp.none.length}</b></span>
+        <span>${teamHtml(m.home)} <b>${sp.home.length}</b> <small>${esc(splitPercent(sp.home.length,total))}</small></span>
+        <span>${teamHtml(m.away)} <b>${sp.away.length}</b> <small>${esc(splitPercent(sp.away.length,total))}</small></span>
+        <span>${esc(tl('No edge','بدون أفضلية'))} <b>${sp.none.length}</b> <small>${esc(splitPercent(sp.none.length,total))}</small></span>
       </div>
     </div>`;
   }).join('');
@@ -4287,7 +5052,7 @@ function renderPredictionDashboard(){
     </div>
   </div>
   <div class="wc-pred-widget-grid">${chartCards}</div>`;
-  return wcSection(`📈 ${esc(tl('Prediction Dashboard','لوحة التوقعات'))}`,tl('Quick widgets for today’s prediction split.','مؤشرات سريعة لتقسيم توقعات اليوم.'),body,'wc-pred-dashboard');
+  return wcSection(`📈 ${esc(tl('Prediction Dashboard','لوحة التوقعات'))}`,tl('Quick widgets for today’s prediction split with percentages.','مؤشرات سريعة لانقسام توقعات اليوم مع النسب.'),body,'wc-pred-dashboard');
 }
 function renderYesterdayFeed(){
   const data=allCompletedResultsForHome();
@@ -4391,7 +5156,7 @@ function renderAIMatchdaySummary(){
     </div>
 
     <div class="briefing-kpis">
-      <div><b class="num">${completedMatchCount()}/72</b><span>${esc(tl('Completed group matches','مباريات مجموعات مكتملة'))}</span></div>
+      <div><b class="num">${completedMatchCount()}/${totalGroupMatchCount()}</b><span>${esc(tl('Completed group matches','مباريات مجموعات مكتملة'))}</span></div>
       <div><b class="num">${results.matches.length}</b><span>${esc(results.label)}</span></div>
       <div><b class="num">${today.length}</b><span>${esc(tl('Match Center','مركز المباريات'))}</span></div>
       <div><b class="num">${groups.length}</b><span>${esc(tl('Groups covered','مجموعات مشمولة'))}</span></div>
@@ -4416,7 +5181,7 @@ function aiMatchdaySummaryText(){
     `${uaeToday()} · UAE`,
     '',
     tl('WC2026 update','تحديث WC2026'),
-    `${completedMatchCount()}/72 ${tl('group matches completed','مباراة مجموعات مكتملة')}. ${today.length} ${tl('matches today','مباريات اليوم')}.`,
+    `${completedMatchCount()}/${totalGroupMatchCount()} ${tl('group matches completed','مباراة مجموعات مكتملة')}. ${today.length} ${tl('matches today','مباريات اليوم')}.`,
     '',
     tl('Yesterday / latest results','نتائج أمس / آخر النتائج'),
     resultRows.length?resultRows.map(r=>`- ${r.title} (${r.meta})${r.impact.length?' | '+r.impact.join(', '):''}`).join('\n'):tl('No saved results yet.','لا توجد نتائج محفوظة بعد.'),
@@ -4501,12 +5266,17 @@ function renderTodayPredictionCard(m){
 }
 function viewDashboard(){
   return `
-    ${renderHomeAISummary()}
-    ${renderMatchdayStatusBar()}
-    ${renderTodayFeed()}
+    ${renderMatchdayHero()}
+    <div class="hub-grid">
+      ${renderYourMatchdayCard()}
+      ${renderLeaderboardPulseCard()}
+    </div>
+    <div class="hub-grid">
+      ${renderMatchCenterHub()}
+      ${renderLatestResultsImpactHub()}
+    </div>
     ${renderPredictionDashboard()}
-    ${renderYesterdayFeed()}
-    ${renderGroupsFeed()}
+    ${renderGroupPulseHub()}
   `;
 }
 function adminHealthPanel(){
@@ -4545,12 +5315,32 @@ function completedMatchesList(){
   for(const g of GROUP_KEYS){
     for(let i=0;i<6;i++){
       const r=matchResult(g,i);
-      if(r.complete) out.push({group:g,idx:i,key:matchKey(g,i),home:r.home,away:r.away,hs:r.hs,as:r.as,winner:r.winner,outcome:r.outcome,date:(buildLocalSchedule().find(m=>m.key===matchKey(g,i))||{}).date,time:(buildLocalSchedule().find(m=>m.key===matchKey(g,i))||{}).time,tz:'UAE'});
+      if(r.complete){
+        const sched=allSchedule().find(m=>m&&m.group===g&&Number(m.idx)===i)||{};
+        out.push({
+          group:g,
+          idx:i,
+          key:matchKey(g,i),
+          home:r.home,
+          away:r.away,
+          hs:r.hs,
+          as:r.as,
+          winner:r.winner,
+          outcome:r.outcome,
+          date:sched.date,
+          time:sched.time,
+          tz:'UAE',
+          kickoff:sched?matchUaeTimestamp(sched):0
+        });
+      }
     }
   }
-  return out;
+  return out.sort((a,b)=>Number(a.kickoff||0)-Number(b.kickoff||0));
 }
-function latestCompletedMatch(){ const arr=completedMatchesList(); return arr[arr.length-1]||null; }
+function latestCompletedMatch(){
+  const arr=completedMatchesList();
+  return arr[arr.length-1]||null;
+}
 function matchImpactData(group,idx){
   const a=auditMatch(group,idx), r=a.match;
   const right=a.rows.filter(x=>x.got>0);
@@ -5321,6 +6111,7 @@ async function saveOneResult(g,i){
   logAction('result_edit','groupResults.'+key,before,{home:h,away:a});
   await upsertNormalizedResult(normalizedResultRow(g,i,h,a,source,'final'));
   await saveState();
+  invalidateLeaderboardCache();
   const after=leaderboardSnapshot();
   showResultCelebration(g,i,beforeLb,after,beforeLeader);
   trackEvent('admin_result_save',{match_key:key,source});
@@ -5449,7 +6240,26 @@ function toast(msg){ let el=document.createElement('div'); el.textContent=msg;
   document.body.appendChild(el); setTimeout(()=>el.remove(),1800); }
 function downloadText(fn,txt){ const b=new Blob([txt],{type:'application/json'}); const u=URL.createObjectURL(b);
   const a=document.createElement('a'); a.href=u; a.download=fn; a.click(); URL.revokeObjectURL(u); }
-function copyText(txt){ navigator.clipboard?.writeText(txt).then(()=>toast(t('copied')),()=>toast(t('copied'))); }
+function copyText(txt){
+  if(!navigator.clipboard){
+    toast(tl('Clipboard unavailable','الحافظة غير متاحة'));
+    return;
+  }
+  navigator.clipboard.writeText(String(txt||''))
+    .then(()=>toast(t('copied')))
+    .catch(()=>toast(tl('Copy failed','فشل النسخ')));
+}
+
+async function shareText(text){
+  if(!text) return;
+  if(navigator.share){
+    try{
+      await navigator.share({text:String(text)});
+      return;
+    }catch(_){}
+  }
+  copyText(String(text));
+}
 function openRestore(){ openSheet(`<h3 style="padding:0 8px">${esc(t('restore'))}</h3>
   <textarea id="restoreBox" placeholder='{"players":...}'></textarea>
   <button class="btn" style="margin-top:8px" onclick="doRestore()">${esc(t('confirm'))}</button>`); }
@@ -5542,19 +6352,25 @@ function parseScenarioCommand(q){
   return {match:best,hs,as,raw};
 }
 function simulateLeaderboardForMatch(m,hs,as){
+  invalidateLeaderboardCache();
   const before=buildLeaderboard();
   const old=APP.data.groupResults||{};
   const oldMeta=APP.data.resultMeta||{};
-  const sim=JSON.parse(JSON.stringify(old));
-  sim[matchKey(m.group,m.idx)]={home:String(hs),away:String(as)};
-  APP.data.groupResults=sim;
-  const after=buildLeaderboard();
-  APP.data.groupResults=old;
-  APP.data.resultMeta=oldMeta;
-  return after.map(r=>{
-    const b=before.find(x=>x.name===r.name)||{rank:r.rank,total:r.total};
-    return {...r, oldRank:b.rank, oldTotal:b.total, deltaPts:r.total-b.total, deltaRank:b.rank-r.rank};
-  });
+  try{
+    const sim=JSON.parse(JSON.stringify(old));
+    sim[matchKey(m.group,m.idx)]={home:String(hs),away:String(as)};
+    APP.data.groupResults=sim;
+    invalidateLeaderboardCache();
+    const after=buildLeaderboard();
+    return after.map(r=>{
+      const b=before.find(x=>x.name===r.name)||{rank:r.rank,total:r.total};
+      return {...r, oldRank:b.rank, oldTotal:b.total, deltaPts:r.total-b.total, deltaRank:b.rank-r.rank};
+    });
+  }finally{
+    APP.data.groupResults=old;
+    APP.data.resultMeta=oldMeta;
+    invalidateLeaderboardCache();
+  }
 }
 function scenarioWinnerText(m,hs,as){
   if(hs>as) return teamText(m.home);
@@ -5693,7 +6509,7 @@ function compareApiEventToApp(e){
   const api=m.reversed?{home:sc.away,away:sc.home}:sc;
   const app=readScore((APP.data.groupResults||{})[m.key]);
   let status='missing';
-  if(app.complete) status=(String(app.hs)===String(api.home)&&String(app.as)===String(api.away))?'match':'mismatch';
+  if(app) status=(String(app.hs)===String(api.home)&&String(app.as)===String(api.away))?'match':'mismatch';
   return {status,event:e,match:m,api,app};
 }
 async function fetchCompletedApiComparisons(){
@@ -5743,7 +6559,7 @@ function renderSyncComparisonRows(rows){
   return rows.map((r,idx)=>{
     const cls=r.status==='match'?'ok':r.status==='missing'?'miss':r.status==='mismatch'?'bad':'';
     const title=r.match?`${teamHtml(r.match.home)} vs ${teamHtml(r.match.away)}`:`${esc(r.event.strHomeTeam||'')} vs ${esc(r.event.strAwayTeam||'')}`;
-    const app=r.app&&r.app.complete?`${r.app.hs}-${r.app.as}`:'—';
+    const app=r.app?`${r.app.hs}-${r.app.as}`:'—';
     const api=r.api?`${r.api.home}-${r.api.away}`:'—';
     return `<div class="sync-row">
       <div class="main"><div class="title">${title}</div><div class="meta">${esc((r.event.dateEvent||'')+' · '+(r.match?r.match.key:tl('not mapped','غير مرتبطة')))}</div></div>
@@ -5954,11 +6770,19 @@ function viewShareCards(){
   <div class="card"><div class="share-preview"><h3>🛣️ ${esc(tl('Road to win','طريق الفوز'))}</h3><pre style="white-space:pre-wrap">${esc(shareCardText('road'))}</pre></div><button class="btn ghost sm" style="margin-top:10px" onclick="copyText(shareCardText('road'))">${esc(t('copy'))}</button></div>
   <div class="card"><div class="share-preview"><h3>🔥 ${esc(t('matchImpact'))}</h3><pre style="white-space:pre-wrap">${esc(shareCardText('match'))}</pre></div><button class="btn ghost sm" style="margin-top:10px" onclick="copyText(shareCardText('match'))">${esc(t('copy'))}</button></div>`;
 }
+
+function playerCount(){
+  const players=APP&&APP.data?APP.data.players:null;
+  if(Array.isArray(players)) return players.length;
+  if(players&&typeof players==='object') return Object.keys(players).length;
+  return 0;
+}
+
 function healthShapeReport(){
   const d=APP.data||{};
   return [
     {label:'Supabase URL',value:SB_URL?'OK':'Missing'},
-    {label:'Players',value:Array.isArray(d.players)?d.players.length:'Missing'},
+    {label:'Players',value:playerCount()},
     {label:'Group results',value:Object.keys(d.groupResults||{}).length},
     {label:'Schedule matches',value:Array.isArray(d.scheduleMatches)?d.scheduleMatches.length:'Missing'},
     {label:'Audit log',value:Array.isArray(d.auditLog)?d.auditLog.length:'Missing'},
@@ -6103,7 +6927,7 @@ const ADMIN_HASH=adminHash(ADMIN_PASSWORD); // default admin password
 function openAdmin(){
   if(APP.isAdmin){ openMore(); return; }
   openSheet(`<h3 style="padding:0 8px">🔒 ${esc(t('pwPrompt'))}</h3>
-    <input id="pwIn" type="password" placeholder="${esc(t('pwPrompt'))}" autocomplete="off"/>
+    <input id="pwIn" type="password" placeholder="${esc(t('pwPrompt'))}" autocomplete="off" onkeydown="if(event.key==='Enter')tryAdmin()"/>
     <button class="btn" style="margin-top:10px" onclick="tryAdmin()">${esc(t('confirm'))}</button>`);
   setTimeout(()=>$('pwIn')?.focus(),100);
 }
@@ -6127,52 +6951,87 @@ function toggleLang(){ LANG=LANG==='ar'?'en':'ar'; localStorage.setItem('wc_lang
 
 /* ================= schedule loaders ================= */
 async function loadToday(){
-  APP._todayLoading=true; if(APP.view==='today'||APP.view==='dashboard') render();
-  const date=uaeToday();
-  const ev=await fetchDay(date);
-  // map API events onto local fixtures when possible; otherwise show local fixtures dated today
-  const schedule=(Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule();
-  const local=schedule.filter(m=>m.date===date);
-  APP._today = ev.length? ev.map(e=>({group:groupFromEvent(e),home:e.strHomeTeam,away:e.strAwayTeam,date:(e.dateEvent||date),time:eventTimeUAE(e),tz:'UAE',key:null,idx:null,source:'api'}))
-    : local;
-  APP._todayLoading=false; render();
+  APP._todayLoading=true;
+  if(APP.view==='today'||APP.view==='dashboard') render();
+  try{
+    const date=uaeToday();
+    const dates=[uaeDateOffset(-1),date,uaeDateOffset(1)];
+    const batches=await Promise.all(dates.map(d=>fetchDay(d).catch(()=>[])));
+    const ev=batches.flat();
+    const apiRows=scheduleRowsFromApiEvents(ev).filter(m=>m&&m.date===date);
+    const local=allSchedule().filter(m=>m&&m.date===date);
+    APP._today=apiRows.length?apiRows:local;
+  }catch(e){
+    APP._today=allSchedule().filter(m=>m&&m.date===uaeToday());
+  }
+  APP._todayLoading=false;
+  render();
 }
-function groupFromEvent(e){ const home=e.strHomeTeam;
-  for(const g of GROUP_KEYS) if((GROUPS[g]||[]).some(tm=>sameTeam(tm,home))) return g; return null; }
-
+// Generated from GROUPS at runtime so it can never drift from the real draw.
+const API_GROUP_BY_TEAM=(()=>{
+  const map={};
+  for(const g of GROUP_KEYS){
+    for(const tm of (GROUPS[g]||[])){
+      if(!tm||tm==='TBD') continue;
+      map[teamCompareKey(tm)]=g;
+      map[norm(tm)]=g;
+      const variants=TEAM_ALIASES[canonTeam(tm)]||[];
+      variants.forEach(v=>{ map[norm(v)]=g; });
+    }
+  }
+  return map;
+})();
+function groupForTeamFromApiName(team){
+  const k=teamCompareKey(team);
+  if(API_GROUP_BY_TEAM[k]) return API_GROUP_BY_TEAM[k];
+  const raw=norm(team);
+  if(API_GROUP_BY_TEAM[raw]) return API_GROUP_BY_TEAM[raw];
+  for(const g of GROUP_KEYS) if((GROUPS[g]||[]).some(tm=>sameTeam(tm,team))) return g;
+  return '';
+}
+function groupFromEvent(e){
+  const gh=groupForTeamFromApiName(e&&e.strHomeTeam);
+  const ga=groupForTeamFromApiName(e&&e.strAwayTeam);
+  if(gh&&ga&&gh===ga) return gh;
+  return gh||ga||'TBD';
+}
 function scheduleRowsFromApiEvents(ev){
-  const byGroup={};
-  (ev||[]).forEach(e=>{
-    const g=groupFromEvent(e);
-    if(!g||!e.strHomeTeam||!e.strAwayTeam) return;
-    (byGroup[g]=byGroup[g]||[]).push(e);
-  });
+  const counters={};
   const rows=[];
-  Object.keys(byGroup).forEach(g=>{
-    byGroup[g].sort((a,b)=>{
-      const da=(a.dateEvent||'')+' '+(a.strTime||a.strTimestamp||'');
-      const db=(b.dateEvent||'')+' '+(b.strTime||b.strTimestamp||'');
-      return da.localeCompare(db);
-    });
-    byGroup[g].forEach((e,idx)=>{
-      rows.push({
-        group:g,
-        idx,
-        key:matchKey(g,idx),
-        home:canonTeam(e.strHomeTeam),
-        away:canonTeam(e.strAwayTeam),
-        date:eventDateUAE(e),
-        time:eventTimeUAE(e),
-        tz:'UAE',
-        source:'api',
-        eventId:e.idEvent||e.idSoccerXML||null,
-        status:e.strStatus||'Scheduled',
-        venue:e.strVenue||'',
-        api:true
-      });
+  (ev||[]).forEach((e,rawIndex)=>{
+    if(!e||!e.strHomeTeam||!e.strAwayTeam) return;
+    const g=groupFromEvent(e)||'TBD';
+    counters[g]=counters[g]||0;
+    const idx=counters[g]++;
+    const meta=apiEventKickoffMeta(e);
+    rows.push({
+      group:g,
+      idx,
+      key:matchKey(g,idx),
+      home:canonTeam(e.strHomeTeam),
+      away:canonTeam(e.strAwayTeam),
+      date:meta.uaeDate,
+      time:meta.uaeTime,
+      uaeDate:meta.uaeDate,
+      uaeTime:meta.uaeTime,
+      kickoffUtc:meta.kickoffUtc,
+      sourceDate:meta.sourceDate,
+      sourceTime:meta.sourceTime,
+      sourceTimeZone:meta.sourceTimeZone,
+      sourceTimestamp:meta.sourceTimestamp,
+      sourceLabel:meta.sourceLabel,
+      sourceTimestamp:meta.sourceTimestamp,
+      sourceLabel:meta.sourceLabel,
+      tz:'UAE',
+      source:'live',
+      eventId:e.idEvent||e.idSoccerXML||null,
+      status:e.strStatus||'Scheduled',
+      venue:e.strVenue||'',
+      api:true,
+      rawIndex
     });
   });
-  return rows.sort((a,b)=>(a.date||'').localeCompare(b.date||'') || matchUaeTimestamp(a)-matchUaeTimestamp(b));
+  return rows.sort((a,b)=>matchUaeTimestamp(a)-matchUaeTimestamp(b));
 }
 async function ensureApiScheduleIndexed(persist){
   if(APP._apiScheduleIndexed&&Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.some(m=>m.source==='api'&&m.idx!=null)) return APP.data.scheduleMatches;
@@ -6319,18 +7178,22 @@ async function boot(){
   try{ const r=localStorage.getItem('wc2026_ranks'); if(r) APP.prevRanks=JSON.parse(r); }catch(_){}
   if(sessionStorage.getItem(ADMIN_FLAG)==='1') APP.isAdmin=true;
   await loadState();
+  if(Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length){ APP.data.scheduleMatches=normalizeScheduleRowsForGst(APP.data.scheduleMatches); }
   APP._schedule=(Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule();
   await loadHomeApiUpdates();
   render();
   loadAnalytics();
   trackEvent('app_open',{view:APP.view||'dashboard'});
+  trackPageView(APP.view||'dashboard');
   registerPWA();
   updateInstallUI();
+  document.body.classList.toggle('no-voice', !voiceSupported());
   updateHeaderDateTime();
   if(!APP._clockTimer) APP._clockTimer=setInterval(updateHeaderDateTime,30000);
   loadToday();
 }
 window.addEventListener('online',()=>{ if(APP.cached) boot(); });
+window.addEventListener('keydown',(e)=>{ if(e.key==='Escape'){ const bg=$('sheetBg'); if(bg&&bg.classList.contains('open')) closeSheet(); } });
 boot();
 </script>
 </body>
