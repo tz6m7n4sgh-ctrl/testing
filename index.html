@@ -710,6 +710,261 @@ body{
   .topbar .brand{max-width:48vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 }
 
+
+/* ===== v38 home page redesign / desktop stability ===== */
+.home-shell{
+  background:rgba(255,255,255,.92)!important;
+  overflow:hidden;
+}
+.home-shell.compact{padding:16px!important}
+.home-shell-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:16px;
+}
+.hero-kicker.dark{color:var(--grass-d)}
+.home-focus-grid{
+  display:grid;
+  grid-template-columns:1.25fr .75fr;
+  gap:16px;
+  align-items:start;
+}
+.home-focus-grid.two{
+  grid-template-columns:1fr 1fr;
+  margin-top:16px;
+}
+.home-secondary-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:14px;
+  align-items:start;
+}
+.home-panel{
+  min-width:0;
+  border:1px solid rgba(16,32,25,.08);
+  background:linear-gradient(180deg,#fff,#f7fbf8);
+  border-radius:22px;
+  padding:15px;
+  box-shadow:0 8px 24px rgba(7,21,16,.06);
+}
+.home-panel-main{
+  background:linear-gradient(180deg,#ffffff,#f0fff6);
+  border-color:rgba(34,199,122,.22);
+}
+.home-panel h3{
+  margin-bottom:10px;
+}
+.home-links{
+  grid-column:span 2;
+}
+.home-hero .grid.g3{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:12px;
+}
+.home-hero .stat{
+  min-width:0;
+}
+.home-hero .stat .v{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.next-impact-card .between{
+  gap:12px;
+}
+.next-impact-card .between h3{
+  min-width:0;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.next-impact-card .match-time{
+  flex-shrink:0;
+  font-size:12px;
+}
+
+/* On desktop, dashboard should not use the old direct-card mosaic. */
+@media(min-width:980px){
+  body[data-view="dashboard"] main#view{
+    display:block!important;
+    padding-bottom:42px!important;
+  }
+  body[data-view="dashboard"] main#view>.card{
+    width:100%!important;
+    margin:0 0 18px!important;
+    grid-column:auto!important;
+  }
+  body[data-view="dashboard"] main#view>.card:first-child{
+    width:100%!important;
+  }
+  body[data-view="dashboard"] .home-hero{
+    padding:28px!important;
+  }
+  body[data-view="dashboard"] .hero-title{
+    font-size:clamp(34px,3.2vw,48px)!important;
+    max-width:900px;
+  }
+  body[data-view="dashboard"] .hero-sub{
+    font-size:15px;
+  }
+}
+
+/* Tablet: simpler two-column layout. */
+@media(max-width:979px){
+  .home-focus-grid,
+  .home-focus-grid.two{
+    grid-template-columns:1fr;
+  }
+  .home-secondary-grid{
+    grid-template-columns:1fr 1fr;
+  }
+  .home-links{
+    grid-column:1/-1;
+  }
+}
+
+/* Phone: single clean column. */
+@media(max-width:620px){
+  .home-shell{padding:12px!important}
+  .home-shell-head{align-items:flex-start;flex-direction:column}
+  .home-secondary-grid{
+    grid-template-columns:1fr;
+  }
+  .home-links{grid-column:auto}
+  .home-hero .grid.g3{
+    grid-template-columns:1fr;
+  }
+  .home-panel{
+    border-radius:18px;
+    padding:12px;
+  }
+}
+
+
+/* ===== v39 Matchday AI Home ===== */
+.ai-summary-card{
+  background:
+    radial-gradient(circle at 12% 0%,rgba(34,199,122,.22),transparent 30%),
+    radial-gradient(circle at 100% 0%,rgba(247,201,72,.18),transparent 28%),
+    linear-gradient(135deg,#ffffff,#f5fff9)!important;
+}
+.ai-summary-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:14px;
+}
+.ai-summary-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.ai-summary-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:12px;
+}
+.ai-summary-block{
+  min-width:0;
+  border:1px solid rgba(16,32,25,.08);
+  border-radius:18px;
+  background:rgba(255,255,255,.74);
+  padding:13px;
+}
+.ai-summary-block b{display:block;margin-bottom:7px;color:var(--pitch)}
+.ai-summary-block p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
+.matchday-home{background:rgba(255,255,255,.92)!important}
+.matchday-grid{
+  display:grid;
+  grid-template-columns:1.05fr .95fr;
+  gap:16px;
+  align-items:start;
+}
+.result-brief{
+  border:1px solid rgba(16,32,25,.08);
+  border-radius:17px;
+  padding:11px;
+  margin:10px 0;
+  background:#fff;
+}
+.match-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-weight:1000}
+.match-line .num{font-size:18px;color:var(--grass-d)}
+.mini-group{
+  border:1px solid rgba(16,32,25,.08);
+  border-radius:17px;
+  padding:11px;
+  margin:10px 0;
+  background:#fff;
+}
+.mini-row{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  padding:6px 0;
+  border-bottom:1px solid var(--soft);
+  font-size:13px;
+}
+.mini-row:last-child{border-bottom:0}
+.mini-row.q{font-weight:900;color:var(--grass-d)}
+.today-preds-panel{margin-top:16px}
+.today-pred-card{
+  border:1px solid rgba(34,199,122,.20);
+  border-radius:20px;
+  padding:13px;
+  margin:12px 0;
+  background:linear-gradient(180deg,#fff,#f5fff9);
+}
+.today-pred-head{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+}
+.split-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin-top:12px;
+}
+.split-box{
+  min-width:0;
+  border:1px solid rgba(16,32,25,.08);
+  border-radius:16px;
+  padding:11px;
+  background:#fff;
+}
+.split-box b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.split-box .num{display:block;font-size:24px;font-weight:1000;margin:5px 0;color:var(--pitch)}
+.split-box small{display:block;color:var(--muted);font-size:12px;line-height:1.35;max-height:50px;overflow:auto}
+.split-box.home{border-color:rgba(34,199,122,.28)}
+.split-box.away{border-color:rgba(247,201,72,.45)}
+.split-box.none{border-color:rgba(102,118,111,.22)}
+.pred-details{margin-top:12px}
+.pred-details summary{
+  cursor:pointer;
+  font-weight:900;
+  color:var(--grass-d);
+}
+.pred-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}
+.pred-table th,.pred-table td{border-bottom:1px solid var(--border);padding:9px 8px;text-align:start}
+.pred-table th{font-size:12px;color:var(--muted);background:var(--soft)}
+.edge-chip{display:inline-flex;border-radius:999px;padding:4px 8px;font-size:12px;font-weight:900;background:var(--soft)}
+.edge-chip.home{background:#e5faef;color:#087343}
+.edge-chip.away{background:#fff2bf;color:#80600b}
+.edge-chip.none{background:#edf2ef;color:#66766f}
+@media(min-width:980px){
+  body[data-view="dashboard"] main#view{display:block!important}
+  body[data-view="dashboard"] main#view>.card{margin-bottom:18px!important}
+}
+@media(max-width:980px){
+  .ai-summary-grid{grid-template-columns:1fr 1fr}
+  .matchday-grid{grid-template-columns:1fr}
+}
+@media(max-width:620px){
+  .ai-summary-top,.today-pred-head{flex-direction:column}
+  .ai-summary-actions{justify-content:flex-start}
+  .ai-summary-grid,.split-grid{grid-template-columns:1fr}
+}
+
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DEDV833VML"></script>
@@ -1882,6 +2137,184 @@ function renderBiggestMovers(latest){
   if(!rows.length) return `<div class="sub">${esc(tl('No movement yet. Enter results to see who rises.','لا توجد حركة بعد. أدخل النتائج لرؤية التغييرات.'))}</div>`;
   return rows.map(x=>`<div class="mover-row"><div class="who">${playerAvatar(x.name,'sm')}<span>${esc(x.name)}</span></div><div class="change ${x.dir==='dn'?'down':'up'}">${typeof x.label==='string'?esc(x.label):x.label}</div></div>`).join('');
 }
+
+function allSchedule(){
+  return (Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule();
+}
+function uaeDateOffset(days){
+  const d=new Date(uaeToday()+'T00:00:00Z');
+  d.setUTCDate(d.getUTCDate()+days);
+  return d.toISOString().slice(0,10);
+}
+function matchesOnDate(date){
+  return allSchedule().filter(m=>m.date===date).sort((a,b)=>matchUaeTimestamp(a)-matchUaeTimestamp(b));
+}
+function groupKeysFromMatches(matches){
+  return [...new Set((matches||[]).map(m=>m.group).filter(Boolean))];
+}
+function completedMatchesOnDate(date){
+  return matchesOnDate(date).filter(m=>m.group&&m.idx!=null&&matchResult(m.group,m.idx).complete);
+}
+function resultLine(m){
+  const r=matchResult(m.group,m.idx);
+  if(!r.complete) return `${teamText(m.home)} vs ${teamText(m.away)}`;
+  return `${teamText(r.home)} ${r.hs}-${r.as} ${teamText(r.away)}`;
+}
+function groupLeaderLine(g){
+  const table=computeGroupTable(g);
+  const played=table.reduce((a,x)=>a+x.P,0);
+  if(!played) return `${tl('Group','المجموعة')} ${g}: ${tl('not started yet','لم تبدأ بعد')}`;
+  const lead=table[0];
+  const next=table[1];
+  return `${tl('Group','المجموعة')} ${g}: ${teamText(lead.team)} ${tl('leads','يتصدر')} (${lead.Pts} ${tl('pts','نقاط')}${next?`, ${teamText(next.team)} ${next.Pts}`:''})`;
+}
+function playerPredictionSplit(m){
+  const home=[], away=[], none=[];
+  playerNames().forEach(name=>{
+    const p=getPlayer(name);
+    const e=predictedEdge(p,m.group,m.home,m.away);
+    const row={name,edge:e,rh:e.rh||rankOfTeamInPred(p,m.group,m.home),ra:e.ra||rankOfTeamInPred(p,m.group,m.away)};
+    if(e.status==='ok'&&sameTeam(e.edge,m.home)) home.push(row);
+    else if(e.status==='ok'&&sameTeam(e.edge,m.away)) away.push(row);
+    else none.push(row);
+  });
+  return {home,away,none};
+}
+function todayMostImportantMatch(today){
+  if(!today||!today.length) return null;
+  return today.map(m=>({m,sp:playerPredictionSplit(m)}))
+    .sort((a,b)=>Math.abs(b.sp.home.length-b.sp.away.length)-Math.abs(a.sp.home.length-a.sp.away.length))[0];
+}
+function renderAIMatchdaySummary(){
+  const today=matchesOnDate(uaeToday()).filter(m=>m.group&&m.idx!=null);
+  const yesterday=completedMatchesOnDate(uaeDateOffset(-1));
+  const pastNeed=pastUncompletedMatches(5);
+  const completed=completedMatchCount();
+  const lb=buildLeaderboard();
+  const leader=lb[0];
+  const activeGroups=[...new Set([...groupKeysFromMatches(yesterday),...groupKeysFromMatches(today),...GROUP_KEYS.filter(g=>computeGroupTable(g).some(x=>x.P>0))])].slice(0,6);
+  const important=todayMostImportantMatch(today);
+  const groupText=activeGroups.length
+    ? activeGroups.map(groupLeaderLine).join(' · ')
+    : tl('No group has started yet. Today will create the first group movements.','لم تبدأ أي مجموعة بعد. مباريات اليوم ستبدأ حركة المجموعات.');
+  const yesterdayText=yesterday.length
+    ? yesterday.map(resultLine).join(' · ')
+    : (pastNeed.length?tl('Some past matches still need results entered.','بعض المباريات السابقة ما زالت تحتاج إدخال النتائج.'):tl('No saved results from yesterday yet.','لا توجد نتائج محفوظة من أمس حتى الآن.'));
+  const playerText=leader
+    ? `${leader.name} ${tl('leads with','يتصدر بـ')} ${leader.total} ${t('pts')}${lb[1]?`, ${lb[1].name} ${tl('is next on','يليه بـ')} ${lb[1].total}`:''}.`
+    : tl('No players have been added yet.','لم تتم إضافة لاعبين بعد.');
+  const todayText=today.length
+    ? `${today.length} ${tl('match(es) today','مباراة اليوم')}${important?`: ${teamText(important.m.home)} vs ${teamText(important.m.away)} ${tl('has','لديها')} ${important.sp.home.length}-${important.sp.away.length} ${tl('prediction split','انقسام في التوقعات')}.`:'.'}`
+    : tl('No matches scheduled for today in the app schedule.','لا توجد مباريات مجدولة اليوم في التطبيق.');
+  return `<div class="card ai-summary-card">
+    <div class="ai-summary-top">
+      <div>
+        <div class="hero-kicker dark">🤖 ${esc(tl('AI Matchday Summary','ملخص اليوم بالذكاء'))}</div>
+        <h3>${esc(tl('Yesterday results, group situation, and player impact','نتائج أمس ووضع المجموعات وتأثير اللاعبين'))}</h3>
+      </div>
+      <div class="ai-summary-actions">
+        <button class="btn ghost sm" onclick="copyText(aiMatchdaySummaryText())">📋 ${esc(t('copy'))}</button>
+        <button class="btn ghost sm" onclick="shareText(aiMatchdaySummaryText())">📲 ${esc(t('share'))}</button>
+      </div>
+    </div>
+    <div class="ai-summary-grid">
+      <div class="ai-summary-block"><b>🏆 WC2026</b><p>${esc(`${completed}/72 ${tl('group matches completed','مباراة مجموعات مكتملة')}. ${todayText}`)}</p></div>
+      <div class="ai-summary-block"><b>📊 ${esc(tl('Groups','المجموعات'))}</b><p>${esc(groupText)}</p></div>
+      <div class="ai-summary-block"><b>👥 ${esc(tl('Players','اللاعبون'))}</b><p>${esc(playerText)} ${esc(important?tl('Today can change the table quickly because predictions are split.','اليوم قد يغير الترتيب بسرعة لأن التوقعات منقسمة.'):tl('Player impact will appear once today matches start.','تأثير اللاعبين سيظهر عند بداية مباريات اليوم.'))}</p></div>
+      <div class="ai-summary-block"><b>🕘 ${esc(tl('Yesterday','أمس'))}</b><p>${esc(yesterdayText)}</p></div>
+    </div>
+  </div>`;
+}
+function aiMatchdaySummaryText(){
+  const today=matchesOnDate(uaeToday()).filter(m=>m.group&&m.idx!=null);
+  const yesterday=completedMatchesOnDate(uaeDateOffset(-1));
+  const lb=buildLeaderboard();
+  const activeGroups=[...new Set([...groupKeysFromMatches(yesterday),...groupKeysFromMatches(today),...GROUP_KEYS.filter(g=>computeGroupTable(g).some(x=>x.P>0))])].slice(0,6);
+  const lines=[
+    tl('AI Matchday Summary','ملخص اليوم بالذكاء'),
+    `${completedMatchCount()}/72 ${tl('group matches completed','مباراة مجموعات مكتملة')}`,
+    '',
+    tl('Yesterday results:','نتائج أمس:'),
+    yesterday.length?yesterday.map(resultLine).join(' | '):tl('No saved results from yesterday yet.','لا توجد نتائج محفوظة من أمس حتى الآن.'),
+    '',
+    tl('Groups:','المجموعات:'),
+    activeGroups.length?activeGroups.map(groupLeaderLine).join(' | '):tl('No group has started yet.','لم تبدأ أي مجموعة بعد.'),
+    '',
+    tl('Players:','اللاعبون:'),
+    lb[0]?`${lb[0].name} ${tl('leads with','يتصدر بـ')} ${lb[0].total} ${t('pts')}.`:tl('No players yet.','لا يوجد لاعبون بعد.'),
+    '',
+    tl('Today matches:','مباريات اليوم:'),
+    today.length?today.map(m=>`${teamText(m.home)} vs ${teamText(m.away)} · ${matchDateTime(m)}`).join(' | '):tl('No matches today.','لا مباريات اليوم.')
+  ];
+  return lines.join('\n');
+}
+function renderYesterdayResultsSection(){
+  const y=uaeDateOffset(-1);
+  let list=completedMatchesOnDate(y);
+  if(!list.length) list=completedMatchesList().slice(-3);
+  return `<section class="home-panel home-panel-main">
+    <div class="between"><h3>🕘 ${esc(tl('Yesterday / latest results','نتائج أمس / آخر النتائج'))}</h3><span class="chip">${esc(y)}</span></div>
+    ${list.length?list.map(m=>{
+      const r=matchResult(m.group,m.idx);
+      const imp=matchImpactData(m.group,m.idx).right.slice(0,5);
+      return `<div class="result-brief">
+        <div class="match-line">${teamHtml(r.home)} <b class="num">${r.hs}-${r.as}</b> ${teamHtml(r.away)}</div>
+        <div class="sub">${esc(tl('Group','المجموعة'))} ${esc(m.group)} · ${esc(matchDateTime(m))}</div>
+        <div class="impact-list">${imp.length?imp.map(x=>`<span class="impact-pill good">+${x.got} ${esc(x.name)}</span>`).join(''):`<span class="impact-pill">${esc(tl('No player edge points','لا نقاط أفضلية'))}</span>`}</div>
+      </div>`;
+    }).join(''):`<div class="sub">${esc(tl('No results saved yet. Use Admin Results or Result Sync.','لا توجد نتائج محفوظة بعد. استخدم نتائج المدير أو مزامنة النتائج.'))}</div>`}
+  </section>`;
+}
+function renderGroupUpdatesSection(){
+  const today=matchesOnDate(uaeToday());
+  const y=completedMatchesOnDate(uaeDateOffset(-1));
+  const groups=[...new Set([...groupKeysFromMatches(y),...groupKeysFromMatches(today),...GROUP_KEYS.filter(g=>computeGroupTable(g).some(x=>x.P>0))])].slice(0,4);
+  return `<section class="home-panel">
+    <div class="between"><h3>📊 ${esc(tl('Group updates','تحديث المجموعات'))}</h3><button class="btn ghost sm" onclick="go('groups')">${esc(t('v_groups'))} →</button></div>
+    ${groups.length?groups.map(g=>{
+      const table=computeGroupTable(g);
+      return `<div class="mini-group">
+        <b>${esc(tl('Group','المجموعة'))} ${esc(g)}</b>
+        ${table.map((x,i)=>`<div class="mini-row ${i<2?'q':''}"><span>${i+1}. ${teamHtml(x.team)}</span><span class="num">${x.Pts} pts · ${x.GD>=0?'+':''}${x.GD}</span></div>`).join('')}
+      </div>`;
+    }).join(''):`<div class="sub">${esc(tl('No group updates yet.','لا توجد تحديثات للمجموعات بعد.'))}</div>`}
+  </section>`;
+}
+function renderTodayPredictionsSection(){
+  const today=matchesOnDate(uaeToday()).filter(m=>m.group&&m.idx!=null);
+  return `<section class="home-panel today-preds-panel">
+    <div class="between"><h3>📅 ${esc(tl('Today matches + player predictions','مباريات اليوم + توقعات اللاعبين'))}</h3><span class="chip on">${esc(uaeToday())}</span></div>
+    ${today.length?today.map(renderTodayPredictionCard).join(''):`<div class="sub">${esc(t('noToday'))}</div>`}
+  </section>`;
+}
+function renderTodayPredictionCard(m){
+  const split=playerPredictionSplit(m);
+  const rows=playerNames().map(name=>{
+    const p=getPlayer(name);
+    const rh=rankOfTeamInPred(p,m.group,m.home);
+    const ra=rankOfTeamInPred(p,m.group,m.away);
+    let edge='—', cls='';
+    if(rh&&ra&&rh<ra){edge=teamText(m.home); cls='home';}
+    else if(rh&&ra&&ra<rh){edge=teamText(m.away); cls='away';}
+    else if(!rh||!ra){edge=tl('Missing','ناقص'); cls='none';}
+    return `<tr><td>${esc(name)}</td><td class="num">${rh||'—'}</td><td class="num">${ra||'—'}</td><td><span class="edge-chip ${cls}">${esc(edge)}</span></td></tr>`;
+  }).join('');
+  return `<div class="today-pred-card">
+    <div class="today-pred-head">
+      <div><b>${teamHtml(m.home)} vs ${teamHtml(m.away)}</b><div class="sub">${esc(tl('Group','المجموعة'))} ${esc(m.group)} · ${esc(matchDateTime(m))}</div></div>
+      <button class="btn ghost sm" onclick="go('scenarios')">⚡ ${esc(t('v_scenarios'))}</button>
+    </div>
+    <div class="split-grid">
+      <div class="split-box home"><b>${teamHtml(m.home)}</b><span class="num">${split.home.length}</span><small>${esc(split.home.map(x=>x.name).join(', ')||t('none'))}</small></div>
+      <div class="split-box away"><b>${teamHtml(m.away)}</b><span class="num">${split.away.length}</span><small>${esc(split.away.map(x=>x.name).join(', ')||t('none'))}</small></div>
+      <div class="split-box none"><b>${esc(tl('No clear edge','لا أفضلية واضحة'))}</b><span class="num">${split.none.length}</span><small>${esc(split.none.map(x=>x.name).join(', ')||t('none'))}</small></div>
+    </div>
+    <details class="pred-details">
+      <summary>${esc(tl('Show player prediction table','عرض جدول توقعات اللاعبين'))}</summary>
+      <div class="table-wrap"><table class="pred-table"><thead><tr><th>${esc(tl('Player','اللاعب'))}</th><th>${teamHtml(m.home)}</th><th>${teamHtml(m.away)}</th><th>${esc(tl('Edge','الأفضلية'))}</th></tr></thead><tbody>${rows}</tbody></table></div>
+    </details>
+  </div>`;
+}
 function viewDashboard(){
   const lb=buildLeaderboard();
   const leader=lb[0];
@@ -1891,58 +2324,63 @@ function viewDashboard(){
   const latest=latestCompletedMatch();
   const next=dashboardNextMatch(todayList);
   return `
-  ${renderHomeHero(lb,leader,next)}
+  ${renderAIMatchdaySummary()}
 
-  <div class="card">
-    <div class="between"><h3>⚡ ${esc(tl('Next match impact','تأثير المباراة القادمة'))}</h3><span class="chip on">${esc(t(currentPhase()))}</span></div>
-    ${renderNextMatchImpact(next)}
+  <div class="card matchday-home">
+    <div class="home-shell-head">
+      <div>
+        <div class="hero-kicker dark">⚽ ${esc(tl('Matchday home','صفحة يوم المباريات'))}</div>
+        <h3>${esc(tl('Results, groups, and today predictions','النتائج والمجموعات وتوقعات اليوم'))}</h3>
+      </div>
+      <span class="chip on">🕒 ${esc(formatUaeDateTimeParts().time)} UAE</span>
+    </div>
+
+    <div class="matchday-grid">
+      ${renderYesterdayResultsSection()}
+      ${renderGroupUpdatesSection()}
+    </div>
+
+    ${renderTodayPredictionsSection()}
   </div>
 
-  <div class="card">
-    <h3>🤖 ${esc(tl('AI quick scenario','سيناريو سريع بالذكاء'))}</h3>
-    ${renderHomeAIQuick(next)}
-  </div>
+  <div class="card home-shell compact">
+    <div class="home-secondary-grid">
+      <section class="home-panel">
+        <div class="between"><h3>🏆 ${esc(t('top3'))}</h3><button class="btn ghost sm" onclick="go('leaderboard')">${esc(t('v_leaderboard'))} →</button></div>
+        ${renderPodium(lb)}
+      </section>
 
-  <div class="card">
-    <div class="between"><h3>🏆 ${esc(t('top3'))}</h3><button class="btn ghost sm" onclick="go('leaderboard')">${esc(t('v_leaderboard'))} →</button></div>
-    ${renderPodium(lb)}
-  </div>
+      <section class="home-panel">
+        <h3>🚀 ${esc(tl('Biggest movers','أكبر المتحركين'))}</h3>
+        ${renderBiggestMovers(latest)}
+      </section>
 
-  <div class="card">
-    <h3>🚀 ${esc(tl('Biggest movers','أكبر المتحركين'))}</h3>
-    ${renderBiggestMovers(latest)}
-  </div>
+      <section class="home-panel">
+        <h3>🔥 ${esc(t('matchImpact'))}</h3>
+        ${latest?renderMiniImpact(latest.group,latest.idx):`<div class="sub">${esc(t('noData'))}</div>`}
+      </section>
 
-  <div class="card">
-    <h3>🔥 ${esc(t('matchImpact'))}</h3>
-    ${latest?renderMiniImpact(latest.group,latest.idx):`<div class="sub">${esc(t('noData'))}</div>`}
-  </div>
+      <section class="home-panel">
+        <h3>👑 ${esc(t('champConsensus'))}</h3>
+        ${champCons.length?barChart(champCons.slice(0,5).map(c=>({n:teamText(c.key),v:c.count}))):`<div class="sub">${esc(t('noData'))}</div>`}
+      </section>
 
-  <div class="card">
-    <h3>📅 ${esc(t('todayMatches'))}</h3>
-    ${todayList.length?todayList.slice(0,4).map(miniMatch).join(''):`<div class="sub">${esc(t('noToday'))}</div>`}
-    <button class="btn ghost sm" style="margin-top:8px" onclick="go('today')">${esc(t('v_today'))} →</button>
-  </div>
+      <section class="home-panel">
+        <h3>🥇 ${esc(t('topWinners'))}</h3>
+        ${winners.length?barChart(winners.slice(0,6)):`<div class="sub">${esc(t('noData'))}</div>`}
+      </section>
 
-  <div class="card">
-    <h3>👑 ${esc(t('champConsensus'))}</h3>
-    ${champCons.length?barChart(champCons.slice(0,5).map(c=>({n:teamText(c.key),v:c.count}))):`<div class="sub">${esc(t('noData'))}</div>`}
-  </div>
-
-  <div class="card">
-    <h3>🥇 ${esc(t('topWinners'))}</h3>
-    ${winners.length?barChart(winners.slice(0,6)):`<div class="sub">${esc(t('noData'))}</div>`}
-  </div>
-
-  <div class="card">
-    <h3>🔗 ${esc(t('quickLinks'))}</h3>
-    <div class="grid g2">
-      <button class="btn ghost sm" onclick="go('matches')">⚽ ${esc(t('v_matches'))}</button>
-      <button class="btn ghost sm" onclick="go('groups')">📊 ${esc(t('v_groups'))}</button>
-      <button class="btn ghost sm" onclick="go('impact')">🔥 ${esc(t('v_impact'))}</button>
-      <button class="btn ghost sm" onclick="go('scenarios')">⚡ ${esc(t('v_scenarios'))}</button>
-      <button class="btn ghost sm" onclick="go('ai')">🤖 ${esc(t('v_ai'))}</button>
-      <button class="btn ghost sm" onclick="go('predictions')">📝 ${esc(t('v_predictions'))}</button>
+      <section class="home-panel home-links">
+        <h3>🔗 ${esc(t('quickLinks'))}</h3>
+        <div class="grid g2">
+          <button class="btn ghost sm" onclick="go('matches')">⚽ ${esc(t('v_matches'))}</button>
+          <button class="btn ghost sm" onclick="go('groups')">📊 ${esc(t('v_groups'))}</button>
+          <button class="btn ghost sm" onclick="go('impact')">🔥 ${esc(t('v_impact'))}</button>
+          <button class="btn ghost sm" onclick="go('scenarios')">⚡ ${esc(t('v_scenarios'))}</button>
+          <button class="btn ghost sm" onclick="go('ai')">🤖 ${esc(t('v_ai'))}</button>
+          <button class="btn ghost sm" onclick="go('predictions')">📝 ${esc(t('v_predictions'))}</button>
+        </div>
+      </section>
     </div>
   </div>
 
