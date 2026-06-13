@@ -965,6 +965,685 @@ body{
   .ai-summary-grid,.split-grid{grid-template-columns:1fr}
 }
 
+
+/* ===== v40 expanded AI briefing ===== */
+.ai-summary-expanded{
+  padding:22px!important;
+  background:
+    radial-gradient(circle at 8% 0%,rgba(34,199,122,.24),transparent 30%),
+    radial-gradient(circle at 100% 0%,rgba(247,201,72,.20),transparent 32%),
+    linear-gradient(135deg,#ffffff 0%,#f2fff8 62%,#fff9df 100%)!important;
+}
+.ai-summary-hero{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:18px;
+  margin-bottom:16px;
+}
+.ai-summary-hero h2{
+  font-size:clamp(24px,3.1vw,42px);
+  letter-spacing:-.035em;
+  margin:5px 0 8px;
+}
+.ai-summary-hero p{
+  max-width:980px;
+  margin:0;
+  color:var(--muted);
+  font-size:15px;
+  line-height:1.55;
+}
+.ai-kpi-row{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:10px;
+  margin:14px 0 18px;
+}
+.ai-kpi{
+  border:1px solid rgba(16,32,25,.08);
+  border-radius:18px;
+  background:rgba(255,255,255,.78);
+  padding:12px;
+}
+.ai-kpi b{
+  display:block;
+  color:var(--pitch);
+  font-size:24px;
+  line-height:1;
+}
+.ai-kpi span{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:900;
+  margin-top:5px;
+}
+.ai-deep-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+.ai-deep-block{
+  min-width:0;
+  border:1px solid rgba(16,32,25,.08);
+  border-radius:22px;
+  padding:16px;
+  background:rgba(255,255,255,.82);
+  box-shadow:0 8px 24px rgba(7,21,16,.06);
+}
+.ai-deep-block.wide{
+  grid-column:1/-1;
+}
+.ai-deep-block h3{
+  margin-bottom:10px;
+}
+.ai-deep-block p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.5;
+}
+.ai-line-card{
+  border:1px solid rgba(16,32,25,.08);
+  border-radius:17px;
+  padding:12px;
+  margin:10px 0;
+  background:#fff;
+}
+.ai-line-card b{
+  display:block;
+  color:var(--pitch);
+}
+.ai-line-card small{
+  display:block;
+  color:var(--muted);
+  margin-top:3px;
+}
+.ai-line-card p{
+  margin-top:6px;
+  font-size:13px;
+}
+.mini-split{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  margin-top:10px;
+}
+.mini-split span{
+  border-radius:14px;
+  background:var(--soft);
+  padding:9px;
+  min-width:0;
+  font-size:12px;
+  font-weight:900;
+}
+.mini-split span .num{
+  font-size:18px;
+  color:var(--grass-d);
+}
+.mini-split span em{
+  display:block;
+  margin-top:4px;
+  font-style:normal;
+  font-weight:700;
+  color:var(--muted);
+  max-height:38px;
+  overflow:auto;
+}
+@media(max-width:980px){
+  .ai-summary-hero{flex-direction:column}
+  .ai-kpi-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ai-deep-grid{grid-template-columns:1fr}
+  .mini-split{grid-template-columns:1fr}
+}
+@media(max-width:620px){
+  .ai-summary-expanded{padding:14px!important}
+  .ai-kpi-row{grid-template-columns:1fr 1fr}
+  .ai-summary-actions{width:100%}
+  .ai-summary-actions .btn{flex:1}
+}
+
+
+/* ===== v41 complete matchday home ===== */
+.ai-complete-briefing{
+  padding:22px!important;
+  background:
+    radial-gradient(circle at 10% 0%,rgba(34,199,122,.22),transparent 30%),
+    radial-gradient(circle at 100% 0%,rgba(247,201,72,.18),transparent 30%),
+    linear-gradient(135deg,#fff,#f2fff8 60%,#fff9df)!important;
+}
+.briefing-hero{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:18px;
+  margin-bottom:16px;
+}
+.briefing-hero h2{
+  font-size:clamp(25px,3vw,44px);
+  line-height:1.05;
+  letter-spacing:-.04em;
+  margin:5px 0 8px;
+}
+.briefing-hero p{
+  margin:0;
+  max-width:920px;
+  color:var(--muted);
+  line-height:1.5;
+}
+.briefing-kpis{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:10px;
+  margin:14px 0 16px;
+}
+.briefing-kpis>div{
+  background:rgba(255,255,255,.80);
+  border:1px solid rgba(16,32,25,.08);
+  border-radius:18px;
+  padding:12px;
+}
+.briefing-kpis b{display:block;font-size:24px;color:var(--pitch)}
+.briefing-kpis span{display:block;color:var(--muted);font-size:12px;font-weight:900;margin-top:5px}
+.briefing-warning{
+  border:1px solid rgba(247,201,72,.65);
+  background:#fff8db;
+  color:#6f5300;
+  border-radius:18px;
+  padding:12px;
+  font-weight:800;
+  margin:12px 0 16px;
+}
+.matchday-section{
+  margin-top:16px;
+  border:1px solid rgba(16,32,25,.08);
+  background:rgba(255,255,255,.84);
+  border-radius:24px;
+  padding:16px;
+}
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+  margin-bottom:12px;
+}
+.section-title p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.result-brief.full{background:#fff}
+.match-line.big{font-size:17px}
+.home-groups-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.home-group-card{
+  border:1px solid rgba(16,32,25,.08);
+  background:#fff;
+  border-radius:18px;
+  padding:12px;
+}
+.home-stand-row{
+  display:grid;
+  grid-template-columns:1fr auto auto;
+  gap:10px;
+  padding:7px 0;
+  border-bottom:1px solid var(--soft);
+  align-items:center;
+  font-size:13px;
+}
+.home-stand-row:last-child{border-bottom:0}
+.home-stand-row.q{color:var(--grass-d);font-weight:1000}
+.full-today-card{
+  border:1px solid rgba(34,199,122,.22);
+  background:linear-gradient(180deg,#fff,#f6fff9);
+  border-radius:22px;
+  padding:14px;
+  margin:13px 0;
+}
+.full-today-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+}
+.today-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.split-grid.complete{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:12px}
+.pred-table.full th,.pred-table.full td{white-space:nowrap}
+.edge-chip.missing{background:#fff2bf;color:#80600b}
+.leader-strip{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+.leader-chip{
+  border:1px solid rgba(16,32,25,.08);
+  background:#fff;
+  border-radius:16px;
+  padding:10px;
+}
+.leader-chip b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.leader-chip span{display:block;color:var(--grass-d);font-weight:1000;margin-top:4px}
+.swing-list{margin-top:12px}
+.swing-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:10px;
+  border:1px solid var(--border);
+  background:#fff;
+  border-radius:15px;
+  margin:8px 0;
+}
+.swing-row span{color:var(--muted);font-size:13px}
+@media(min-width:980px){
+  body[data-view="dashboard"] main#view{display:block!important}
+  body[data-view="dashboard"] main#view>.card{margin-bottom:18px!important}
+}
+@media(max-width:980px){
+  .briefing-hero,.section-title,.full-today-head{flex-direction:column}
+  .briefing-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .home-groups-grid,.split-grid.complete,.leader-strip{grid-template-columns:1fr}
+  .today-actions{justify-content:flex-start}
+}
+@media(max-width:620px){
+  .ai-complete-briefing{padding:14px!important}
+  .briefing-kpis{grid-template-columns:1fr 1fr}
+  .matchday-section{padding:12px;border-radius:20px}
+  .swing-row{align-items:flex-start;flex-direction:column}
+}
+
+
+/* ===== v42 Matchday Feed Home ===== */
+.matchday-status-card{
+  display:grid;
+  grid-template-columns:1.1fr 1.5fr auto;
+  gap:16px;
+  align-items:center;
+  background:linear-gradient(135deg,#fff,#f3fff8 70%,#fff8df)!important;
+}
+.status-left h2{
+  font-size:clamp(24px,2.7vw,38px);
+  letter-spacing:-.035em;
+  margin:4px 0;
+}
+.status-left p{margin:0;color:var(--muted)}
+.status-metrics{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+.status-metrics>div{
+  border:1px solid rgba(16,32,25,.08);
+  background:#fff;
+  border-radius:17px;
+  padding:11px;
+}
+.status-metrics>div.warn{border-color:rgba(247,201,72,.65);background:#fff8db}
+.status-metrics b{display:block;font-size:23px;color:var(--pitch)}
+.status-metrics span{display:block;color:var(--muted);font-size:12px;font-weight:900;margin-top:4px}
+.status-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.short-ai-card{
+  background:#fff!important;
+  border-left:5px solid var(--grass);
+}
+.ai-main-text{
+  font-size:15px;
+  line-height:1.55;
+  color:var(--ink);
+  margin:12px 0;
+}
+.ai-bullets{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;
+}
+.ai-bullets div{
+  border-radius:14px;
+  background:var(--soft);
+  padding:9px;
+  color:var(--muted);
+  font-weight:800;
+  font-size:13px;
+}
+.feed-section{
+  background:rgba(255,255,255,.94)!important;
+}
+.feed-result-card{
+  border:1px solid rgba(16,32,25,.08);
+  border-radius:20px;
+  padding:14px;
+  margin:12px 0;
+  background:linear-gradient(180deg,#fff,#f8fbf9);
+}
+.feed-note{
+  margin-top:9px;
+  border-radius:14px;
+  background:#eefaf3;
+  padding:9px;
+  color:var(--pitch);
+  font-weight:800;
+}
+.feed-groups-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+}
+.feed-group-card{
+  min-width:0;
+}
+.feed-group-card .home-group-card{
+  margin:0;
+}
+.next-group-line{
+  margin-top:8px;
+  border-radius:14px;
+  background:#fff;
+  border:1px solid var(--border);
+  padding:9px;
+  font-size:13px;
+  font-weight:800;
+}
+.today-main-feed{
+  border:2px solid rgba(34,199,122,.18)!important;
+}
+.today-feed-card{
+  border:1px solid rgba(34,199,122,.28);
+  background:linear-gradient(180deg,#ffffff,#f3fff8);
+  border-radius:24px;
+  padding:16px;
+  margin:16px 0;
+}
+.today-feed-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:14px;
+}
+.match-line.huge{
+  font-size:clamp(20px,2.5vw,34px);
+  font-weight:1000;
+  line-height:1.15;
+}
+.match-line.huge span{
+  color:var(--muted);
+  font-size:.72em;
+}
+.impact-scenarios{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin:12px 0;
+}
+.impact-scenarios>div{
+  border:1px solid rgba(16,32,25,.08);
+  background:#fff;
+  border-radius:16px;
+  padding:11px;
+}
+.impact-scenarios b{display:block;margin-bottom:6px}
+.impact-scenarios p{margin:0;color:var(--muted);font-size:13px;line-height:1.4;max-height:68px;overflow:auto}
+.pred-details[open]{
+  border-top:1px solid var(--border);
+  padding-top:10px;
+}
+@media(min-width:980px){
+  body[data-view="dashboard"] main#view{display:block!important}
+  body[data-view="dashboard"] main#view>.card{margin-bottom:18px!important}
+}
+@media(max-width:1100px){
+  .matchday-status-card{grid-template-columns:1fr}
+  .status-actions{justify-content:flex-start}
+}
+@media(max-width:820px){
+  .status-metrics,.ai-bullets,.feed-groups-grid,.impact-scenarios{grid-template-columns:1fr}
+  .today-feed-head{flex-direction:column}
+  .today-actions{justify-content:flex-start}
+}
+@media(max-width:620px){
+  .status-metrics{grid-template-columns:1fr 1fr}
+  .today-feed-card{padding:12px;border-radius:20px}
+}
+
+
+/* ===== v44 boxed AI summary ===== */
+.summary-box-card{
+  border-left:0!important;
+  background:
+    radial-gradient(circle at 12% 0%,rgba(34,199,122,.16),transparent 28%),
+    linear-gradient(135deg,#ffffff,#f7fff9)!important;
+}
+.summary-box-head{align-items:flex-start}
+.summary-box-layout{
+  display:grid;
+  grid-template-columns:1fr 1.25fr;
+  gap:12px;
+  margin-top:14px;
+}
+.summary-panel{
+  min-width:0;
+  border:1px solid rgba(16,32,25,.08);
+  background:#fff;
+  border-radius:20px;
+  padding:13px;
+  box-shadow:0 8px 20px rgba(7,21,16,.05);
+}
+.summary-panel.wide{grid-column:1/-1}
+.summary-panel.warning{
+  border-color:rgba(247,201,72,.65);
+  background:#fff8db;
+}
+.summary-panel-title{
+  color:var(--pitch);
+  font-weight:1000;
+  margin-bottom:10px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.summary-groups-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:9px;
+}
+.summary-group-box{
+  min-width:0;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:10px;
+  background:linear-gradient(180deg,#fff,#f6fbf8);
+}
+.summary-group-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:1000;
+}
+.summary-group-leader{
+  margin-top:8px;
+  font-weight:1000;
+  font-size:14px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.summary-group-meta{
+  margin-top:4px;
+  color:var(--grass-d);
+  font-weight:1000;
+  font-size:13px;
+}
+.summary-group-chaser{
+  margin-top:7px;
+  color:var(--muted);
+  font-size:12px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.summary-result-box{
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:11px;
+  background:linear-gradient(180deg,#fff,#f7fbf8);
+}
+.summary-result-teams{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:8px;
+  font-weight:1000;
+}
+.summary-result-teams .num{
+  color:var(--grass-d);
+  font-size:20px;
+}
+.summary-result-meta,.summary-match-meta{
+  margin-top:5px;
+  color:var(--muted);
+  font-size:12px;
+  font-weight:800;
+}
+.summary-match-box{
+  border:1px solid rgba(34,199,122,.22);
+  border-radius:18px;
+  padding:12px;
+  background:linear-gradient(180deg,#fff,#f4fff8);
+}
+.summary-team-vs{
+  font-weight:1000;
+  font-size:18px;
+}
+.summary-team-vs span{
+  color:var(--muted);
+  font-size:13px;
+  margin:0 6px;
+}
+.summary-team-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin-top:12px;
+}
+.summary-team-box{
+  border:1px solid var(--border);
+  border-radius:17px;
+  background:#fff;
+  padding:11px;
+  min-width:0;
+}
+.summary-team-box.home{border-color:rgba(34,199,122,.34)}
+.summary-team-box.away{border-color:rgba(247,201,72,.52)}
+.summary-team-box.none{background:#f5f7f6}
+.summary-team-name{
+  font-weight:1000;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+.summary-team-count{
+  display:block;
+  margin:8px 0 3px;
+  font-size:30px;
+  line-height:1;
+  color:var(--pitch);
+}
+.summary-team-label{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:900;
+}
+.summary-player-box{
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:11px;
+  background:linear-gradient(180deg,#fff,#f7fbf8);
+}
+.summary-player-main{
+  font-weight:1000;
+}
+.summary-player-score{
+  color:var(--grass-d);
+  font-size:22px;
+  font-weight:1000;
+  margin-top:7px;
+}
+.summary-player-meta{
+  color:var(--muted);
+  font-size:12px;
+  font-weight:800;
+  margin-top:5px;
+}
+.summary-empty{
+  border-radius:16px;
+  background:var(--soft);
+  padding:12px;
+  color:var(--muted);
+  font-weight:800;
+}
+@media(max-width:900px){
+  .summary-box-layout{grid-template-columns:1fr}
+  .summary-groups-grid,.summary-team-grid{grid-template-columns:1fr}
+}
+
+
+/* ===== v46 Home priority layout ===== */
+.priority-today{
+  position:relative;
+  border:2px solid rgba(34,199,122,.34)!important;
+  box-shadow:0 14px 38px rgba(10,31,23,.12)!important;
+  background:
+    radial-gradient(circle at 14% 0%,rgba(34,199,122,.14),transparent 30%),
+    linear-gradient(180deg,#fff,#f3fff8)!important;
+}
+.priority-today .section-title h3{
+  font-size:clamp(20px,2.3vw,30px);
+  letter-spacing:-.025em;
+}
+.priority-today .today-feed-card{
+  border-width:2px;
+  box-shadow:0 10px 28px rgba(7,21,16,.08);
+}
+.priority-today .split-box{
+  padding:14px;
+}
+.priority-today .split-box .num,
+.summary-team-count{
+  font-size:34px;
+}
+.priority-today .pred-details summary{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:42px;
+  border-radius:14px;
+  background:var(--soft);
+  font-weight:1000;
+  color:var(--pitch);
+  margin-top:8px;
+}
+.priority-today .pred-details[open] summary{
+  background:#e6f8ee;
+  color:var(--grass-d);
+}
+.more-insights-card{
+  opacity:.96;
+}
+.more-insights-card .home-panel{
+  box-shadow:none;
+}
+@media(max-width:620px){
+  .priority-today .split-box .num,
+  .summary-team-count{
+    font-size:30px;
+  }
+  .priority-today .pred-details summary{
+    font-size:13px;
+  }
+}
+
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-DEDV833VML"></script>
@@ -1156,7 +1835,7 @@ const I18N={
     logout:"خروج المشرف", consensusNote:"تُعرض المراكز الأربعة كاملة.", noData:"لا توجد بيانات بعد."
   }
 };
-let LANG=localStorage.getItem('wc_lang')||'en';
+let LANG=localStorage.getItem('wc_lang')||'ar';
 const t=(k)=>{const v=I18N[LANG][k];return v===undefined?(I18N.en[k]??k):v;};
 
 /* ================= Part 2: state, persistence, normalization ================= */
@@ -1538,7 +2217,15 @@ function getPlayer(name){ const d=APP.data||defaultData(); return (d.players||{}
 /* ================= Part 3: scoring, tables, schedule, audit, repair ================= */
 
 /* ---- group match model ---- */
-function matchTeams(group,idx){ const g=GROUPS[group]||[]; const p=RR[idx]; return p?[g[p[0]],g[p[1]]]:[null,null]; }
+function matchTeams(group,idx){
+  // Prefer saved/fetched schedule because the real WC2026 fixture order can differ from simple RR fallback.
+  try{
+    const sched=(APP&&APP.data&&Array.isArray(APP.data.scheduleMatches))?APP.data.scheduleMatches:null;
+    const m=sched&&sched.find(x=>x&&x.group===group&&Number(x.idx)===Number(idx)&&x.home&&x.away);
+    if(m) return [canonTeam(m.home),canonTeam(m.away)];
+  }catch(_){}
+  const g=GROUPS[group]||[]; const p=RR[idx]; return p?[g[p[0]],g[p[1]]]:[null,null];
+}
 function matchKey(group,idx){ return group+'_'+idx; }
 function readScore(res){
   if(!res) return null;
@@ -1890,7 +2577,7 @@ const NAV=[
   {id:'dashboard',ic:'🏠',key:'nav_dashboard'},
   {id:'leaderboard',ic:'🏆',key:'nav_leaderboard'},
   {id:'player',ic:'👤',key:'nav_profile'},
-  {id:'ai',ic:'🤖',key:'v_ai'},
+  {id:'groups',ic:'📊',key:'v_groups'},
   {id:'more',ic:'☰',key:'nav_more'}
 ];
 const MORE_ITEMS=[
@@ -1898,8 +2585,8 @@ const MORE_ITEMS=[
   {id:'matches',ic:'⚽',key:'nav_matches'},
   {id:'alerts',ic:'🔔',key:'v_alerts'},
   {id:'scenarios',ic:'⚡',key:'v_scenarios'},
+  {id:'ai',ic:'🤖',key:'v_ai'},
   {id:'sharecards',ic:'📲',key:'v_sharecards'},
-  {id:'groups',ic:'📊',key:'v_groups'},
   {id:'predictions',ic:'📝',key:'v_predictions'},
   {id:'consensus',ic:'👥',key:'v_consensus'},
   {id:'knockout',ic:'🎯',key:'v_knockout'},
@@ -2185,66 +2872,474 @@ function todayMostImportantMatch(today){
   return today.map(m=>({m,sp:playerPredictionSplit(m)}))
     .sort((a,b)=>Math.abs(b.sp.home.length-b.sp.away.length)-Math.abs(a.sp.home.length-a.sp.away.length))[0];
 }
-function renderAIMatchdaySummary(){
+
+function currentGroupNarrativeRows(){
+  const active=GROUP_KEYS.map(g=>({g,table:computeGroupTable(g)}))
+    .filter(x=>x.table.some(r=>r.P>0))
+    .slice(0,8);
+  return active.map(x=>{
+    const t=x.table;
+    const leader=t[0];
+    const second=t[1];
+    const played=t.reduce((a,r)=>a+r.P,0)/2;
+    return {
+      group:x.g,
+      title:`${tl('Group','المجموعة')} ${x.g}`,
+      text: leader
+        ? `${teamText(leader.team)} ${tl('leads','يتصدر')} ${leader.Pts} ${tl('pts','نقاط')} (${leader.GD>=0?'+':''}${leader.GD}). ${second?teamText(second.team)+' '+tl('is chasing on','يلاحق بـ')+' '+second.Pts+' '+tl('pts','نقاط')+'.':''} ${played}/6 ${tl('matches played','مباريات لعبت')}.`
+        : `${tl('Group','المجموعة')} ${x.g} ${tl('has not started yet.','لم تبدأ بعد.')}`
+    };
+  });
+}
+function matchPlayerImpactBrief(m){
+  if(!m||!m.group||m.idx==null) return [];
+  const split=playerPredictionSplit(m);
+  return [
+    {label:teamText(m.home),count:split.home.length,names:split.home.map(x=>x.name)},
+    {label:teamText(m.away),count:split.away.length,names:split.away.map(x=>x.name)},
+    {label:tl('No clear edge','لا أفضلية واضحة'),count:split.none.length,names:split.none.map(x=>x.name)}
+  ];
+}
+function todayPredictionNarrativeRows(){
   const today=matchesOnDate(uaeToday()).filter(m=>m.group&&m.idx!=null);
-  const yesterday=completedMatchesOnDate(uaeDateOffset(-1));
-  const pastNeed=pastUncompletedMatches(5);
-  const completed=completedMatchCount();
+  return today.map(m=>{
+    const b=matchPlayerImpactBrief(m);
+    return {
+      title:`${teamText(m.home)} vs ${teamText(m.away)}`,
+      meta:`${tl('Group','المجموعة')} ${m.group} · ${matchDateTime(m)}`,
+      blocks:b
+    };
+  });
+}
+function latestResultNarrativeRows(){
+  const y=completedMatchesOnDate(uaeDateOffset(-1));
+  const list=y.length?y:completedMatchesList().slice(-4);
+  return list.map(m=>{
+    const r=matchResult(m.group,m.idx);
+    const impact=matchImpactData(m.group,m.idx).right.slice(0,6);
+    return {
+      title:`${teamText(r.home)} ${r.hs}-${r.as} ${teamText(r.away)}`,
+      meta:`${tl('Group','المجموعة')} ${m.group} · ${matchDateTime(m)}`,
+      impact:impact.map(x=>`${x.name} +${x.got}`)
+    };
+  });
+}
+function leaderboardNarrative(){
   const lb=buildLeaderboard();
-  const leader=lb[0];
-  const activeGroups=[...new Set([...groupKeysFromMatches(yesterday),...groupKeysFromMatches(today),...GROUP_KEYS.filter(g=>computeGroupTable(g).some(x=>x.P>0))])].slice(0,6);
-  const important=todayMostImportantMatch(today);
-  const groupText=activeGroups.length
-    ? activeGroups.map(groupLeaderLine).join(' · ')
-    : tl('No group has started yet. Today will create the first group movements.','لم تبدأ أي مجموعة بعد. مباريات اليوم ستبدأ حركة المجموعات.');
-  const yesterdayText=yesterday.length
-    ? yesterday.map(resultLine).join(' · ')
-    : (pastNeed.length?tl('Some past matches still need results entered.','بعض المباريات السابقة ما زالت تحتاج إدخال النتائج.'):tl('No saved results from yesterday yet.','لا توجد نتائج محفوظة من أمس حتى الآن.'));
-  const playerText=leader
-    ? `${leader.name} ${tl('leads with','يتصدر بـ')} ${leader.total} ${t('pts')}${lb[1]?`, ${lb[1].name} ${tl('is next on','يليه بـ')} ${lb[1].total}`:''}.`
-    : tl('No players have been added yet.','لم تتم إضافة لاعبين بعد.');
-  const todayText=today.length
-    ? `${today.length} ${tl('match(es) today','مباراة اليوم')}${important?`: ${teamText(important.m.home)} vs ${teamText(important.m.away)} ${tl('has','لديها')} ${important.sp.home.length}-${important.sp.away.length} ${tl('prediction split','انقسام في التوقعات')}.`:'.'}`
-    : tl('No matches scheduled for today in the app schedule.','لا توجد مباريات مجدولة اليوم في التطبيق.');
-  return `<div class="card ai-summary-card">
-    <div class="ai-summary-top">
+  if(!lb.length) return tl('No players have been added yet.','لم تتم إضافة لاعبين بعد.');
+  const top=lb.slice(0,5).map(r=>`#${r.rank} ${r.name} ${r.total} ${t('pts')}`).join(' · ');
+  const gap=lb[1] ? `${tl('The gap between first and second is','الفارق بين الأول والثاني')} ${lb[0].total-lb[1].total} ${t('pts')}.` : '';
+  return `${top}. ${gap}`;
+}
+function aiSummaryInsightBadges(){
+  const today=matchesOnDate(uaeToday()).filter(m=>m.group&&m.idx!=null);
+  const y=completedMatchesOnDate(uaeDateOffset(-1));
+  const past=pastUncompletedMatches(20);
+  const activeGroups=GROUP_KEYS.filter(g=>computeGroupTable(g).some(x=>x.P>0)).length;
+  return [
+    {v:`${completedMatchCount()}/72`,l:tl('Completed','مكتملة')},
+    {v:String(y.length),l:tl('Yesterday results','نتائج أمس')},
+    {v:String(today.length),l:tl('Today matches','مباريات اليوم')},
+    {v:String(activeGroups),l:tl('Active groups','مجموعات بدأت')},
+    {v:String(past.length),l:tl('Need results','تحتاج نتائج')}
+  ];
+}
+
+
+function allRelevantGroupsForHome(){
+  const today=matchesOnDate(uaeToday());
+  const y=matchesOnDate(uaeDateOffset(-1));
+  const played=GROUP_KEYS.filter(g=>computeGroupTable(g).some(x=>x.P>0));
+  const groups=[...new Set([...groupKeysFromMatches(y),...groupKeysFromMatches(today),...played])];
+  return groups.length?groups:GROUP_KEYS.slice(0,4);
+}
+function allCompletedResultsForHome(){
+  const yesterday=completedMatchesOnDate(uaeDateOffset(-1));
+  if(yesterday.length) return {label:tl('Yesterday results','نتائج أمس'),date:uaeDateOffset(-1),matches:yesterday};
+  const latest=completedMatchesList().slice(-6);
+  return {label:tl('Latest saved results','آخر النتائج المحفوظة'),date:'',matches:latest};
+}
+function homeGroupCard(g){
+  const table=computeGroupTable(g);
+  const played=table.reduce((a,x)=>a+x.P,0)/2;
+  return `<div class="home-group-card">
+    <div class="between"><b>${esc(tl('Group','المجموعة'))} ${esc(g)}</b><span class="chip">${played}/6</span></div>
+    <div class="home-standings">
+      ${table.map((x,i)=>`<div class="home-stand-row ${i<2?'q':''}">
+        <span>${i+1}. ${teamHtml(x.team)}</span>
+        <span class="num">${x.Pts} ${esc(tl('pts','نقاط'))}</span>
+        <span class="num">${x.GD>=0?'+':''}${x.GD}</span>
+      </div>`).join('')}
+    </div>
+  </div>`;
+}
+function fullPlayerPredictionRowsForMatch(m){
+  return playerNames().map(name=>{
+    const p=getPlayer(name);
+    const rh=rankOfTeamInPred(p,m.group,m.home);
+    const ra=rankOfTeamInPred(p,m.group,m.away);
+    let edge=tl('No clear edge','لا أفضلية واضحة'), cls='none';
+    if(rh&&ra&&rh<ra){edge=teamText(m.home); cls='home';}
+    else if(rh&&ra&&ra<rh){edge=teamText(m.away); cls='away';}
+    else if(!rh||!ra){edge=tl('Missing team','فريق ناقص'); cls='missing';}
+    return {name,rh,ra,edge,cls};
+  });
+}
+function renderFullTodayMatchCard(m){
+  const split=playerPredictionSplit(m);
+  const rows=fullPlayerPredictionRowsForMatch(m);
+  return `<div class="full-today-card">
+    <div class="full-today-head">
       <div>
-        <div class="hero-kicker dark">🤖 ${esc(tl('AI Matchday Summary','ملخص اليوم بالذكاء'))}</div>
-        <h3>${esc(tl('Yesterday results, group situation, and player impact','نتائج أمس ووضع المجموعات وتأثير اللاعبين'))}</h3>
+        <div class="match-line big">${teamHtml(m.home)} <span>vs</span> ${teamHtml(m.away)}</div>
+        <div class="sub">${esc(tl('Group','المجموعة'))} ${esc(m.group)} · ${esc(matchDateTime(m))}</div>
+      </div>
+      <div class="today-actions">
+        <button class="btn ghost sm" onclick="go('scenarios')">⚡ ${esc(t('v_scenarios'))}</button>
+        ${APP.isAdmin?`<button class="btn ghost sm" onclick="go('results')">✏️ ${esc(t('v_results'))}</button>`:''}
+      </div>
+    </div>
+    <div class="split-grid complete">
+      <div class="split-box home"><b>${teamHtml(m.home)}</b><span class="num">${split.home.length}</span><small>${esc(split.home.map(x=>x.name).join(', ')||t('none'))}</small></div>
+      <div class="split-box away"><b>${teamHtml(m.away)}</b><span class="num">${split.away.length}</span><small>${esc(split.away.map(x=>x.name).join(', ')||t('none'))}</small></div>
+      <div class="split-box none"><b>${esc(tl('No clear edge','لا أفضلية واضحة'))}</b><span class="num">${split.none.length}</span><small>${esc(split.none.map(x=>x.name).join(', ')||t('none'))}</small></div>
+    </div>
+    <div class="table-wrap">
+      <table class="pred-table full">
+        <thead><tr>
+          <th>${esc(tl('Player','اللاعب'))}</th>
+          <th>${teamHtml(m.home)} ${esc(tl('rank','الترتيب'))}</th>
+          <th>${teamHtml(m.away)} ${esc(tl('rank','الترتيب'))}</th>
+          <th>${esc(tl('Prediction edge','الأفضلية'))}</th>
+        </tr></thead>
+        <tbody>${rows.map(r=>`<tr><td>${esc(r.name)}</td><td class="num">${r.rh||'—'}</td><td class="num">${r.ra||'—'}</td><td><span class="edge-chip ${r.cls}">${esc(r.edge)}</span></td></tr>`).join('')}</tbody>
+      </table>
+    </div>
+  </div>`;
+}
+function renderCompleteResultsCard(){
+  const data=allCompletedResultsForHome();
+  return `<section class="matchday-section">
+    <div class="section-title"><div><h3>🕘 ${esc(data.label)}</h3><p>${esc(data.date||tl('Showing latest saved results because yesterday has no saved result.','يتم عرض آخر النتائج المحفوظة لأن أمس لا يحتوي نتائج محفوظة.'))}</p></div></div>
+    ${data.matches.length?data.matches.map(m=>{
+      const r=matchResult(m.group,m.idx);
+      const imp=matchImpactData(m.group,m.idx).right;
+      return `<div class="result-brief full">
+        <div class="match-line big">${teamHtml(r.home)} <b class="num">${r.hs}-${r.as}</b> ${teamHtml(r.away)}</div>
+        <div class="sub">${esc(tl('Group','المجموعة'))} ${esc(m.group)} · ${esc(matchDateTime(m))}</div>
+        <div class="impact-list">${imp.length?imp.map(x=>`<span class="impact-pill good">+${x.got} ${esc(x.name)}</span>`).join(''):`<span class="impact-pill">${esc(tl('No player edge points','لا نقاط أفضلية للاعبين'))}</span>`}</div>
+      </div>`;
+    }).join(''):`<div class="banner warn">${esc(tl('No results are saved yet. Use Admin Results or Result Sync so this briefing becomes complete.','لا توجد نتائج محفوظة حتى الآن. استخدم نتائج المدير أو مزامنة النتائج حتى يكتمل هذا الملخص.'))}</div>`}
+  </section>`;
+}
+function renderCompleteGroupsCard(){
+  const groups=allRelevantGroupsForHome();
+  return `<section class="matchday-section">
+    <div class="section-title"><div><h3>📊 ${esc(tl('Groups update','تحديث المجموعات'))}</h3><p>${esc(tl('All groups connected to yesterday, today, or saved results.','كل المجموعات المرتبطة بأمس أو اليوم أو النتائج المحفوظة.'))}</p></div><button class="btn ghost sm" onclick="go('groups')">${esc(t('v_groups'))} →</button></div>
+    <div class="home-groups-grid">${groups.map(homeGroupCard).join('')}</div>
+  </section>`;
+}
+function renderCompleteTodayCard(){
+  const today=matchesOnDate(uaeToday()).filter(m=>m.group&&m.idx!=null);
+  return `<section class="matchday-section">
+    <div class="section-title"><div><h3>📅 ${esc(tl('Today matches and all player predictions','مباريات اليوم وكل توقعات اللاعبين'))}</h3><p>${esc(uaeToday())} · ${esc(tl('UAE time','بتوقيت الإمارات'))}</p></div></div>
+    ${today.length?today.map(renderFullTodayMatchCard).join(''):`<div class="banner">${esc(t('noToday'))}</div>`}
+  </section>`;
+}
+function renderCompletePlayersCard(){
+  const lb=buildLeaderboard();
+  const today=matchesOnDate(uaeToday()).filter(m=>m.group&&m.idx!=null);
+  return `<section class="matchday-section">
+    <div class="section-title"><div><h3>👥 ${esc(tl('Players update','تحديث اللاعبين'))}</h3><p>${esc(tl('Leaderboard position and today swing matches.','الترتيب ومباريات اليوم المؤثرة.'))}</p></div><button class="btn ghost sm" onclick="go('leaderboard')">${esc(t('v_leaderboard'))} →</button></div>
+    ${lb.length?`<div class="leader-strip">${lb.slice(0,8).map(r=>`<div class="leader-chip"><b>#${r.rank} ${esc(r.name)}</b><span class="num">${r.total} ${esc(t('pts'))}</span></div>`).join('')}</div>`:`<div class="sub">${esc(t('noData'))}</div>`}
+    ${today.length?`<div class="swing-list">${today.map(m=>{
+      const sp=playerPredictionSplit(m);
+      const total=sp.home.length+sp.away.length+sp.none.length;
+      return `<div class="swing-row"><b>${teamHtml(m.home)} vs ${teamHtml(m.away)}</b><span>${teamHtml(m.home)} ${sp.home.length} · ${teamHtml(m.away)} ${sp.away.length} · ${esc(tl('none','بدون'))} ${sp.none.length}/${total}</span></div>`;
+    }).join('')}</div>`:''}
+  </section>`;
+}
+function dataCompletenessWarnings(){
+  const warnings=[];
+  if(!(Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)) warnings.push(tl('Schedule is using local fallback, not fetched API schedule.','الجدول يستخدم نسخة احتياطية محلية وليس جدول API.'));
+  const past=pastUncompletedMatches(20);
+  if(past.length) warnings.push(`${past.length} ${tl('past match(es) need result entry/sync.','مباراة سابقة تحتاج إدخال أو مزامنة نتيجة.')}`);
+  if(!playerNames().length) warnings.push(tl('No players found.','لا يوجد لاعبون.'));
+  return warnings;
+}
+
+
+function renderMatchdayStatusBar(){
+  const today=matchesOnDate(uaeToday()).filter(m=>m.group&&m.idx!=null);
+  const past=pastUncompletedMatches(20);
+  const results=allCompletedResultsForHome();
+  return `<div class="card matchday-status-card">
+    <div class="status-left">
+      <div class="hero-kicker dark">⚽ ${esc(tl('Matchday Feed','صفحة يوم المباريات'))}</div>
+      <h2>${esc(tl('Today · UAE time','اليوم · توقيت الإمارات'))}</h2>
+      <p>${esc(uaeToday())} · ${esc(formatUaeDateTimeParts().time)} UAE</p>
+    </div>
+    <div class="status-metrics">
+      <div><b class="num">${completedMatchCount()}/72</b><span>${esc(tl('Completed','مكتملة'))}</span></div>
+      <div><b class="num">${results.matches.length}</b><span>${esc(results.label)}</span></div>
+      <div><b class="num">${today.length}</b><span>${esc(tl('Today','اليوم'))}</span></div>
+      <div class="${past.length?'warn':''}"><b class="num">${past.length}</b><span>${esc(tl('Need result','تحتاج نتيجة'))}</span></div>
+    </div>
+    <div class="status-actions">
+      <button class="btn gold sm" onclick="go('syncresults')">🔄 ${esc(tl('Sync results','مزامنة النتائج'))}</button>
+      <button class="btn ghost sm" onclick="go('results')">✏️ ${esc(t('v_results'))}</button>
+      <button class="btn ghost sm" onclick="shareText(aiMatchdaySummaryText())">📲 ${esc(t('share'))}</button>
+    </div>
+  </div>`;
+}
+
+function summaryTeamBox(team,count,label,cls){
+  return `<div class="summary-team-box ${cls||''}">
+    <div class="summary-team-name">${teamHtml(team)}</div>
+    <div class="summary-team-count num">${esc(count)}</div>
+    <div class="summary-team-label">${esc(label||'')}</div>
+  </div>`;
+}
+function summaryGroupBox(g){
+  const table=computeGroupTable(g);
+  const leader=table[0];
+  const second=table[1];
+  const played=table.reduce((a,x)=>a+x.P,0)/2;
+  return `<div class="summary-group-box">
+    <div class="summary-group-title">${esc(tl('Group','المجموعة'))} ${esc(g)} <span class="chip">${played}/6</span></div>
+    <div class="summary-group-leader">${leader?teamHtml(leader.team):esc(t('noData'))}</div>
+    <div class="summary-group-meta">${leader?`${leader.Pts} ${esc(tl('pts','نقاط'))} · ${leader.GD>=0?'+':''}${leader.GD} GD`:''}</div>
+    ${second?`<div class="summary-group-chaser">${esc(tl('Chasing','يلاحق'))}: ${teamHtml(second.team)} · ${second.Pts} ${esc(tl('pts','نقاط'))}</div>`:''}
+  </div>`;
+}
+function summaryResultBox(m){
+  const r=matchResult(m.group,m.idx);
+  if(!r.complete) return '';
+  return `<div class="summary-result-box">
+    <div class="summary-result-teams">${teamHtml(r.home)} <b class="num">${r.hs}-${r.as}</b> ${teamHtml(r.away)}</div>
+    <div class="summary-result-meta">${esc(tl('Group','المجموعة'))} ${esc(m.group)} · ${esc(matchDateTime(m))}</div>
+  </div>`;
+}
+function summaryTodayMatchBox(m){
+  const sp=playerPredictionSplit(m);
+  return `<div class="summary-match-box">
+    <div class="summary-match-head">
+      <div class="summary-team-vs">${teamHtml(m.home)} <span>vs</span> ${teamHtml(m.away)}</div>
+      <div class="summary-match-meta">${esc(tl('Group','المجموعة'))} ${esc(m.group)} · ${esc(matchDateTime(m))}</div>
+    </div>
+    <div class="summary-team-grid">
+      ${summaryTeamBox(m.home,sp.home.length,tl('player edge','أفضلية لاعب'),'home')}
+      ${summaryTeamBox(m.away,sp.away.length,tl('player edge','أفضلية لاعب'),'away')}
+      <div class="summary-team-box none">
+        <div class="summary-team-name">${esc(tl('No clear edge','لا أفضلية واضحة'))}</div>
+        <div class="summary-team-count num">${sp.none.length}</div>
+        <div class="summary-team-label">${esc(tl('players','لاعبين'))}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderShortAISummary(){
+  const today=matchesOnDate(uaeToday()).filter(m=>m.group&&m.idx!=null);
+  const results=allCompletedResultsForHome().matches;
+  const groups=allRelevantGroupsForHome();
+  const lb=buildLeaderboard();
+  const past=pastUncompletedMatches(20);
+  const latest=results.length?results[results.length-1]:null;
+  const focus=today[0];
+
+  return `<div class="card short-ai-card summary-box-card">
+    <div class="between summary-box-head">
+      <div>
+        <div class="hero-kicker dark">🤖 ${esc(tl('AI Summary','ملخص ذكي'))}</div>
+        <h3>${esc(tl('What changed and what matters today','ما تغير وما يهم اليوم'))}</h3>
       </div>
       <div class="ai-summary-actions">
         <button class="btn ghost sm" onclick="copyText(aiMatchdaySummaryText())">📋 ${esc(t('copy'))}</button>
         <button class="btn ghost sm" onclick="shareText(aiMatchdaySummaryText())">📲 ${esc(t('share'))}</button>
       </div>
     </div>
-    <div class="ai-summary-grid">
-      <div class="ai-summary-block"><b>🏆 WC2026</b><p>${esc(`${completed}/72 ${tl('group matches completed','مباراة مجموعات مكتملة')}. ${todayText}`)}</p></div>
-      <div class="ai-summary-block"><b>📊 ${esc(tl('Groups','المجموعات'))}</b><p>${esc(groupText)}</p></div>
-      <div class="ai-summary-block"><b>👥 ${esc(tl('Players','اللاعبون'))}</b><p>${esc(playerText)} ${esc(important?tl('Today can change the table quickly because predictions are split.','اليوم قد يغير الترتيب بسرعة لأن التوقعات منقسمة.'):tl('Player impact will appear once today matches start.','تأثير اللاعبين سيظهر عند بداية مباريات اليوم.'))}</p></div>
-      <div class="ai-summary-block"><b>🕘 ${esc(tl('Yesterday','أمس'))}</b><p>${esc(yesterdayText)}</p></div>
+
+    <div class="summary-box-layout">
+      <section class="summary-panel">
+        <div class="summary-panel-title">🕘 ${esc(tl('Latest result','آخر نتيجة'))}</div>
+        ${latest?summaryResultBox(latest):`<div class="summary-empty">${esc(tl('No saved result yet.','لا توجد نتيجة محفوظة بعد.'))}</div>`}
+      </section>
+
+      <section class="summary-panel">
+        <div class="summary-panel-title">📊 ${esc(tl('Active groups','المجموعات النشطة'))}</div>
+        <div class="summary-groups-grid">
+          ${groups.length?groups.slice(0,4).map(summaryGroupBox).join(''):`<div class="summary-empty">${esc(tl('No active groups yet.','لا توجد مجموعات نشطة بعد.'))}</div>`}
+        </div>
+      </section>
+
+      <section class="summary-panel wide">
+        <div class="summary-panel-title">📅 ${esc(tl('Today focus','محور اليوم'))}</div>
+        ${focus?summaryTodayMatchBox(focus):`<div class="summary-empty">${esc(tl('No matches are scheduled for today in the app schedule.','لا توجد مباريات مجدولة اليوم في التطبيق.'))}</div>`}
+      </section>
+
+      <section class="summary-panel">
+        <div class="summary-panel-title">👥 ${esc(tl('Players','اللاعبون'))}</div>
+        ${lb[0]?`<div class="summary-player-box">
+          <div class="summary-player-main">${playerNameHtml(lb[0].name,'sm')}</div>
+          <div class="summary-player-score num">${lb[0].total} ${esc(t('pts'))}</div>
+          <div class="summary-player-meta">${lb[1]?`${esc(tl('Chasing','يلاحق'))}: ${esc(lb[1].name)} · ${lb[1].total} ${esc(t('pts'))}`:esc(tl('Current leader','المتصدر الحالي'))}</div>
+        </div>`:`<div class="summary-empty">${esc(t('noData'))}</div>`}
+      </section>
+
+      ${past.length?`<section class="summary-panel warning">
+        <div class="summary-panel-title">⚠️ ${esc(tl('Action needed','إجراء مطلوب'))}</div>
+        <div class="summary-empty">${past.length} ${esc(tl('past match(es) need results.','مباراة سابقة تحتاج نتائج.'))}</div>
+      </section>`:''}
     </div>
+  </div>`;
+}
+function renderYesterdayFeed(){
+  const data=allCompletedResultsForHome();
+  return `<div class="card feed-section">
+    <div class="section-title"><div><h3>🕘 ${esc(data.label)}</h3><p>${esc(data.date||tl('Showing latest saved results.','عرض آخر النتائج المحفوظة.'))}</p></div></div>
+    ${data.matches.length?data.matches.map(m=>{
+      const r=matchResult(m.group,m.idx);
+      const table=computeGroupTable(m.group);
+      const leader=table[0];
+      const imp=matchImpactData(m.group,m.idx).right;
+      return `<div class="feed-result-card">
+        <div class="match-line big">${teamHtml(r.home)} <b class="num">${r.hs}-${r.as}</b> ${teamHtml(r.away)}</div>
+        <div class="sub">${esc(tl('Group','المجموعة'))} ${esc(m.group)} · ${esc(matchDateTime(m))}</div>
+        <div class="feed-note">📊 ${esc(tl('Group changed','تغيرت المجموعة'))}: ${leader?teamHtml(leader.team)+' '+esc(tl('leads with','يتصدر بـ'))+' <b class="num">'+leader.Pts+'</b> '+esc(tl('pts','نقاط')):esc(t('noData'))}</div>
+        <div class="impact-list">${imp.length?imp.map(x=>`<span class="impact-pill good">+${x.got} ${esc(x.name)}</span>`).join(''):`<span class="impact-pill">${esc(tl('No player edge points','لا نقاط أفضلية للاعبين'))}</span>`}</div>
+      </div>`;
+    }).join(''):`<div class="banner warn">${esc(tl('No results are saved yet. Use Admin Results or Result Sync.','لا توجد نتائج محفوظة بعد. استخدم نتائج المدير أو مزامنة النتائج.'))}</div>`}
+  </div>`;
+}
+function nextMatchForGroup(g){
+  return allSchedule().filter(m=>m.group===g&&m.idx!=null&&!matchResult(m.group,m.idx).complete&&matchIsUpcoming(m))
+    .sort((a,b)=>matchUaeTimestamp(a)-matchUaeTimestamp(b))[0]||null;
+}
+function renderGroupsFeed(){
+  const groups=allRelevantGroupsForHome();
+  return `<div class="card feed-section">
+    <div class="section-title"><div><h3>📊 ${esc(tl('Group Updates','تحديث المجموعات'))}</h3><p>${esc(tl('Only active or relevant groups are shown here.','يتم عرض المجموعات النشطة أو المهمة فقط هنا.'))}</p></div><button class="btn ghost sm" onclick="go('groups')">${esc(t('v_groups'))} →</button></div>
+    <div class="feed-groups-grid">
+      ${groups.map(g=>{
+        const nxt=nextMatchForGroup(g);
+        return `<div class="feed-group-card">
+          ${homeGroupCard(g)}
+          <div class="next-group-line">${nxt?`⏭️ ${esc(tl('Next','القادمة'))}: ${teamHtml(nxt.home)} vs ${teamHtml(nxt.away)} · ${esc(matchDateTime(nxt))}`:`✅ ${esc(tl('No upcoming match currently','لا توجد مباراة قادمة حالياً'))}`}</div>
+        </div>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
+function renderTodayFeed(){
+  const today=matchesOnDate(uaeToday()).filter(m=>m.group&&m.idx!=null);
+  return `<div class="card feed-section today-main-feed priority-today">
+    <div class="section-title"><div><div class="hero-kicker dark">🔥 ${esc(tl('Main focus','الأهم'))}</div><h3>📅 ${esc(tl('Today Matches + Player Predictions','مباريات اليوم + توقعات اللاعبين'))}</h3><p>${esc(tl('Who picked who, what each result changes, and the full prediction table.','من اختار من، ماذا تغير كل نتيجة، وجدول التوقعات الكامل.'))}</p></div></div>
+    ${today.length?today.map(renderTodayMatchFeedCard).join(''):`<div class="banner">${esc(t('noToday'))}</div>`}
+  </div>`;
+}
+function renderTodayMatchFeedCard(m){
+  const split=playerPredictionSplit(m);
+  const rows=fullPlayerPredictionRowsForMatch(m);
+  return `<div class="today-feed-card">
+    <div class="today-feed-head">
+      <div>
+        <div class="match-line huge">${teamHtml(m.home)} <span>vs</span> ${teamHtml(m.away)}</div>
+        <div class="sub">${esc(tl('Group','المجموعة'))} ${esc(m.group)} · ${esc(matchDateTime(m))}</div>
+      </div>
+      <div class="today-actions">
+        <button class="btn ghost sm" onclick="go('scenarios')">⚡ ${esc(t('v_scenarios'))}</button>
+        ${APP.isAdmin?`<button class="btn gold sm" onclick="go('results')">✏️ ${esc(t('v_results'))}</button>`:''}
+      </div>
+    </div>
+
+    <div class="split-grid complete">
+      <div class="split-box home"><b>${teamHtml(m.home)} ${esc(tl('edge','أفضلية'))}</b><span class="num">${split.home.length}</span><small>${esc(split.home.map(x=>x.name).join(', ')||t('none'))}</small></div>
+      <div class="split-box away"><b>${teamHtml(m.away)} ${esc(tl('edge','أفضلية'))}</b><span class="num">${split.away.length}</span><small>${esc(split.away.map(x=>x.name).join(', ')||t('none'))}</small></div>
+      <div class="split-box none"><b>${esc(tl('No clear edge','لا أفضلية واضحة'))}</b><span class="num">${split.none.length}</span><small>${esc(split.none.map(x=>x.name).join(', ')||t('none'))}</small></div>
+    </div>
+
+    <div class="impact-scenarios">
+      <div><b>${esc(tl('If','إذا فاز'))} ${teamHtml(m.home)}</b><p>${split.home.length?split.home.map(x=>x.name+' +'+SCORING.edgeCorrect).join(', '):esc(t('none'))}</p></div>
+      <div><b>${esc(tl('If','إذا فاز'))} ${teamHtml(m.away)}</b><p>${split.away.length?split.away.map(x=>x.name+' +'+SCORING.edgeCorrect).join(', '):esc(t('none'))}</p></div>
+      <div><b>${esc(tl('If draw','إذا تعادل'))}</b><p>${esc(tl('No edge-win points. Exact score/group ranking points may still matter later.','لا توجد نقاط أفضلية للفوز. قد تبقى نقاط النتيجة الدقيقة أو ترتيب المجموعة لاحقاً.'))}</p></div>
+    </div>
+
+    <details class="pred-details">
+      <summary>${esc(tl('Player prediction table — tap to expand','جدول توقعات اللاعبين — اضغط للتوسيع'))}</summary>
+      <div class="table-wrap">
+        <table class="pred-table full">
+          <thead><tr>
+            <th>${esc(tl('Player','اللاعب'))}</th>
+            <th>${teamHtml(m.home)} ${esc(tl('rank','الترتيب'))}</th>
+            <th>${teamHtml(m.away)} ${esc(tl('rank','الترتيب'))}</th>
+            <th>${esc(tl('Edge','الأفضلية'))}</th>
+          </tr></thead>
+          <tbody>${rows.map(r=>`<tr><td>${esc(r.name)}</td><td class="num">${r.rh||'—'}</td><td class="num">${r.ra||'—'}</td><td><span class="edge-chip ${r.cls}">${esc(r.edge)}</span></td></tr>`).join('')}</tbody>
+        </table>
+      </div>
+    </details>
+  </div>`;
+}
+
+function renderAIMatchdaySummary(){
+  const warnings=dataCompletenessWarnings();
+  const today=matchesOnDate(uaeToday()).filter(m=>m.group&&m.idx!=null);
+  const results=allCompletedResultsForHome();
+  const groups=allRelevantGroupsForHome();
+  return `<div class="card ai-complete-briefing">
+    <div class="briefing-hero">
+      <div>
+        <div class="hero-kicker dark">🤖 ${esc(tl('Complete Matchday Briefing','موجز كامل ليوم المباريات'))}</div>
+        <h2>${esc(tl('Results, groups, today matches, and player predictions','النتائج والمجموعات ومباريات اليوم وتوقعات اللاعبين'))}</h2>
+        <p>${esc(tl('This Home page is built from saved results, group tables, today schedule, and every player prediction.','هذه الصفحة مبنية من النتائج المحفوظة وجداول المجموعات وجدول اليوم وكل توقعات اللاعبين.'))}</p>
+      </div>
+      <div class="ai-summary-actions">
+        <button class="btn gold sm" onclick="copyText(aiMatchdaySummaryText())">📋 ${esc(t('copy'))}</button>
+        <button class="btn ghost sm" onclick="shareText(aiMatchdaySummaryText())">📲 ${esc(t('share'))}</button>
+        <button class="btn ghost sm" onclick="go('syncresults')">🔄 ${esc(tl('Sync','مزامنة'))}</button>
+      </div>
+    </div>
+
+    <div class="briefing-kpis">
+      <div><b class="num">${completedMatchCount()}/72</b><span>${esc(tl('Completed group matches','مباريات مجموعات مكتملة'))}</span></div>
+      <div><b class="num">${results.matches.length}</b><span>${esc(results.label)}</span></div>
+      <div><b class="num">${today.length}</b><span>${esc(tl('Today matches','مباريات اليوم'))}</span></div>
+      <div><b class="num">${groups.length}</b><span>${esc(tl('Groups covered','مجموعات مشمولة'))}</span></div>
+      <div><b class="num">${playerNames().length}</b><span>${esc(tl('Players','لاعبون'))}</span></div>
+    </div>
+
+    ${warnings.length?`<div class="briefing-warning">⚠️ ${warnings.map(esc).join('<br>')}</div>`:''}
+
+    ${renderCompleteResultsCard()}
+    ${renderCompleteGroupsCard()}
+    ${renderCompleteTodayCard()}
+    ${renderCompletePlayersCard()}
   </div>`;
 }
 function aiMatchdaySummaryText(){
   const today=matchesOnDate(uaeToday()).filter(m=>m.group&&m.idx!=null);
-  const yesterday=completedMatchesOnDate(uaeDateOffset(-1));
-  const lb=buildLeaderboard();
-  const activeGroups=[...new Set([...groupKeysFromMatches(yesterday),...groupKeysFromMatches(today),...GROUP_KEYS.filter(g=>computeGroupTable(g).some(x=>x.P>0))])].slice(0,6);
+  const resultRows=latestResultNarrativeRows();
+  const groupRows=currentGroupNarrativeRows();
+  const todayRows=todayPredictionNarrativeRows();
   const lines=[
-    tl('AI Matchday Summary','ملخص اليوم بالذكاء'),
-    `${completedMatchCount()}/72 ${tl('group matches completed','مباراة مجموعات مكتملة')}`,
+    tl('AI Matchday Briefing','موجز اليوم بالذكاء'),
+    `${uaeToday()} · UAE`,
     '',
-    tl('Yesterday results:','نتائج أمس:'),
-    yesterday.length?yesterday.map(resultLine).join(' | '):tl('No saved results from yesterday yet.','لا توجد نتائج محفوظة من أمس حتى الآن.'),
+    tl('WC2026 update','تحديث WC2026'),
+    `${completedMatchCount()}/72 ${tl('group matches completed','مباراة مجموعات مكتملة')}. ${today.length} ${tl('matches today','مباريات اليوم')}.`,
     '',
-    tl('Groups:','المجموعات:'),
-    activeGroups.length?activeGroups.map(groupLeaderLine).join(' | '):tl('No group has started yet.','لم تبدأ أي مجموعة بعد.'),
+    tl('Yesterday / latest results','نتائج أمس / آخر النتائج'),
+    resultRows.length?resultRows.map(r=>`- ${r.title} (${r.meta})${r.impact.length?' | '+r.impact.join(', '):''}`).join('\n'):tl('No saved results yet.','لا توجد نتائج محفوظة بعد.'),
     '',
-    tl('Players:','اللاعبون:'),
-    lb[0]?`${lb[0].name} ${tl('leads with','يتصدر بـ')} ${lb[0].total} ${t('pts')}.`:tl('No players yet.','لا يوجد لاعبون بعد.'),
+    tl('Groups summary','ملخص المجموعات'),
+    groupRows.length?groupRows.map(g=>`- ${g.text}`).join('\n'):tl('No group has started yet.','لم تبدأ أي مجموعة بعد.'),
     '',
-    tl('Today matches:','مباريات اليوم:'),
-    today.length?today.map(m=>`${teamText(m.home)} vs ${teamText(m.away)} · ${matchDateTime(m)}`).join(' | '):tl('No matches today.','لا مباريات اليوم.')
+    tl('Players summary','ملخص اللاعبين'),
+    leaderboardNarrative(),
+    '',
+    tl('Today matches and prediction split','مباريات اليوم وانقسام التوقعات'),
+    todayRows.length?todayRows.map(m=>`- ${m.title} (${m.meta}): ${m.blocks.map(b=>`${b.label} ${b.count}`).join(' / ')}`).join('\n'):tl('No matches today.','لا مباريات اليوم.')
   ];
   return lines.join('\n');
 }
@@ -2317,33 +3412,18 @@ function renderTodayPredictionCard(m){
 }
 function viewDashboard(){
   const lb=buildLeaderboard();
-  const leader=lb[0];
   const champCons=consensusCount(p=>p.champion);
-  const todayList=APP._today||[];
   const winners=topGroupWinnerPicks();
   const latest=latestCompletedMatch();
-  const next=dashboardNextMatch(todayList);
   return `
-  ${renderAIMatchdaySummary()}
+  ${renderMatchdayStatusBar()}
+  ${renderShortAISummary()}
+  ${renderTodayFeed()}
+  ${renderYesterdayFeed()}
+  ${renderGroupsFeed()}
 
-  <div class="card matchday-home">
-    <div class="home-shell-head">
-      <div>
-        <div class="hero-kicker dark">⚽ ${esc(tl('Matchday home','صفحة يوم المباريات'))}</div>
-        <h3>${esc(tl('Results, groups, and today predictions','النتائج والمجموعات وتوقعات اليوم'))}</h3>
-      </div>
-      <span class="chip on">🕒 ${esc(formatUaeDateTimeParts().time)} UAE</span>
-    </div>
-
-    <div class="matchday-grid">
-      ${renderYesterdayResultsSection()}
-      ${renderGroupUpdatesSection()}
-    </div>
-
-    ${renderTodayPredictionsSection()}
-  </div>
-
-  <div class="card home-shell compact">
+  <div class="card home-shell compact more-insights-card">
+    <div class="section-title"><div><h3>📌 ${esc(tl('More insights','مؤشرات إضافية'))}</h3><p>${esc(tl('Secondary features remain available here.','الميزات الثانوية تبقى متاحة هنا.'))}</p></div></div>
     <div class="home-secondary-grid">
       <section class="home-panel">
         <div class="between"><h3>🏆 ${esc(t('top3'))}</h3><button class="btn ghost sm" onclick="go('leaderboard')">${esc(t('v_leaderboard'))} →</button></div>
@@ -3492,11 +4572,14 @@ function sportsEventComplete(e){
   const sc=sportsScore(e);
   if(!sc) return false;
   const st=String((e&&e.strStatus)||'').toLowerCase();
-  return !st || st.includes('match finished') || st==='ft' || st.includes('full') || st.includes('finished') || st.includes('after');
+  if(!st) return true;
+  return st.includes('match finished') || st==='ft' || st==='aet' || st.includes('full') || st.includes('finished') || st.includes('after') || st.includes('complete');
 }
 function mapEventToGroupMatch(e){
   const eh=e&&e.strHomeTeam, ea=e&&e.strAwayTeam;
   if(!eh||!ea) return null;
+  const bySchedule=findScheduledMatchByTeams(eh,ea);
+  if(bySchedule) return bySchedule;
   for(const g of GROUP_KEYS){
     for(let i=0;i<RR.length;i++){
       const [h,a]=matchTeams(g,i);
@@ -3519,23 +4602,34 @@ function compareApiEventToApp(e){
   return {status,event:e,match:m,api,app};
 }
 async function fetchCompletedApiComparisons(){
+  APP._syncError=null;
+  APP._syncDebug={days:0,events:0,completed:0,mapped:0};
+  try{ await ensureApiScheduleIndexed(true); }catch(e){ console.warn('Could not refresh API schedule before sync',e); APP._syncError=String(e&&e.message?e.message:e); }
   const end=uaeToday()>WC_END?WC_END:uaeToday();
   const dates=dateRange(WC_START,end);
   const rows=[];
   for(const d of dates){
+    APP._syncDebug.days++;
     const ev=await fetchDay(d);
-    ev.filter(sportsEventComplete).forEach(e=>rows.push(compareApiEventToApp(e)));
+    APP._syncDebug.events+=ev.length;
+    ev.filter(sportsEventComplete).forEach(e=>{
+      APP._syncDebug.completed++;
+      const row=compareApiEventToApp(e);
+      if(row.match) APP._syncDebug.mapped++;
+      rows.push(row);
+    });
   }
   return rows;
 }
 async function runResultSyncCompare(){
-  APP._syncLoading=true; APP._syncRows=null; render();
+  APP._syncLoading=true; APP._syncRows=null; APP._syncError=null; render();
   try{
     APP._syncRows=await fetchCompletedApiComparisons();
     APP._lastSyncCheck=new Date().toISOString();
     trackEvent('result_sync_compare',{count:APP._syncRows.length});
   }catch(e){
     APP._syncRows=[];
+    APP._syncError=String(e&&e.message?e.message:e);
     toast(t('syncFail'));
     console.warn(e);
   }
@@ -3550,7 +4644,7 @@ function syncStatusLabel(s){
 }
 function renderSyncComparisonRows(rows){
   if(!rows) return `<div class="state">${esc(tl('Press Compare API vs App to check completed matches.','اضغط مقارنة API مع التطبيق لفحص المباريات المكتملة.'))}</div>`;
-  if(!rows.length) return `<div class="state">${esc(tl('No completed API matches found yet.','لا توجد مباريات مكتملة من API حالياً.'))}</div>`;
+  if(!rows.length) return `<div class="state">${esc(tl('No completed API matches found yet.','لا توجد مباريات مكتملة من API حالياً.'))}${APP._syncDebug?`<div class="sub" style="margin-top:8px">${esc('Checked days: '+APP._syncDebug.days+' · events: '+APP._syncDebug.events+' · completed: '+APP._syncDebug.completed)}</div>`:''}${APP._syncError?`<div class="banner err">${esc(APP._syncError)}</div>`:''}</div>`;
   return rows.map((r,idx)=>{
     const cls=r.status==='match'?'ok':r.status==='missing'?'miss':r.status==='mismatch'?'bad':'';
     const title=r.match?`${teamHtml(r.match.home)} vs ${teamHtml(r.match.away)}`:`${esc(r.event.strHomeTeam||'')} vs ${esc(r.event.strAwayTeam||'')}`;
@@ -3610,9 +4704,12 @@ function viewSyncResults(){
     <div class="banner warn">⚠️ ${esc(tl('The app now reads/writes the normalized wc2026_match_results table, while keeping the old JSON as fallback.','التطبيق الآن يقرأ ويكتب من جدول wc2026_match_results مع إبقاء JSON القديم كاحتياطي.'))}</div>
     <div class="sync-tools">
       <button class="btn" onclick="runResultSyncCompare()">🔎 ${esc(tl('Compare API vs App','مقارنة API مع التطبيق'))}</button>
+      <button class="btn ghost" onclick="doFetchSchedule()">🌐 ${esc(t('fetchSchedule'))}</button>
       <button class="btn gold" onclick="applyAllApiResults()">✅ ${esc(tl('Apply all missing/different','تطبيق كل الناقص/المختلف'))}</button>
       <button class="btn ghost" onclick="go('results')">✏️ ${esc(t('v_results'))}</button>
     </div>
+    ${APP._syncDebug?`<div class="banner">${esc('Debug: days '+APP._syncDebug.days+' · events '+APP._syncDebug.events+' · completed '+APP._syncDebug.completed+' · mapped '+APP._syncDebug.mapped)}</div>`:''}
+    ${APP._syncError?`<div class="banner err">⚠ ${esc(APP._syncError)}</div>`:''}
   </div>
   <div class="card"><div class="grid g2">
     ${statTile(counts.match||0,tl('Synced','متطابق'))}${statTile((counts.missing||0)+(counts.mismatch||0),tl('Need update','تحتاج تحديث'))}
@@ -3932,15 +5029,87 @@ async function loadToday(){
 }
 function groupFromEvent(e){ const home=e.strHomeTeam;
   for(const g of GROUP_KEYS) if((GROUPS[g]||[]).some(tm=>sameTeam(tm,home))) return g; return null; }
-async function doFetchSchedule(){
-  APP._schedLoading=true; render();
-  const ev=await fetchFullSchedule((i,n)=>{ if(i%7===0){} });
-  if(ev.length){ APP._schedule=ev.map(e=>({group:groupFromEvent(e),home:e.strHomeTeam,away:e.strAwayTeam,
-      date:(e.dateEvent||''),time:eventTimeUAE(e),tz:'UAE',key:null,idx:null})); toast(t('saved')); }
-  else { APP._schedule=(Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule(); toast(t('syncFail')); }
-  APP._schedLoading=false; render();
+
+function scheduleRowsFromApiEvents(ev){
+  const byGroup={};
+  (ev||[]).forEach(e=>{
+    const g=groupFromEvent(e);
+    if(!g||!e.strHomeTeam||!e.strAwayTeam) return;
+    (byGroup[g]=byGroup[g]||[]).push(e);
+  });
+  const rows=[];
+  Object.keys(byGroup).forEach(g=>{
+    byGroup[g].sort((a,b)=>{
+      const da=(a.dateEvent||'')+' '+(a.strTime||a.strTimestamp||'');
+      const db=(b.dateEvent||'')+' '+(b.strTime||b.strTimestamp||'');
+      return da.localeCompare(db);
+    });
+    byGroup[g].forEach((e,idx)=>{
+      rows.push({
+        group:g,
+        idx,
+        key:matchKey(g,idx),
+        home:canonTeam(e.strHomeTeam),
+        away:canonTeam(e.strAwayTeam),
+        date:(e.dateEvent||''),
+        time:eventTimeUAE(e),
+        tz:'UAE',
+        source:'api',
+        eventId:e.idEvent||e.idSoccerXML||null
+      });
+    });
+  });
+  return rows.sort((a,b)=>(a.date||'').localeCompare(b.date||'') || matchUaeTimestamp(a)-matchUaeTimestamp(b));
+}
+async function ensureApiScheduleIndexed(persist){
+  if(APP._apiScheduleIndexed&&Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.some(m=>m.source==='api'&&m.idx!=null)) return APP.data.scheduleMatches;
+  const ev=await fetchFullSchedule();
+  if(!ev.length) return (Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule();
+  const rows=scheduleRowsFromApiEvents(ev);
+  if(rows.length){
+    APP.data.scheduleMatches=rows;
+    APP._schedule=rows;
+    APP._apiScheduleIndexed=true;
+    if(persist) await saveState();
+  }
+  return rows;
+}
+function findScheduledMatchByTeams(home,away){
+  const sched=(Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:(APP._schedule||[]);
+  const eh=teamCompareKey(home), ea=teamCompareKey(away);
+  for(const m of sched){
+    if(!m||!m.home||!m.away||m.group==null||m.idx==null) continue;
+    const mh=teamCompareKey(m.home), ma=teamCompareKey(m.away);
+    if((eh===mh&&ea===ma)||(eh===ma&&ea===mh)){
+      return {group:m.group,idx:Number(m.idx),key:m.key||matchKey(m.group,m.idx),home:canonTeam(m.home),away:canonTeam(m.away),reversed:(eh===ma&&ea===mh)};
+    }
+  }
+  return null;
 }
 
+async function doFetchSchedule(){
+  APP._schedLoading=true; render();
+  try{
+    const ev=await fetchFullSchedule((i,n)=>{ if(i%7===0){} });
+    if(ev.length){
+      const rows=scheduleRowsFromApiEvents(ev);
+      APP._schedule=rows;
+      APP.data.scheduleMatches=rows;
+      APP._apiScheduleIndexed=true;
+      await saveState();
+      toast(t('saved'));
+    }
+    else {
+      APP._schedule=(Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule();
+      toast(t('syncFail'));
+    }
+  }catch(e){
+    console.warn('Fetch schedule failed',e);
+    APP._schedule=(Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule();
+    toast(t('syncFail'));
+  }
+  APP._schedLoading=false; render();
+}
 
 async function testApis(){
   const out=$('apiTestOut');
