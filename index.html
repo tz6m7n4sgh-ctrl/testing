@@ -3267,6 +3267,8 @@ body.no-voice .micbtn{display:none!important}
 .pts-chart-row.me .pts-chart-name{color:var(--grass-d)}
 .pts-chart-row.me .pts-chart-val{color:#9c7905}
 @media(max-width:560px){.pts-chart-row{grid-template-columns:minmax(64px,42%) 1fr auto}}
+
+.hub-brief-mini b,.hub-brief-mini span,.hub-brief-main,.hub-brief-sub,.wc-status-tile b,.wc-status-tile small{unicode-bidi:isolate}
 </style>
 <!-- Analytics is initialized once in loadAnalytics() to avoid duplicate page_view hits. -->
 </head>
@@ -3277,7 +3279,7 @@ body.no-voice .micbtn{display:none!important}
   <div class="clockpill" id="clockPill"><span class="date">—</span><span class="time">—</span></div>
   <button class="iconbtn" id="langBtn" onclick="toggleLang()">EN</button>
   <button class="iconbtn gold hide" id="adminBtn" onclick="openAdmin()">Admin</button>
-  <button class="iconbtn" id="installBtn" onclick="installPWA()" style="display:none">Install</button>
+  <button class="iconbtn" id="installBtn" onclick="installPWA()" title="Add to home screen" aria-label="Add to home screen" style="display:none">⬇️ Install</button>
 </div>
 <div class="phase wrap" id="phaseStrip"></div>
 <main class="wrap" id="view"></main>
@@ -4527,7 +4529,7 @@ function go(view){ APP.view=view; closeSheet(); render(); window.scrollTo(0,0); 
 
 /* ---- top-level render ---- */
 function applyDir(){ document.documentElement.lang=LANG; document.documentElement.dir=LANG==='ar'?'rtl':'ltr';
-  $('langBtn').textContent=LANG==='ar'?'EN':'ع'; $('brandTxt').textContent=t('brand'); updateHeaderDateTime();
+  $('langBtn').textContent=LANG==='ar'?'EN':'ع'; $('brandTxt').textContent=t('brand'); updateHeaderDateTime(); if(typeof updateInstallUI==='function') updateInstallUI();
   const ab=$('adminBtn');
   if(ab){
     ab.classList.remove('hide');
@@ -4896,7 +4898,7 @@ function completedMatchesOnDate(date){
 }
 function resultLine(m){
   const r=matchResult(m.group,m.idx);
-  if(!r.complete) return `${teamText(m.home)} vs ${teamText(m.away)}`;
+  if(!r.complete) return `⁦${teamText(m.home)} vs ${teamText(m.away)}⁩`;
   return `${teamText(r.home)} ${r.hs}-${r.as} ${teamText(r.away)}`;
 }
 function groupLeaderLine(g){
@@ -5220,7 +5222,7 @@ function dataCompletenessWarnings(){
 
 function homeResultLine(m){
   if(!m) return '—';
-  if(m.api) return `${teamText(m.home)} ${m.hs}-${m.as} ${teamText(m.away)}`;
+  if(m.api) return `⁦${teamText(m.home)} ${m.hs}-${m.as} ${teamText(m.away)}⁩`;
   const r=matchResult(m.group,m.idx);
   return r&&r.complete?`${teamText(r.home)} ${r.hs}-${r.as} ${teamText(r.away)}`:'—';
 }
@@ -5585,11 +5587,11 @@ function renderLeaderboardPulseCard(){
 }
 function hubMatchName(m){
   if(!m) return '—';
-  return `${teamText(m.home)} vs ${teamText(m.away)}`;
+  return `⁦${teamText(m.home)} vs ${teamText(m.away)}⁩`;
 }
 function latestScoreLabel(m){
   if(!m) return '—';
-  return `${teamText(m.home)} ${m.hs}-${m.as} ${teamText(m.away)}`;
+  return `⁦${teamText(m.home)} ${m.hs}-${m.as} ${teamText(m.away)}⁩`;
 }
 
 function renderMatchdayHero(){
@@ -5889,11 +5891,11 @@ function mdhFreshnessBadge(){
 }
 function mdhMatchName(m){
   if(!m) return '—';
-  return `${teamText(m.home)} vs ${teamText(m.away)}`;
+  return `⁦${teamText(m.home)} vs ${teamText(m.away)}⁩`;
 }
 function mdhLatestScoreLabel(m){
   if(!m) return '—';
-  return `${teamText(m.home)} ${m.hs}-${m.as} ${teamText(m.away)}`;
+  return `⁦${teamText(m.home)} ${m.hs}-${m.as} ${teamText(m.away)}⁩`;
 }
 function mdhMatchStatus(m){
   if(!m) return {key:'upcoming',label:tl('Upcoming','قادمة')};
@@ -7977,9 +7979,27 @@ function isStandalonePWA(){
 function updateInstallUI(){
   const btn=$('installBtn'), banner=$('installBanner');
   const dismissed=localStorage.getItem('wc2026_install_dismissed')==='1';
-  const canInstall=!!deferredInstallPrompt && !isStandalonePWA() && !dismissed;
-  if(btn) btn.style.display=canInstall?'inline-flex':'none';
-  if(banner) banner.classList.toggle('show',canInstall);
+  const standalone=isStandalonePWA();
+  // Header shortcut button: offered on every phone — installPWA() shows iOS steps when no native prompt
+  if(btn){
+    btn.style.display=standalone?'none':'inline-flex';
+    btn.textContent='⬇️ '+((typeof tl==='function')?tl('Install','تثبيت'):'Install');
+    const label=(typeof tl==='function')?tl('Add to home screen','أضف إلى الشاشة الرئيسية'):'Add to home screen';
+    btn.title=label; btn.setAttribute('aria-label',label);
+  }
+  // Auto banner: only when a native install prompt is available and not dismissed
+  const canBanner=!!deferredInstallPrompt && !standalone && !dismissed;
+  if(banner){
+    banner.classList.toggle('show',canBanner);
+    if(canBanner && typeof tl==='function'){
+      const ti=banner.querySelector('.title'), su=banner.querySelector('.sub');
+      const bs=banner.querySelectorAll('button');
+      if(ti) ti.textContent='📲 '+tl("Install WC2026 Pick'em",'ثبّت تطبيق توقعات كأس العالم');
+      if(su) su.textContent=tl('Add it to your home screen for app-like access.','أضفه إلى الشاشة الرئيسية لتجربة تشبه التطبيق.');
+      if(bs[0]) bs[0].textContent=tl('Install','تثبيت');
+      if(bs[1]) bs[1].textContent=tl('Later','لاحقاً');
+    }
+  }
 }
 window.addEventListener('beforeinstallprompt',(e)=>{
   e.preventDefault();
@@ -7994,11 +8014,11 @@ window.addEventListener('appinstalled',()=>{
 });
 async function installPWA(){
   if(!deferredInstallPrompt){
-    openSheet(`<h3 style="padding:0 8px">📲 Install app</h3>
-      <div class="card flat"><b>iPhone / iPad</b><div class="sub">Open in Safari → Share → Add to Home Screen.</div></div>
-      <div class="card flat"><b>Android / Chrome</b><div class="sub">Open the menu ⋮ → Install app or Add to Home screen.</div></div>
-      <div class="banner warn">Install works after hosting this folder on HTTPS, like GitHub Pages, Netlify, or Vercel.</div>
-      <button class="btn ghost" onclick="closeSheet()">Close</button>`);
+    openSheet(`<h3 style="padding:0 8px">📲 ${esc(tl('Add to your phone','أضف إلى هاتفك'))}</h3>
+      <div class="card flat"><b>${esc(tl('iPhone / iPad (Safari)','آيفون / آيباد (سفاري)'))}</b><div class="sub">${esc(tl('Tap the Share button, then “Add to Home Screen”.','اضغط زر المشاركة ثم «أضف إلى الشاشة الرئيسية».'))}</div></div>
+      <div class="card flat"><b>${esc(tl('Android / Chrome','أندرويد / كروم'))}</b><div class="sub">${esc(tl('Open the menu ⋮, then “Install app” or “Add to Home screen”.','افتح القائمة ⋮ ثم «تثبيت التطبيق» أو «أضف إلى الشاشة الرئيسية».'))}</div></div>
+      <div class="banner cache">${esc(tl('Tip: installing works when the app is opened from its web link (https), not from a file.','ملاحظة: التثبيت يعمل عند فتح التطبيق من رابطه على الإنترنت (https) وليس من ملف.'))}</div>
+      <button class="btn ghost" onclick="closeSheet()">${esc(t('close'))}</button>`);
     return;
   }
   deferredInstallPrompt.prompt();
@@ -9772,7 +9792,7 @@ function formatInstantUserTz(ts){
   const tz=browserTimeZone(); const loc=LANG==='ar'?'ar-AE':'en-GB';
   const date=new Intl.DateTimeFormat(loc,{timeZone:tz,weekday:'short',day:'2-digit',month:'short'}).format(d);
   const time=new Intl.DateTimeFormat('en-US',{timeZone:tz,hour:'numeric',minute:'2-digit',hour12:true}).format(d);
-  return `${date} · ${time} ${timeZoneShortName(tz,d)}`;
+  return `${date} · ⁦${time} ${timeZoneShortName(tz,d)}⁩`;
 }
 function matchDateTime(m){
   if(!m) return '';
