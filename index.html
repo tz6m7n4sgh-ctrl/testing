@@ -73,8 +73,9 @@ h1,h2,h3,h4{margin:0;line-height:1.2}
 
 /* Phase strip */
 .phase{
+  display:none !important;
   background:linear-gradient(180deg,var(--pitch2),var(--pitch));color:#cdeee0;
-  padding:8px 14px;font-size:12.5px;display:flex;gap:10px;align-items:center;justify-content:center;
+  padding:8px 14px;font-size:12.5px;gap:10px;align-items:center;justify-content:center;
   border-bottom:1px solid var(--line);
 }
 .phase b{color:#fff}
@@ -4633,6 +4634,11 @@ body.has-live{padding-bottom:52px}
 .gtbl-legend b{color:var(--ink);font-weight:900}
 .player-select{width:100%;margin-top:10px;min-height:48px;border-radius:12px;border:1px solid var(--border);background:var(--soft);padding:10px 14px;font-size:15px;font-weight:800;color:var(--ink);cursor:pointer}
 .player-select:focus{outline:none;border-color:var(--grass);box-shadow:0 0 0 3px rgba(25,195,125,.15)}
+.gd-grid{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.gd-cell{font-size:12px;font-weight:900;padding:5px 9px;border-radius:9px;border:1px solid var(--border);white-space:nowrap}
+.gd-cell.ok{background:#e2f7ec;color:var(--grass-d);border-color:#bfe9d2}
+.gd-cell.none{background:var(--soft);color:var(--muted)}
+.gd-cell.tbd{background:#fdf3e2;color:#b9831f;border-color:#f0d9b0}
 .gtbl .c-pts{font-weight:900}
 .gtbl .c-dim{color:var(--muted)}
 .form-dots{display:inline-flex;gap:3px;align-items:center;justify-content:center}
@@ -6776,11 +6782,17 @@ function latestApiResults(limit){
   const n=limit||4;
   return apiHomeMatches().slice(-n).reverse();
 }
+function baseTodaySchedule(){
+  // The SportsDB API feed (homeSchedule) is often empty (CORS-blocked). Fall back to the
+  // stored/local schedule (allSchedule) so Today + live detection still work from real UAE times.
+  const api=homeSchedule();
+  return (api&&api.length)?api:(typeof allSchedule==='function'?allSchedule().filter(m=>m&&m.group&&m.idx!=null):[]);
+}
 function matchCenterMatches(){
   const now=uaeNowMs();
   const lower=now-4*60*60*1000;      // keep matches that are currently live/recently kicked off
   const upper=now+30*60*60*1000;     // show tonight + early next day in UAE time
-  let rows=homeSchedule()
+  let rows=baseTodaySchedule()
     .filter(m=>m.group&&m.idx!=null)
     .filter(m=>{
       const ts=matchUaeTimestamp(m);
@@ -6791,7 +6803,7 @@ function matchCenterMatches(){
 
   // If the user's local day has no games in this window, still show the next upcoming games.
   if(!rows.length){
-    rows=homeSchedule()
+    rows=baseTodaySchedule()
       .filter(m=>m.group&&m.idx!=null&&matchIsUpcoming(m))
       .sort((a,b)=>matchUaeTimestamp(a)-matchUaeTimestamp(b))
       .slice(0,6);
@@ -6800,7 +6812,7 @@ function matchCenterMatches(){
 }
 function allTodayApiMatches(){
   const today=uaeToday();
-  const rows=homeSchedule()
+  const rows=baseTodaySchedule()
     .filter(m=>m.group&&m.idx!=null)
     .filter(m=>(m.date||'')===today)
     .sort((a,b)=>matchUaeTimestamp(a)-matchUaeTimestamp(b));
@@ -9382,6 +9394,21 @@ async function cleanAndSaveGroupResultsFromNormalized(){
   }
 }
 
+function groupsDiagnostic(){
+  const cells=GROUP_KEYS.map(g=>{
+    let played=0; for(let i=0;i<6;i++){ if(matchResult(g,i).complete) played++; }
+    const hasTBD=(GROUPS[g]||[]).some(t=>String(t).toUpperCase()==='TBD');
+    const cls=played>0?'ok':(hasTBD?'tbd':'none');
+    return `<span class="gd-cell ${cls}">${g} ${played}/6${hasTBD?' ⚠':''}</span>`;
+  }).join('');
+  const rt=APP._resultsTableStatus||{};
+  const unmapped=(rt.rows!=null&&rt.applied!=null&&rt.rows>rt.applied)?(rt.rows-rt.applied):0;
+  return `<div class="card"><div class="between"><h3>📊 ${esc(tl('Per-group results','نتائج كل مجموعة'))}</h3></div>
+    <div class="gd-grid">${cells}</div>
+    <div class="sub" style="margin-top:8px">${esc(tl('“x/6” = matches with a result. ⚠ = group has a TBD (playoff) slot whose real team is not set, so its results cannot map until the live schedule is available.','«x/6» = مباريات لها نتيجة. ⚠ = المجموعة فيها فريق TBD لم يُحدد، لذا لا يمكن ربط نتائجه حتى يتوفر الجدول المباشر.'))}</div>
+    ${unmapped>0?`<div class="banner warn" style="margin-top:8px">⚠ ${esc(tl('Results table rows not mapped to a fixture','صفوف في جدول النتائج لم تُربط بمباراة'))}: <b>${unmapped}</b> — ${esc(tl('likely a team-name mismatch.','غالباً اختلاف في اسم الفريق.'))}</div>`:''}
+  </div>`;
+}
 function dataSourcePanel(){
   const live=!APP.cached;
   const cls=live?'paid':'pend';
@@ -9397,7 +9424,7 @@ function dataSourcePanel(){
       <button class="btn ghost" onclick="clearCacheAndReload()">🧹 ${esc(tl('Clear cache & reload','مسح المخزّن وإعادة التحميل'))}</button>
     </div>
     <div class="sub" style="margin-top:8px">${esc(tl('Use “Reload results table” if group tables look out of date.','استخدم «إعادة تحميل جدول النتائج» إذا بدت جداول المجموعات قديمة.'))}</div>
-  </div>`;
+  </div>`+groupsDiagnostic();
 }
 async function refreshLiveData(){
   toast(tl('Refreshing…','جارٍ التحديث…'));
