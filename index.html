@@ -4994,6 +4994,19 @@ function normalizedResultToApp(row){
     storedKey:row.match_key
   };
 }
+function completedResultsCount(){ let n=0; for(const g of GROUP_KEYS) for(let i=0;i<6;i++){ try{ if(matchResult(g,i).complete) n++; }catch(_){} } return n; }
+function resultsFingerprint(){ const parts=[]; for(const g of GROUP_KEYS) for(let i=0;i<6;i++){ try{ const r=matchResult(g,i); if(r.complete) parts.push(g+i+':'+r.hs+'-'+r.as); }catch(_){} } return parts.join('|'); }
+function noteResultsState(){
+  const fp=resultsFingerprint();
+  let prev=null; try{ prev=localStorage.getItem('wc2026_results_fp'); }catch(_){}
+  const changed=(prev!==null)&&(fp!==prev);
+  if(prev===null || fp!==prev){
+    try{ localStorage.setItem('wc2026_results_fp',fp); if(fp!==prev){ localStorage.setItem('wc2026_results_changed_at',new Date().toISOString()); } }catch(_){}
+  }
+  if(fp!==prev) APP._lastResultsChange=new Date().toISOString();
+  else if(!APP._lastResultsChange){ try{ APP._lastResultsChange=localStorage.getItem('wc2026_results_changed_at')||null; }catch(_){} }
+  return {changed, count:completedResultsCount(), fp};
+}
 async function loadNormalizedResultsIntoApp(){
   APP._resultsTableStatus={ok:false, mode:'fallback-json'};
   try{
@@ -5024,6 +5037,7 @@ async function loadNormalizedResultsIntoApp(){
     APP.data.resultMeta={...(APP.data.resultMeta||{}),...rebuiltMeta};
 
     APP._resultsTableStatus={ok:true, mode:'normalized-table', rows:APP._matchResultRows.length, applied, remapped, skipped, merged:true};
+    try{ noteResultsState(); }catch(_){}
     return true;
   }catch(e){
     console.warn('Normalized results table unavailable. Falling back to wc2026.data.groupResults.',e);
@@ -6877,10 +6891,10 @@ function homeAISummaryText(){
   return lines.join(' ');
 }
 function dataFreshnessLabel(){
-  const now=formatUaeDateTimeParts();
-  if(homeUsesApiResults()) return tl('Live data · updated now','بيانات مباشرة · محدثة الآن');
-  if(APP._homeApiError) return tl('Saved data · live unavailable','بيانات محفوظة · البيانات المباشرة غير متاحة');
-  return tl('Saved data','بيانات محفوظة');
+  const cnt=completedResultsCount();
+  if(cnt===0) return tl('No results yet','لا نتائج بعد');
+  const at=APP._lastResultsChange?(' · '+tl('updated','حُدّث')+' '+String(APP._lastResultsChange).slice(0,16).replace('T',' ')):'';
+  return tl('Saved results','نتائج محفوظة')+' ('+cnt+')'+at;
 }
 function hubMatchStatus(m){
   if(!m) return {key:'upcoming',label:tl('Upcoming','قادمة')};
@@ -9416,8 +9430,14 @@ function dataSourcePanel(){
   const reason=(APP.apiStatus&&APP.apiStatus.error)?`<div class="sub" style="margin-top:6px">${esc(tl('Last load error','آخر خطأ تحميل'))}: ${esc(APP.apiStatus.error)}</div>`:'';
   const rt=APP._resultsTableStatus||{};
   const rtLine=`<div class="sub" style="margin-top:4px">${esc(tl('Results source','مصدر النتائج'))}: ${rt.ok?esc(tl('live table','الجدول المباشر'))+' ('+(rt.applied||0)+')':esc(tl('fallback / not loaded','احتياطي / غير محمّل'))}</div>`;
+  const cnt=completedResultsCount();
+  if(!APP._lastResultsChange){ try{ APP._lastResultsChange=localStorage.getItem('wc2026_results_changed_at')||null; }catch(_){} }
+  const lastChange=APP._lastResultsChange?String(APP._lastResultsChange).slice(0,16).replace('T',' '):tl('never','لا يوجد');
+  const honest=`<div class="sub" style="margin-top:8px">${esc(tl('Matches with a result','مباريات لها نتيجة'))}: <b>${cnt}</b> · ${esc(tl('database rows','صفوف قاعدة البيانات'))}: <b>${rt.rows!=null?rt.rows:'—'}</b></div>
+    <div class="sub">${esc(tl('Last actual data change','آخر تغيّر فعلي للبيانات'))}: <b>${esc(lastChange)}</b></div>
+    ${cnt===0?`<div class="banner warn" style="margin-top:8px">⚠ ${esc(tl('No results in the database yet — nothing to show until results are added. A “check” will not change this.','لا توجد نتائج في قاعدة البيانات بعد — لا شيء لعرضه حتى تُضاف نتائج. «الفحص» لن يغيّر ذلك.'))}</div>`:''}`;
   return `<div class="card"><div class="between"><h3>🔀 ${esc(tl('Data source','مصدر البيانات'))}</h3><span class="tag ${cls}">${esc(label)}</span></div>
-    ${rtLine}${reason}
+    ${rtLine}${honest}${reason}
     <div class="sync-tools" style="margin-top:10px">
       <button class="btn" onclick="refreshLiveData()">🔄 ${esc(tl('Refresh from live','تحديث من المباشر'))}</button>
       <button class="btn gold" onclick="forceResultsRefresh()">📥 ${esc(tl('Reload results table','إعادة تحميل جدول النتائج'))}</button>
@@ -9428,11 +9448,16 @@ function dataSourcePanel(){
 }
 async function refreshLiveData(){
   toast(tl('Refreshing…','جارٍ التحديث…'));
+  const before=resultsFingerprint();
   try{ await loadState(); }catch(_){}
   invalidateLeaderboardCache();
+  const st=noteResultsState();
   render();
+  const after=resultsFingerprint();
+  const changedMsg=(after===before)?tl('No new results found.','لا توجد نتائج جديدة.'):tl('Results updated.','تم تحديث النتائج.');
   const live=!APP.cached;
-  alert((live?tl('Loaded LIVE data.','تم تحميل البيانات المباشرة.'):tl('Live failed — showing CACHED data.','فشل المباشر — يتم عرض النسخة المخزّنة.'))
+  alert((live?tl('Loaded live data.','تم تحميل البيانات المباشرة.'):tl('Live failed — no data loaded.','فشل المباشر — لم تُحمّل بيانات.'))
+    +'\n'+changedMsg+'\n'+tl('Matches with a result','مباريات لها نتيجة')+': '+st.count
     +(APP.apiStatus&&APP.apiStatus.error?('\n\n'+APP.apiStatus.error):''));
 }
 async function clearCacheAndReload(){
@@ -9442,18 +9467,25 @@ async function clearCacheAndReload(){
 }
 async function forceResultsRefresh(){
   toast(tl('Reloading results…','جارٍ إعادة تحميل النتائج…'));
+  const before=resultsFingerprint();
   let ok=false; try{ ok=await loadNormalizedResultsIntoApp(); }catch(e){ APP._resultsTableStatus={ok:false,error:String(e&&e.message?e.message:e)}; }
   invalidateLeaderboardCache();
+  const st=noteResultsState();
   render();
   const s=APP._resultsTableStatus||{};
-  if(ok) alert(tl('Results reloaded from the live table.','تمت إعادة تحميل النتائج من الجدول المباشر.')+'\n'+tl('Applied','طُبّقت')+': '+(s.applied||0)+' · '+tl('rows','صفوف')+': '+(s.rows||0));
-  else alert(tl('Results table reload failed','فشلت إعادة تحميل جدول النتائج')+':\n\n'+(s.error||'')+'\n\n'+RESULTS_Data);
+  if(!ok){ alert(tl('Results table reload failed','فشلت إعادة تحميل جدول النتائج')+':\n\n'+(s.error||'')+'\n\n'+RESULTS_Data); return; }
+  const after=resultsFingerprint();
+  if(after===before){
+    alert(tl('No new results found.','لا توجد نتائج جديدة.')+'\n\n'+tl('Matches with a result','مباريات لها نتيجة')+': '+st.count+' · '+tl('database rows','صفوف قاعدة البيانات')+': '+(s.rows!=null?s.rows:'—'));
+  } else {
+    alert(tl('Results updated.','تم تحديث النتائج.')+'\n\n'+tl('Matches with a result','مباريات لها نتيجة')+': '+st.count+' · '+tl('applied','مطبّقة')+': '+(s.applied||0));
+  }
 }
 function viewSyncResults(){
   const rows=APP._syncRows;
   const counts={match:0,missing:0,mismatch:0,unmapped:0};
   (rows||[]).forEach(r=>counts[r.status]=(counts[r.status]||0)+1);
-  return dataSourcePanel()+`<div class="card"><div class="between"><h3>🔄 ${esc(t('v_syncResults'))}</h3><span class="chip">${APP._lastSyncCheck?esc(APP._lastSyncCheck.slice(0,16).replace('T',' ')):esc(tl('Not checked','لم يتم الفحص'))}</span></div>
+  return dataSourcePanel()+`<div class="card"><div class="between"><h3>🔄 ${esc(t('v_syncResults'))}</h3><span class="chip">${completedResultsCount()} ${esc(tl('results','نتيجة'))}${APP._lastSyncCheck?' · '+esc(tl('checked','فُحص'))+' '+esc(APP._lastSyncCheck.slice(11,16)):''}</span></div>
     <div class="banner warn">⚠️ ${esc(tl('The app now reads/writes the normalized wc2026_match_results table, while keeping the old JSON as fallback.','التطبيق الآن يقرأ ويكتب من جدول wc2026_match_results مع إبقاء JSON القديم كاحتياطي.'))}</div>
     <div class="sync-tools">
       <button class="btn" onclick="runResultSyncCompare()">🔎 ${esc(tl('Compare vs App','مقارنة مع التطبيق'))}</button>
