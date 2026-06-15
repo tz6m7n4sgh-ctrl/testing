@@ -4708,15 +4708,15 @@ const GROUPS={
   A:["Mexico","South Africa","South Korea","Czechia"],
   B:["Canada","Switzerland","Qatar","Bosnia-Herzegovina"],
   C:["Brazil","Morocco","Scotland","Haiti"],
-  D:["USA","Paraguay","Australia","TBD"],
+  D:["USA","Paraguay","Australia","Turkey"],
   E:["Germany","Curacao","Ivory Coast","Ecuador"],
-  F:["Netherlands","Japan","Tunisia","TBD"],
+  F:["Netherlands","Japan","Tunisia","Sweden"],
   G:["Belgium","Egypt","Iran","New Zealand"],
   H:["Spain","Cape Verde","Saudi Arabia","Uruguay"],
-  I:["France","Senegal","Norway","TBD"],
+  I:["France","Senegal","Norway","Iraq"],
   J:["Argentina","Algeria","Austria","Jordan"],
   K:["England","Croatia","Ghana","Panama"],
-  L:["Portugal","Colombia","Uzbekistan","TBD"]
+  L:["Portugal","Colombia","Uzbekistan","DR Congo"]
 };
 const GROUP_KEYS=Object.keys(GROUPS);
 
@@ -4732,7 +4732,9 @@ const TEAM_ALIASES={
   "Cabo Verde":["cape verde"],
   "Ivory Coast":["cote d'ivoire","côte d'ivoire","cote divoire"],
   "Curacao":["curaçao"],
-  "Saudi Arabia":["ksa","saudi"]
+  "Saudi Arabia":["ksa","saudi"],
+  "Turkey":["türkiye","turkiye","turkey"],
+  "DR Congo":["congo dr","dr congo","democratic republic of the congo","drc","congo"]
 };
 
 /* --- i18n --- */
@@ -4834,7 +4836,7 @@ let LANG=localStorage.getItem('wc_lang')||'ar';
 const t=(k)=>{const v=I18N[LANG][k];return v===undefined?(I18N.en[k]??k):v;};
 
 /* ================= Part 2: state, persistence, normalization ================= */
-const APP={ data:null, loaded:false, error:null, cached:false, isAdmin:true, view:'dashboard', sel:{}, snapshot:null, prevRanks:null, apiStatus:null };
+const APP={ data:null, loaded:false, error:null, cached:false, isAdmin:false, view:'dashboard', sel:{}, snapshot:null, prevRanks:null, apiStatus:null };
 const CACHE_KEY='wc2026_cache_v2';
 const ADMIN_FLAG='wc2026_admin';
 
@@ -5288,24 +5290,10 @@ function getPlayer(name){ const d=APP.data||defaultData(); return (d.players||{}
 
 /* ---- group match model ---- */
 function matchTeams(group,idx){
-  // Prefer saved/fetched schedule (real fixture order can differ from RR fallback).
-  // Memoized by schedule-array reference and length, so it rebuilds only when the schedule changes.
-  const sched=(APP&&APP.data&&Array.isArray(APP.data.scheduleMatches))?APP.data.scheduleMatches:null;
-  if(sched){
-    if(APP._mtSchedRef!==sched || APP._mtSchedLen!==sched.length){
-      const map={};
-      sched.forEach(x=>{
-        if(x&&x.group!=null&&x.idx!=null&&x.home&&x.away){
-          map[x.group+'_'+x.idx]=[canonTeam(x.home),canonTeam(x.away)];
-        }
-      });
-      APP._mtMap=map;
-      APP._mtSchedRef=sched;
-      APP._mtSchedLen=sched.length;
-    }
-    const hit=APP._mtMap&&APP._mtMap[group+'_'+idx];
-    if(hit) return hit;
-  }
+  // Authoritative pairing from the official groups + fixed round-robin order.
+  // (Previously this trusted APP.data.scheduleMatches, but a corrupt saved schedule
+  //  produced duplicate/wrong fixtures like B_0==B_4. The canonical pairing below is
+  //  the single source of truth and stays consistent with the results SQL.)
   const g=GROUPS[group]||[];
   const p=RR[idx];
   return p?[g[p[0]],g[p[1]]]:[null,null];
@@ -9615,7 +9603,7 @@ function tryAdmin(){
     toast(t('wrongPw'));
   }
 }
-function logoutAdmin(){ APP.isAdmin=true; /* roles removed: all tools stay open */ render(); }
+function logoutAdmin(){ APP.isAdmin=false; sessionStorage.removeItem(ADMIN_FLAG); trackEvent('admin_logout'); render(); }
 
 /* ================= language ================= */
 function toggleLang(){ LANG=LANG==='ar'?'en':'ar'; localStorage.setItem('wc_lang',LANG); trackEvent('language_change',{language:LANG}); render(); }
