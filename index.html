@@ -4603,6 +4603,32 @@ body.has-live{padding-bottom:52px}
 .pbk-grp{border:1px solid var(--soft);border-radius:12px;padding:9px 10px;margin-bottom:9px}
 .pbk-grp .gh{font-size:11px;font-weight:1000;color:var(--muted);margin-bottom:4px}
 @media print{.botnav,#liveDock,.dash-pdf,.topbar{display:none!important}}
+
+/* ===== Group standings — Google-style table (rebuilt) ===== */
+.gtbl-card{padding:14px 14px 8px}
+.gtbl-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+.gtbl-head h3{margin:0;font-size:16px;font-weight:900}
+.gtbl-note .sub{margin:0}
+.gtbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -14px;padding:0 14px}
+.gtbl{width:100%;min-width:430px;border-collapse:collapse;font-size:13px}
+.gtbl thead th{font-size:10.5px;font-weight:800;color:var(--muted);text-align:center;padding:4px 6px 9px;white-space:nowrap;border-bottom:1px solid var(--border)}
+.gtbl thead th.c-team{text-align:start;padding-inline-start:10px}
+.gtbl thead th.c-pts{color:var(--ink)}
+.gtbl tbody td{padding:10px 6px;text-align:center;white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--ink);border-bottom:1px solid #f1f4f2}
+.gtbl tbody tr:last-child td{border-bottom:none}
+.gtbl td.c-team{text-align:start;position:sticky;inset-inline-start:0;background:var(--card);z-index:1;border-inline-start:3px solid transparent;padding-inline-start:7px}
+.gtbl tbody tr.q1 td.c-team,.gtbl tbody tr.q2 td.c-team{border-inline-start-color:var(--grass)}
+.gtbl tbody tr.qline td{border-bottom:2px solid #dbe6e0}
+.gtbl .tcell{display:flex;align-items:center;gap:9px;min-width:0}
+.gtbl .rk{width:16px;text-align:center;font-weight:900;color:var(--muted);flex:0 0 auto}
+.gtbl .tcell .team-name-inline{min-width:0}
+.gtbl .tcell .team-label{font-weight:800;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:128px}
+.gtbl .tcell .big-flag{font-size:1.05em}
+.gtbl .c-pts{font-weight:900}
+.gtbl .c-dim{color:var(--muted)}
+.form-dots{display:inline-flex;gap:3px;align-items:center;justify-content:center}
+.fd{width:15px;height:15px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:9px;font-weight:900;color:#fff;flex:0 0 auto;line-height:1}
+.fd.w{background:var(--good)} .fd.l{background:var(--bad)} .fd.d{background:#caa42a} .fd.e{background:transparent;border:1.5px solid #d4ddd8}
 </style>
 <!-- Analytics is initialized once in loadAnalytics() to avoid duplicate page_view hits. -->
 </head>
@@ -8365,17 +8391,50 @@ function setGroupsTab(tab){
   render();
   window.scrollTo(0,0);
 }
+function teamGroupForm(g,team){
+  const out=[];
+  for(let i=0;i<6;i++){ const r=matchResult(g,i); if(!r||!r.complete) continue;
+    let me,opp;
+    if(sameTeam(r.home,team)){me=r.hs;opp=r.as;} else if(sameTeam(r.away,team)){me=r.as;opp=r.hs;} else continue;
+    out.push(me>opp?'W':(me<opp?'L':'D'));
+  }
+  return out;
+}
+function formDotsHtml(form){
+  const slots=5, r=form.slice().reverse(); let h='';
+  for(let i=0;i<slots;i++){ const v=r[i];
+    if(v==='W') h+='<span class="fd w">✓</span>';
+    else if(v==='L') h+='<span class="fd l">✕</span>';
+    else if(v==='D') h+='<span class="fd d">–</span>';
+    else h+='<span class="fd e"></span>';
+  }
+  return `<span class="form-dots">${h}</span>`;
+}
 function groupsStageHtml(){
-  return groupsResultSourceBanner()+`<div class="card"><h3>📊 ${esc(tl('Group Stage','دور المجموعات'))}</h3><div class="sub">${esc(t('tiebreak'))}</div></div>`+
-    GROUP_KEYS.map(g=>{ const tb=computeGroupTable(g); const done=groupComplete(g); const started=tb.some(r=>r.P>0);
-      return `<div class="card"><div class="between"><h3>Group ${g}</h3><span class="chip ${done?'on':''}">${done?esc(t('groupsDone')):esc(t('pending'))}</span></div>
-      <table class="gtable"><thead><tr><th style="text-align:start">${esc(t('player').slice(0,0))}Team</th>
-        <th>${esc(t('played'))}</th><th>${esc(t('win'))}</th><th>${esc(t('drawSh')).slice(0,1)}</th><th>${esc(t('loss'))}</th>
-        <th>${esc(t('gd'))}</th><th>${esc(t('pts'))}</th></tr></thead><tbody>
-        ${tb.map((r,i)=>{ const q=started&&i<2&&r.P>0; return `<tr class="${q?(i===0?'q1':'q2'):''}"><td class="tn"><span class="pos">${i+1}</span>${teamHtml(r.team)}</td>
-          <td class="num">${r.P}</td><td class="num">${r.W}</td><td class="num">${r.D}</td><td class="num">${r.L}</td>
-          <td class="num">${r.GD>0?'+':''}${r.GD}</td><td class="num"><b>${r.Pts}</b></td></tr>`;}).join('')}
-      </tbody></table></div>`;
+  return groupsResultSourceBanner()
+    +`<div class="card gtbl-note"><div class="sub">${esc(t('tiebreak'))}</div></div>`
+    +GROUP_KEYS.map(g=>{
+      const tb=computeGroupTable(g); const done=groupComplete(g); const started=tb.some(r=>r.P>0);
+      const rows=tb.map((r,i)=>{
+        const q=started&&i<2&&r.P>0;
+        const form=teamGroupForm(g,r.team);
+        return `<tr class="${q?(i===0?'q1':'q2'):''}${i===1?' qline':''}">
+          <td class="c-team"><div class="tcell"><span class="rk">${i+1}</span>${teamHtml(r.team)}</div></td>
+          <td>${r.P}</td><td>${r.W}</td><td>${r.D}</td><td>${r.L}</td>
+          <td class="c-pts"><b>${r.Pts}</b></td>
+          <td class="c-dim">${r.GF}</td><td class="c-dim">${r.GA}</td><td>${r.GD>0?'+':''}${r.GD}</td>
+          <td class="c-form">${formDotsHtml(form)}</td>
+        </tr>`;
+      }).join('');
+      return `<div class="card gtbl-card"><div class="gtbl-head"><h3>${esc(tl('Group','المجموعة'))} ${g}</h3><span class="chip ${done?'on':''}">${done?esc(t('groupsDone')):esc(t('pending'))}</span></div>
+        <div class="gtbl-scroll"><table class="gtbl"><thead><tr>
+          <th class="c-team">${esc(tl('Team','الفريق'))}</th>
+          <th>${esc(tl('MP','لعب'))}</th><th>${esc(tl('W','ف'))}</th><th>${esc(tl('D','ت'))}</th><th>${esc(tl('L','خ'))}</th>
+          <th class="c-pts">${esc(tl('Pts','نقاط'))}</th>
+          <th class="c-dim">${esc(tl('GF','له'))}</th><th class="c-dim">${esc(tl('GA','عليه'))}</th><th>${esc(tl('GD','+/-'))}</th>
+          <th class="c-form">${esc(tl('Last 5','آخر 5'))}</th>
+        </tr></thead><tbody>${rows}</tbody></table></div>
+      </div>`;
     }).join('');
 }
 function knockoutStageHtml(){
