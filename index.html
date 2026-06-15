@@ -1663,6 +1663,8 @@ body{
   gap:10px;
   margin-top:12px;
 }
+.stage-tabs.slim{margin:2px 0 14px}
+.stage-tabs.slim button{min-height:42px;border-radius:13px}
 .stage-tabs button{
   min-height:46px;
   border-radius:16px;
@@ -4620,11 +4622,17 @@ body.has-live{padding-bottom:52px}
 .gtbl td.c-team{text-align:start;position:sticky;inset-inline-start:0;background:var(--card);z-index:1;border-inline-start:3px solid transparent;padding-inline-start:7px}
 .gtbl tbody tr.q1 td.c-team,.gtbl tbody tr.q2 td.c-team{border-inline-start-color:var(--grass)}
 .gtbl tbody tr.qline td{border-bottom:2px solid #dbe6e0}
-.gtbl .tcell{display:flex;align-items:center;gap:9px;min-width:0}
+.gtbl .tcell{display:flex;align-items:center;gap:9px;min-width:0;max-width:175px}
 .gtbl .rk{width:16px;text-align:center;font-weight:900;color:var(--muted);flex:0 0 auto}
 .gtbl .tcell .team-name-inline{min-width:0}
-.gtbl .tcell .team-label{font-weight:800;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:128px}
-.gtbl .tcell .big-flag{font-size:1.05em}
+.gtbl .tcell .team-label{font-weight:800;font-size:12.5px;white-space:normal;overflow-wrap:break-word;word-break:normal;line-height:1.18}
+.gtbl thead th.c-team,.gtbl td.c-team{min-width:124px}
+.gtbl .tcell .big-flag{font-size:1.05em;flex:0 0 auto}
+.gtbl-legend{display:flex;flex-wrap:wrap;gap:6px 10px;padding:2px 2px 4px;margin-bottom:2px}
+.gtbl-legend span{font-size:11.5px;color:var(--muted);font-weight:700;white-space:nowrap}
+.gtbl-legend b{color:var(--ink);font-weight:900}
+.player-select{width:100%;margin-top:10px;min-height:48px;border-radius:12px;border:1px solid var(--border);background:var(--soft);padding:10px 14px;font-size:15px;font-weight:800;color:var(--ink);cursor:pointer}
+.player-select:focus{outline:none;border-color:var(--grass);box-shadow:0 0 0 3px rgba(25,195,125,.15)}
 .gtbl .c-pts{font-weight:900}
 .gtbl .c-dim{color:var(--muted)}
 .form-dots{display:inline-flex;gap:3px;align-items:center;justify-content:center}
@@ -5093,14 +5101,8 @@ async function loadState(){
   }catch(e){
     console.error('Supabase load failed. This may be network, CORS, RLS, wrong key, or sandbox/file origin.', e);
     APP.apiStatus={name:'supabase', ok:false, error:String(e&&e.message?e.message:e), sandbox:isSandboxOrFile()};
-    let c=null; try{ c=localStorage.getItem(CACHE_KEY); }catch(_){ c=null; }
-    let parsed=null; if(c){ try{ parsed=JSON.parse(c); }catch(_){ parsed=null; } }
-    if(parsed){ APP.data=ensureShape(parsed); APP.cached=true; APP.loaded=true; APP.error=navigator.onLine?'sync':'offline';
-      // Even if the players doc failed/cached, the normalized results table may still be reachable.
-      // Overlay the latest results so Group tables don't show stale cached scores.
-      try{ if(navigator.onLine) await loadNormalizedResultsIntoApp(); }catch(_){}
-    }
-    else { APP.data=ensureShape({}); APP.loaded=true; APP.error='load'; }
+    // Live-only: do NOT fall back to cached data (cached values were showing misleading/stale results).
+    APP.data=ensureShape({}); APP.loaded=true; APP.cached=false; APP.error='load';
   }
 }
 
@@ -8428,9 +8430,13 @@ function formDotsHtml(form){
   }
   return `<span class="form-dots">${h}</span>`;
 }
+function gtblLegend(){
+  const items=[['MP',tl('Played','لعب')],['W',tl('Won','فوز')],['D',tl('Draw','تعادل')],['L',tl('Lost','خسارة')],['Pts',tl('Points','نقاط')],['GF',tl('Goals for','أهداف له')],['GA',tl('Goals against','أهداف عليه')],['GD',tl('Goal diff','الفارق')]];
+  return `<div class="gtbl-legend">${items.map(([k,v])=>`<span><b>${esc(k)}</b> ${esc(v)}</span>`).join('')}</div>`;
+}
 function groupsStageHtml(){
   return groupsResultSourceBanner()
-    +`<div class="card gtbl-note"><div class="sub">${esc(t('tiebreak'))}</div></div>`
+    +`<div class="card gtbl-note">${gtblLegend()}<div class="sub" style="margin-top:7px">${esc(t('tiebreak'))}</div></div>`
     +GROUP_KEYS.map(g=>{
       const tb=computeGroupTable(g); const done=groupComplete(g); const started=tb.some(r=>r.P>0);
       const rows=tb.map((r,i)=>{
@@ -8460,18 +8466,10 @@ function knockoutStageHtml(){
 }
 function viewGroups(){
   const tab=(APP.sel&&APP.sel.groupsTab)||'group';
-  return `<div class="card group-tabs-card">
-    <div class="between group-tabs-head">
-      <div>
-        <h3>📊 ${esc(t('v_groups'))}</h3>
-        <div class="sub">${esc(tl('Switch between group standings and knockout bracket.','بدّل بين ترتيب المجموعات وجدول خروج المغلوب.'))}</div>
-      </div>
-    </div>
-    <div class="stage-tabs">
+  return `<div class="stage-tabs slim">
       <button class="${tab==='group'?'on':''}" onclick="setGroupsTab('group')">📊 ${esc(tl('Group Stage','دور المجموعات'))}</button>
       <button class="${tab==='knockout'?'on':''}" onclick="setGroupsTab('knockout')">🎯 ${esc(tl('Knockout Stage','خروج المغلوب'))}</button>
-    </div>
-  </div>` + (tab==='knockout'?knockoutStageHtml():groupsStageHtml());
+    </div>` + (tab==='knockout'?knockoutStageHtml():groupsStageHtml());
 }
 
 
@@ -8596,11 +8594,16 @@ function profilePickerCards(selected){
   }).join('')}</div>`;
 }
 function renderProfilePicker(selected){
+  const names=playerNames();
+  if(!names.length) return `<div class="card"><div class="sub">${esc(t('noData'))}</div></div>`;
+  const lb=buildLeaderboard();
+  const opts=names.map(n=>{ const r=lb.find(x=>x.name===n); return `<option value="${esc(n)}" ${n===selected?'selected':''}>${esc(n)}${r?` — #${r.rank} · ${r.total} ${tl('pts','نقطة')}`:''}</option>`; }).join('');
   return `<div class="card">
-    <div class="between"><h3>👤 ${esc(tl('Choose profile','اختر الملف'))}</h3><span class="chip">${esc(playerNames().length)} ${esc(t('players'))}</span></div>
-    <div class="sub">${esc(tl('Tap any player to open their profile. The Profile tab remembers the last selected player.','اختر أي لاعب لفتح ملفه. تبويب الملف يتذكر آخر لاعب اخترته.'))}</div>
-    ${profilePickerCards(selected)}
-    ${selected?`<div class="profile-focus-note"><span>${esc(tl('Current profile','الملف الحالي'))}: <b>${esc(selected)}</b></span><button class="btn ghost sm" onclick="APP.sel.player='';localStorage.removeItem('wc2026_last_profile');render()">${esc(tl('Show picker first','عرض الاختيار أولاً'))}</button></div>`:''}
+    <div class="between"><h3>👤 ${esc(tl('Choose player','اختر اللاعب'))}</h3><span class="chip">${names.length} ${esc(t('players'))}</span></div>
+    <select class="player-select" onchange="if(this.value)chooseProfile(this.value)" aria-label="${esc(tl('Choose player','اختر اللاعب'))}">
+      <option value="" ${!selected?'selected':''} disabled>${esc(tl('Select a player…','اختر لاعباً…'))}</option>
+      ${opts}
+    </select>
   </div>`;
 }
 function viewPlayer(){
