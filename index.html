@@ -4494,12 +4494,13 @@ body[data-view="dashboard"] .hub-next-meta-pill b{
 .std-avs{display:flex;align-items:center}
 .std-av{width:24px;height:24px;border-radius:50%;background:#dfe7e2;border:2px solid #fff;color:#0a1f17;font-size:9px;font-weight:900;display:inline-flex;align-items:center;justify-content:center;margin-inline-start:-7px}
 .std-av:first-child{margin-inline-start:0}
-.std-toggle{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--muted);font-weight:800;background:none;border:none;padding:4px 2px;cursor:pointer}
+.std-toggle{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink);font-weight:900;background:#eef6f1;border:1px solid var(--border);border-radius:999px;padding-block:6px;padding-inline:12px 6px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.std-toggle:active{background:#e2f0e9}
 .std-toggle .av-extra{color:var(--muted);font-weight:800}
 .std-detail{display:none;border-top:1px solid #eef2f0;padding:11px 12px 13px;background:#fbfdfc}
 .std-card.open .std-detail{display:block}
 .std-card.open .std-toggle .chev{transform:rotate(180deg)}
-.std-toggle .chev{display:inline-block;transition:transform .15s}
+.std-toggle .chev{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--grass);color:#fff;font-size:12px;line-height:1;transition:transform .18s}
 .std-dlabel{font-size:11px;font-weight:900;color:var(--muted);margin-bottom:7px}
 .std-foot{display:flex;align-items:center;justify-content:center;gap:12px;padding:9px 12px 12px;font-size:12px;color:var(--muted);flex-wrap:wrap}
 .std-foot .src-tag{font-size:11px}
@@ -5317,7 +5318,24 @@ function readScore(res){
 function matchResult(group,idx){
   const [home,away]=matchTeams(group,idx);
   const d=APP.data||defaultData();
-  const sc=readScore((d.groupResults||{})[matchKey(group,idx)]);
+  let sc=readScore((d.groupResults||{})[matchKey(group,idx)]);
+  if(!sc){
+    // Fallback: the live API feed (same source the Today/popup uses). Without this the
+    // standings only reflect admin/Supabase-table results, so groups whose results arrived
+    // via the API feed (e.g. Group E) showed empty. groupResults still takes priority.
+    const am=(typeof homeApiResultFor==='function')?homeApiResultFor(group,idx):null;
+    if(am && am.hs!=null && am.as!=null && am.hs!=='' && am.as!==''){
+      const ah=Number(am.hs), aa=Number(am.as);
+      if(Number.isFinite(ah)&&Number.isFinite(aa)){
+        // Orient the API home/away onto this fixture's home/away.
+        if(home&&away&&am.home&&am.away&&sameTeam(am.home,away)&&sameTeam(am.away,home)){
+          sc={hs:aa,as:ah};
+        } else {
+          sc={hs:ah,as:aa};
+        }
+      }
+    }
+  }
   if(!sc) return {home,away,complete:false};
   let winner=null,outcome='draw';
   if(sc.hs>sc.as){winner=home;outcome='home';} else if(sc.as>sc.hs){winner=away;outcome='away';}
