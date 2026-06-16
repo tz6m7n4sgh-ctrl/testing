@@ -5335,10 +5335,6 @@ function matchResult(group,idx){
   return {home,away,hs:sc.hs,as:sc.as,winner,outcome,complete:true};
 }
 function groupComplete(group){
-  const matches=allSchedule().filter(m=>m&&m.group===group&&m.idx!==undefined&&m.idx!==null);
-  if(matches.length>=6){
-    return matches.every(m=>matchResult(group,m.idx).complete);
-  }
   for(let i=0;i<6;i++) if(!matchResult(group,i).complete) return false;
   return true;
 }
@@ -5346,13 +5342,15 @@ function completedMatchCount(){ if(!APP.data) return 0; let n=0; for(const g of 
 
 
 function getGroupTeams(group){
-  const teams=[];
+  // Canonical teams come from GROUPS. Deriving them from the stored schedule let a
+  // corrupt blob inject wrong teams into the standings, so GROUPS is authoritative.
+  const canon=(GROUPS[group]||[]).filter(t=>t&&t!=='TBD');
+  if(canon.length>=4) return canon.slice(0,4);
+  const teams=canon.map(canonTeam);
   allSchedule().filter(m=>m&&m.group===group).forEach(m=>{
-    if(m.home&&!teams.some(t=>sameTeam(t,m.home))) teams.push(canonTeam(m.home));
-    if(m.away&&!teams.some(t=>sameTeam(t,m.away))) teams.push(canonTeam(m.away));
+    [m.home,m.away].forEach(t=>{ if(t&&!teams.some(x=>sameTeam(x,t))) teams.push(canonTeam(t)); });
   });
-  if(teams.length>=4) return teams.slice(0,4);
-  return (GROUPS[group]||[]).filter(t=>t&&t!=='TBD');
+  return teams.slice(0,4);
 }
 
 /* ---- actual standings for a group ---- */
@@ -5368,10 +5366,12 @@ function computeGroupTable(group){
 
   getGroupTeams(group).forEach(ensure);
 
-  let matches=allSchedule().filter(m=>m&&m.group===group&&m.idx!==undefined&&m.idx!==null);
-  if(!matches.length){
-    matches=RR.map((_,i)=>{ const [home,away]=matchTeams(group,i); return {group,idx:i,home,away}; });
-  }
+  // Always evaluate the canonical 6 round-robin fixtures (idx 0..5). Building this
+  // list from allSchedule() caused groups to miss played matches whenever the stored
+  // schedule was incomplete or duplicated — e.g. Group B's B_4/B_5 (the only two
+  // played matches) were absent from the corrupt schedule, so the group showed no
+  // results. matchResult()/matchTeams() are canonical, so iterating idx 0..5 is safe.
+  const matches=RR.map((_,i)=>{ const [home,away]=matchTeams(group,i); return {group,idx:i,home,away}; });
 
   matches.forEach(m=>{
     const r=matchResult(group,m.idx);
@@ -5738,10 +5738,7 @@ function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;',
 const $=id=>document.getElementById(id);
 
 
-function totalGroupMatchCount(){
-  const scheduled=allSchedule().filter(m=>m&&m.group&&m.idx!==undefined&&m.idx!==null).length;
-  return scheduled>=72?scheduled:GROUP_KEYS.length*6;
-}
+function totalGroupMatchCount(){ return GROUP_KEYS.length*6; }
 
 function currentPhase(){
   const d=APP.data||defaultData();
@@ -6018,7 +6015,25 @@ function renderBiggestMovers(latest){
 }
 
 function allSchedule(){
-  return (Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule();
+  const stored=(Array.isArray(APP.data.scheduleMatches)&&APP.data.scheduleMatches.length)?APP.data.scheduleMatches:buildLocalSchedule();
+  const list=Array.isArray(stored)?stored:[];
+  const isGroupRow=m=>m&&GROUP_KEYS.includes(m.group)&&m.idx!=null;
+  // Build the canonical 72 group fixtures: team identity always comes from matchTeams
+  // (groups + round-robin), while date/time/api metadata is merged from the matching
+  // stored or local row. This guarantees no duplicate fixtures and no missing matches
+  // even when APP.data.scheduleMatches is corrupt — the root cause of the earlier
+  // duplicate-fixture, wrong-orientation, and missing-group-results bugs.
+  const out=[];
+  for(const g of GROUP_KEYS){
+    for(let i=0;i<6;i++){
+      const [home,away]=matchTeams(g,i);
+      const meta=list.find(m=>isGroupRow(m)&&m.group===g&&Number(m.idx)===i);
+      out.push({...(meta||{}), group:g, idx:i, home, away});
+    }
+  }
+  // Preserve any non-group rows (e.g. knockout fixtures) exactly as stored.
+  list.forEach(m=>{ if(!isGroupRow(m)) out.push(m); });
+  return out;
 }
 function parseDisplayTimeToUtcInstant(date,time){
   if(!date||!time) return null;
