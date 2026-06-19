@@ -34,7 +34,7 @@ const SOURCES = [
   { id: 'gx', ic: '🎤', name: 'GITEX',    extract: 'Speaker — public-speaking experience', on: true },
   { id: 'x',  ic: '🐦', name: 'X / Twitter', extract: 'Low activity', on: false }
 ];
-const state = { extracted: false, cvParsed: false, searched: false };
+const state = { understood: false, extracted: false, cvParsed: false, searched: false };
 
 function get(v) { return v && typeof v === 'object' ? v.val : v; }  // helper for {val,src}
 
@@ -75,19 +75,32 @@ function signIn(provider) { profile.provider = provider; profile.linkedin = true
 $('#loginBtn').onclick = () => signIn('LinkedIn');
 $('#googleBtn').onclick = () => signIn('Google');
 $('#otherBtn').onclick  = () => signIn('Email');
-/* Guest path: no sign-in → manual quick setup (type skills), then search. */
-$('#skipBtn').onclick = () => {
-  profile.linkedin = false; profile.provider = ''; profile.name = 'Guest'; profile.email = '';
-  profile.skills = []; profile.skillSrc = {};
-  showSetup();
-};
+/* Guest path: enter name → web search → confirm → dashboard (no sign-in). */
+$('#skipBtn').onclick = () => showGuest();
+
+function showGuest() { showView('v-guest'); setupGuest(); }
+
+function setupGuest() {
+  $('#guestSearch').onclick = () => {
+    const name = $('#guestName').value.trim() || 'Job Seeker';
+    profile.linkedin = false; profile.provider = ''; profile.name = name; profile.email = '';
+    runUnderstandAgent();
+  };
+  $('#guestManual').onclick = () => {
+    profile.linkedin = false; profile.provider = ''; profile.name = $('#guestName').value.trim() || 'Guest';
+    profile.email = ''; profile.skills = []; profile.skillSrc = {};
+    showSetup();
+  };
+}
 
 /* Stage 1: agent understands the profile and identifies skills, then assessment. */
 function runUnderstandAgent() {
+  const tasks = [];
+  if (profile.provider) tasks.push(`Reading your ${profile.provider} basics`);
+  tasks.push(`Searching "${profile.name}" on the web`, 'Scanning GitHub & social',
+             'Gathering references about you', 'Assessing your profile health');
   runAgentScreen('Understanding your profile…', 'Reading what the web publicly shows about you',
-    [`Reading your ${profile.provider} basics`, `Searching "${profile.name}" on the web`,
-     'Scanning GitHub & social', 'Gathering references about you', 'Assessing your profile health'],
-    showProfile);
+    tasks, () => { state.understood = true; showProfile(); });
 }
 
 /* ── Quick setup (single screen) ── */
@@ -421,7 +434,7 @@ function showDashboard() {
 
 function renderProfileHealth() {
   const box = $('#profileHealth');
-  if (profile.linkedin) {
+  if (state.understood) {
     const s = ASSESS.presence;
     box.innerHTML = `
       <div class="ph-card" id="phCard">
@@ -439,7 +452,7 @@ function renderProfileHealth() {
         <div class="ph-ring" style="background:var(--soft)"><div class="inner">🔒</div></div>
         <div class="ph-main">
           <div class="ph-title">Profile health check</div>
-          <div class="ph-desc">Sign in with LinkedIn to see how recruiters find you →</div>
+          <div class="ph-desc">Add your name or sign in to build your profile →</div>
         </div>
         <span class="ph-arrow">›</span>
       </div>`;
@@ -573,5 +586,5 @@ function bindNav() {
   $('#viewAllBtn').onclick = () => goTab('jobs');
   $('#qaSearch').onclick = () => goTab('jobs');
   $('#qaSaved').onclick  = () => goTab('jobs');
-  $('#qaProfile').onclick = () => { profile.linkedin ? showProfile() : showSetup(); };
+  $('#qaProfile').onclick = () => { state.understood ? showProfile() : showGuest(); };
 }

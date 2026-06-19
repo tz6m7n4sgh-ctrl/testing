@@ -18,10 +18,12 @@
 5. **CV upload (optional)** — agent "Parsing your CV…" fills gaps (education, phone, extra skills) tagged **CV**. ✅
 6. **Stage 2 · Search** — "Find my matching jobs" → agent searches boards → **Dashboard**. ✅
 
-### Flow B — Guest (no sign-in)
+### Flow B — Guest (no sign-in, name-based)
 1. Login → "continue without signing in". ✅
-2. **Quick setup** — role + UAE location + manual skills. ✅
-3. **Search** → Dashboard. Profile-health card is **locked** (prompts sign-in). ✅
+2. **Enter your name** → "Search the web for me". ✅
+3. Same **understand → confirm references → extract** profile flow as signed-in. ✅
+4. **Find jobs** → Dashboard (profile-health card now works for guests too). ✅
+   - Secondary: "skip — set up a search manually" → quick setup → search. ✅
 
 ### Flow C — Returning to profile
 - Dashboard **profile-health card** or **Profile** quick action → opens the profile page with a **← Dashboard** back button. ✅
