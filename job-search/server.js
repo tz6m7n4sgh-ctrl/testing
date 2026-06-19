@@ -22,7 +22,7 @@ app.use(helmet({
     directives: {
       defaultSrc:  ["'self'"],
       scriptSrc:   ["'self'"],
-      styleSrc:    ["'self'"],
+      styleSrc:    ["'self'", "'unsafe-inline'"],  // dynamic inline colors; scripts stay strict
       imgSrc:      ["'self'", 'data:', 'https://media.licdn.com', 'https://*.licdn.com'],
       connectSrc:  ["'self'"],
       formAction:  ["'self'", 'https://www.linkedin.com'],
@@ -124,8 +124,18 @@ app.patch('/api/me', requireAuth, (req, res) => {
 // ── Stage 1: understand profile (signed-in uses session name; guest passes name) ──
 app.post('/api/understand', async (req, res) => {
   let name = '';
-  if (req.session.userId) name = store.getUser(req.session.userId)?.name || '';
-  else name = String(req.body?.name || '').trim().slice(0, 80);
+  if (req.session.userId) {
+    name = store.getUser(req.session.userId)?.name || '';
+  } else {
+    name = String(req.body?.name || '').trim().slice(0, 80);
+    if (name) {
+      // Anonymous guest account so jobs/saved/profile work without OAuth
+      const id = 'guest-' + Math.random().toString(36).slice(2, 12);
+      store.upsertUser({ id, name, email: '', photo: '', headline: '', skills: [],
+        prefs: { roles: [], locations: [], level: '', remote: false } });
+      req.session.userId = id;
+    }
+  }
   if (!name) return res.status(400).json({ error: 'name_required' });
 
   try {
