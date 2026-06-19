@@ -1,103 +1,101 @@
 # JobScout 🎯
 
-A multi-user job-search agent: LinkedIn login auto-fills your profile, three live job feeds are searched in parallel, and every result is ranked 0–100 against your skills and preferences. Installable as a PWA on your phone.
+A personal, AI-assisted **job-search agent** focused on the UAE market. Sign in, let it build your profile from your public presence (and/or your CV), then get live job listings ranked by how well they fit you — with saved-job tracking, an application funnel, and tailored cover letters.
 
-## Architecture
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+![Node](https://img.shields.io/badge/node-%E2%89%A518-339933)
+![PWA](https://img.shields.io/badge/PWA-installable-5a2be2)
 
-```
-Browser PWA  ←→  Express (Node.js)  ←→  LinkedIn OIDC
-                      ↕                      ↕
-                   SQLite              Remotive + Arbeitnow + Himalayas
-```
+> **Runs free with zero API keys.** Optional keys (LinkedIn, Brave, RapidAPI, Anthropic) progressively upgrade features — see [Configuration](#configuration).
 
-- **No frontend framework** — vanilla JS, fast, installable
-- **LinkedIn OIDC** — `openid profile email` scopes (modern, not deprecated)
-- **Job feeds** — Remotive, Arbeitnow, Himalayas (free, no key) + **JSearch** (RapidAPI, optional key) for **UAE / Gulf / global on-site jobs** via Google for Jobs (Bayt, Indeed, LinkedIn, GulfTalent…)
-- **Hybrid matching** — title words × skills overlap × seniority × location × recency
-- **SQLite** — local user profiles + saved jobs with status tracking
+---
 
-## Quick start (local)
+## ✨ Features
+
+- **Flexible onboarding** — sign in with LinkedIn, search by name as a guest, or start from your CV.
+- **"Understand" agent** — extracts skills from your public GitHub (free) and the web (optional), builds a profile with per-field source tags.
+- **CV parsing** — upload a CV to fill the gaps (education, phone, extra skills).
+- **Live job matching** — aggregates free feeds (Remotive, Arbeitnow, Himalayas) plus optional UAE coverage (Bayt/Indeed/LinkedIn/GulfTalent via JSearch); ranks with a transparent, rules-based engine.
+- **Discovery** — filters & sort, in-app job detail view, dismiss "not interested".
+- **Tracking** — save jobs, move them through an application funnel (Saved → Applied → Interviewing → Offer → Rejected), see your interview rate.
+- **Cover letters** — generate a tailored draft per job (templated free; Claude-written when a key is set).
+- **Profile health** — a presence score, "how you look", and suggestions to stand out.
+- **Privacy** — export your data (CSV/JSON) or delete it entirely. Public info only.
+- **Installable PWA** — add to home screen on your phone; Ocean theme, responsive on mobile and web.
+
+A static, mock-data **preview of the whole flow** lives in [`demo/`](demo/) — open `demo/index.html` in a browser, no backend needed.
+
+---
+
+## 🚀 Quick start (local)
+
+Requires **Node ≥ 18**.
 
 ```bash
-git clone https://github.com/your-user/job-search.git
-cd job-search
-cp .env.example .env   # fill in LinkedIn credentials (see below)
+git clone <your-repo-url> jobscout
+cd jobscout
+cp .env.example .env      # optional: add keys (see Configuration)
 npm install
-npm run dev            # starts on http://localhost:3000
+npm run dev               # http://localhost:3000
 ```
 
-Open http://localhost:3000 in your browser.
+The app works immediately with no keys (GitHub-based skill extraction + templated assessment + rules-based matching + free job feeds).
 
-## LinkedIn app setup (required for login)
+## ☁️ Deploy (Railway free tier → installable on your phone)
 
-1. Go to [developer.linkedin.com](https://developer.linkedin.com/apps) → **Create app**
-2. Products → request **Sign In with LinkedIn using OpenID Connect**
-3. Auth tab → Authorized redirect URLs → add:
-   - `http://localhost:3000/auth/callback` (local)
-   - `https://your-app.up.railway.app/auth/callback` (production)
-4. Copy **Client ID** and **Client Secret** into your `.env`
+1. Push this repo to GitHub.
+2. [railway.app](https://railway.app) → New Project → Deploy from GitHub repo.
+3. Set the env vars you want (at minimum `SESSION_SECRET`; add LinkedIn for sign-in).
+4. Open the Railway URL on your phone → **Add to Home Screen**.
 
-## Deploy to Railway (free tier, installable on phone)
+---
 
-1. Push this repo to GitHub
-2. Go to [railway.app](https://railway.app) → New project → Deploy from GitHub repo
-3. Add these environment variables in Railway:
-   ```
-   LINKEDIN_CLIENT_ID=...
-   LINKEDIN_CLIENT_SECRET=...
-   REDIRECT_URI=https://your-app.up.railway.app/auth/callback
-   SESSION_SECRET=<random 32-char string>
-   NODE_ENV=production
-   ```
-4. Railway auto-deploys on every push. Your URL will be `https://your-app.up.railway.app`
-5. Open that URL on your phone → browser menu → **Add to Home Screen** → installed!
+## ⚙️ Configuration
 
-## Profile data model
+All optional — the app degrades gracefully without each.
 
-```js
-{
-  id:        "linkedin_sub_id",
-  name:      "Jane Doe",
-  email:     "jane@example.com",
-  photo:     "https://media.licdn.com/...",
-  headline:  "Senior Frontend Developer",
-  skills:    ["React", "TypeScript", "Node.js"],
-  prefs: {
-    roles:     ["Frontend Developer", "React Developer"],
-    locations: ["Remote", "London"],
-    level:     "senior",
-    remote:    true
-  },
-  lastVisit: "2025-06-19T10:00:00Z"   // used for 'new since last visit' badges
-}
+| Variable | Unlocks | Get it |
+|---|---|---|
+| `SESSION_SECRET` | Secure signed sessions (set in prod) | `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"` |
+| `LINKEDIN_CLIENT_ID` / `LINKEDIN_CLIENT_SECRET` / `REDIRECT_URI` | "Sign in with LinkedIn" (OpenID Connect) | [developer.linkedin.com](https://developer.linkedin.com/apps) |
+| `RAPIDAPI_KEY` | UAE/Gulf on-site jobs via JSearch (Google for Jobs) | [JSearch on RapidAPI](https://rapidapi.com/letscrape-6bRBa3QguO5/api/jsearch) (free tier) |
+| `GITHUB_TOKEN` | Higher GitHub API limits for skill extraction | A read-only Personal Access Token |
+| `BRAVE_API_KEY` | Web-reference search in the profile assessment | [Brave Search API](https://brave.com/search/api/) (free tier) |
+| `ANTHROPIC_API_KEY` | Claude-written cover letters (and future AI features) | [console.anthropic.com](https://console.anthropic.com) |
+| `ANTHROPIC_MODEL` | Model override (default `claude-opus-4-8`; `claude-haiku-4-5` for lowest cost) | — |
+
+See [`.env.example`](.env.example).
+
+---
+
+## 🏗️ Architecture
+
+```
+Browser PWA  ←→  Express (Node)  ←→  LinkedIn OIDC
+                      ↕                    ↕
+                   SQLite          Job feeds + GitHub + (optional) Brave / JSearch / Claude
 ```
 
-## Matching algorithm (`src/jobs.js → score()`)
+- **Backend** — `server.js` (Express, Helmet, rate limiting, sessions), `src/` (`auth`, `store`, `jobs`, `profile`, `ai`).
+- **Frontend** — vanilla JS PWA in `public/` (no framework), Ocean theme, service worker.
+- **Data** — `better-sqlite3`, file-based, zero-config.
 
-| Signal | Points |
-|---|---|
-| Role word in job **title** | 22 per word |
-| Role word in job **tags** | 10 per word |
-| Role word in job **description** | 5 per word |
-| Skill in title | 12 per skill |
-| Skill in tags | 8 per skill |
-| Skill in description | 4 per skill |
-| Seniority match | 8 |
-| Location match / remote | +4 bonus |
-| Location miss | −4 penalty |
-| Posted ≤ 7 days | +6 |
-| Posted ≤ 30 days | +2 |
-| Remote (when pref is remote-only) | +6 |
+## 🔐 Security
 
-Raw score is normalized to 0–100, then bonuses/penalties are applied and clamped.
+Security is a first-class requirement — see [SECURITY.md](SECURITY.md). Highlights: secrets only in env (never client-side), strict CSP + Helmet headers, rate limiting, parameterized SQL, output escaping, OAuth `state`/CSRF, and a QA practice log ([QA.md](QA.md)).
 
-## Adding more job sources
+## 📋 Project docs
 
-Add a `fetchXxx()` function in `src/jobs.js` following the same interface, then include it in `fetchAll()`. Sources that don't have CORS headers need to be called from the server (which we already do — all fetching is backend-side).
+- [FEATURES.md](FEATURES.md) — living reference of features & user flows
+- [ROADMAP.md](ROADMAP.md) — phased plan
+- [CAPABILITIES.md](CAPABILITIES.md) — what's free vs paid, and recommended approach
 
-## Roadmap ideas
+---
 
-- Cover letter draft (Claude API — add `ANTHROPIC_API_KEY` + `/api/cover-letter` endpoint)
-- Email / push notifications for new matches (cron job via Railway + web push)
-- Resume PDF upload → parse skills automatically
-- More job sources (Adzuna, The Muse, HN Who's Hiring via Algolia)
+## 🤝 Contributing
+
+Issues and PRs welcome. Please keep changes aligned with `SECURITY.md` and update `FEATURES.md` when behavior changes.
+
+## 📄 License
+
+Licensed under the **Apache License 2.0** — see [LICENSE](LICENSE).
