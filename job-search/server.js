@@ -93,9 +93,11 @@ app.patch('/api/me', requireAuth, (req, res) => {
 app.get('/api/jobs', requireAuth, async (req, res) => {
   const user  = store.getUser(req.session.userId);
   const query = req.query.q?.trim() || user.prefs?.roles?.[0] || user.skills?.[0] || '';
+  // Location for geo-aware sources (JSearch): query param > first preferred location
+  const location = req.query.loc?.trim() || user.prefs?.locations?.[0] || '';
 
   try {
-    const raw       = await jobs.fetchAll(query);
+    const raw       = await jobs.fetchAll(query, location);
     const lastVisit = user.lastVisit ? new Date(user.lastVisit) : null;
 
     const scored = raw

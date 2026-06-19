@@ -6,6 +6,13 @@ We tackle these **one at a time**, top to bottom. Each is sized: 🟢 quick (~1 
 
 ---
 
+## 🇦🇪 Current priority — UAE job search
+User is searching for jobs **in the UAE**. Free remote/EU feeds barely cover the Gulf.
+
+- ✅ 🟡 **JSearch (RapidAPI) source** — UAE/Gulf on-site jobs via Google for Jobs (Bayt, Indeed, LinkedIn, GulfTalent). Built into backend (`src/jobs.js`), gated on `RAPIDAPI_KEY`, location-aware.
+- ⬜ 🟡 **Deploy full version + set location = UAE** — needed to actually use JSearch (requires Railway + RapidAPI key)
+- ⬜ 🟢 **Default location presets** — Dubai / Abu Dhabi / Sharjah / UAE quick-pick in profile
+
 ## Phase 1 — Quick wins (simple version, no backend)
 High impact, low effort. Improves the version you're already using on your phone.
 
