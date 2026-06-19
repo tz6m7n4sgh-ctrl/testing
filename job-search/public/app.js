@@ -520,10 +520,38 @@ async function toggleSave(job, btn) {
   } catch (e) { console.error(e); }
 }
 const STATUS = { saved: 'Saved', applied: 'Applied', interviewing: 'Interviewing', offer: 'Offer!', rejected: 'Rejected' };
+function savedStats() {
+  const by = {};
+  savedCache.forEach(j => { const s = j.savedStatus || 'saved'; by[s] = (by[s] || 0) + 1; });
+  const total = savedCache.length;
+  const applied = (by.applied || 0) + (by.interviewing || 0) + (by.offer || 0) + (by.rejected || 0);
+  const interviewing = (by.interviewing || 0) + (by.offer || 0);
+  const offers = by.offer || 0;
+  const interviewRate = applied ? Math.round(100 * interviewing / applied) : 0;
+  return { total, applied, interviewing, offers, interviewRate };
+}
+
+function analyticsHTML() {
+  const s = savedStats();
+  const stage = (v, l, c) => `<div class="stat ${c}"><div class="v">${v}</div><div class="l">${l}</div></div>`;
+  return `
+    <div class="acard" style="margin:0 12px 12px">
+      <h3 style="font-size:14px;font-weight:850;margin-bottom:10px">📊 Your application funnel</h3>
+      <div class="stat-row" style="padding:0;margin:0;display:grid;grid-template-columns:repeat(4,1fr);gap:8px">
+        ${stage(s.total, 'Saved', 'brand')}
+        ${stage(s.applied, 'Applied', 'brand')}
+        ${stage(s.interviewing, 'Interviewing', 'warn')}
+        ${stage(s.offers, 'Offers', 'accent')}
+      </div>
+      <div class="funnel-rate">Interview rate: <b>${s.interviewRate}%</b> of applications</div>
+    </div>`;
+}
+
 function renderSaved() {
   $('#savedCount').textContent = savedCache.length ? savedCache.length + ' jobs' : '';
   const box = $('#savedList'); box.innerHTML = '';
   if (!savedCache.length) { box.innerHTML = '<div class="empty" style="padding:40px;text-align:center;color:var(--muted)">★<br/>No saved jobs yet. Tap ☆ on any match.</div>'; return; }
+  box.insertAdjacentHTML('beforeend', analyticsHTML());
   savedCache.forEach(j => {
     const el = document.createElement('div'); el.className = 'job';
     el.innerHTML = `
