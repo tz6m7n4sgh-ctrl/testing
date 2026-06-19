@@ -23,6 +23,7 @@ let _skills = [];              // working skills (editable)
 let edu = [], phone = '';      // from CV
 let jobsCache = [], savedCache = [];
 const state = { understood: false, extracted: false, cvParsed: false, searched: false };
+const filters = { sort: 'match', remote: false, fresh: false, salary: false };
 
 /* ── API helper ── */
 async function api(path, method = 'GET', body) {
@@ -438,11 +439,36 @@ function renderInsights() {
       <div class="sp"><div class="v" style="color:var(--brand-d)">${onsite}</div><div class="l">On-site</div></div></div></div>`;
 }
 
+function salaryMax(j) { const m = (j.salary || '').match(/[\d,]+/g); return m ? Math.max(...m.map(x => +x.replace(/,/g, ''))) : 0; }
+function isFresh(j) { return j.posted && (Date.now() - new Date(j.posted)) / 864e5 <= 7; }
+
+function visibleJobs() {
+  let list = jobsCache.filter(j =>
+    (!filters.remote || j.remote) &&
+    (!filters.fresh || isFresh(j)) &&
+    (!filters.salary || salaryMax(j) > 0)
+  );
+  const by = {
+    match:  (a, b) => b.score - a.score,
+    newest: (a, b) => new Date(b.posted || 0) - new Date(a.posted || 0),
+    salary: (a, b) => salaryMax(b) - salaryMax(a)
+  }[filters.sort];
+  return list.sort(by);
+}
+
 function renderJobList() {
-  $('#jobsCount').textContent = jobsCache.length + ' jobs';
+  const list = visibleJobs();
+  $('#jobsCount').textContent = `${list.length}${list.length !== jobsCache.length ? ' of ' + jobsCache.length : ''} jobs`;
   const box = $('#jobList'); box.innerHTML = '';
   if (!jobsCache.length) { box.innerHTML = '<div class="empty" style="padding:40px;text-align:center;color:var(--muted)">No matches found.</div>'; return; }
-  jobsCache.forEach(j => box.appendChild(jobCard(j)));
+  if (!list.length) { box.innerHTML = '<div class="empty" style="padding:40px;text-align:center;color:var(--muted)">No jobs match these filters.</div>'; return; }
+  list.forEach(j => box.appendChild(jobCard(j)));
+}
+
+function bindFilters() {
+  $('#fSort').onchange = e => { filters.sort = e.target.value; renderJobList(); };
+  const toggle = (id, key) => $(id).onclick = () => { filters[key] = !filters[key]; $(id).classList.toggle('on', filters[key]); renderJobList(); };
+  toggle('#fRemote', 'remote'); toggle('#fFresh', 'fresh'); toggle('#fSalary', 'salary');
 }
 
 /* ── Saved ── */
@@ -489,6 +515,7 @@ function bindNav() {
   $('#qaSearch').onclick = () => goTab('jobs');
   $('#qaSaved').onclick = () => goTab('saved');
   $('#qaProfile').onclick = () => { state.understood ? showProfile() : showView('v-login'); };
+  bindFilters();
 }
 
 /* ── PWA ── */
