@@ -63,6 +63,26 @@ function wireStatic() {
   $('#logoutBtn').onclick = async () => { await fetch('/auth/logout', { method: 'POST' }); location.href = '/'; };
   $('#modalBackdrop').onclick = closeModal;
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+  $('#cvFirstBtn').onclick = cvFirstStart;
+}
+
+/* ── CV-first onboarding: build the whole profile from an uploaded CV ── */
+async function cvFirstStart() {
+  if (!me) me = await api('/api/session/guest', 'POST').catch(() => null);
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = '.txt,.pdf,.doc,.docx';
+  input.onchange = () => { const f = input.files[0]; if (!f) return; const r = new FileReader(); r.onload = () => cvFirstParse(String(r.result || '')); r.readAsText(f); };
+  input.click();
+}
+async function cvFirstParse(text) {
+  understood = { sources: [], skills: [], headline: '', location: '', experience: [],
+    assessment: { presence: 0, summary: 'Built from your CV. Run a web search later to boost your profile health.', suggestions: ['Add your name search to find your public footprint'] } };
+  const res = await runAgent('Reading your CV…', 'Building your profile from your CV',
+    ['Parsing your CV', 'Extracting skills & education', 'Setting up your profile'],
+    () => api('/api/cv', 'POST', { text }));
+  if (res) { if (res.phone) phone = res.phone; if (res.education?.length) edu = res.education; _skills = [...new Set([...(res.skills || [])])]; }
+  state.understood = true; state.extracted = true; state.cvParsed = true;
+  showProfile();
 }
 
 /* ── Guest ── */
