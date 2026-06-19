@@ -1,6 +1,7 @@
 'use strict';
 /* JobScout — static PREVIEW (mock data, no backend). Demonstrates the full flow:
-   login → onboarding → agent search → dashboard. CSP-strict: no inline handlers. */
+   login → quick setup → one parallel agent run → dashboard (with profile-health
+   card → full assessment). CSP-strict: no inline handlers. */
 
 const $  = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -8,10 +9,13 @@ const esc = s => { const d = document.createElement('div'); d.textContent = s ??
 
 /* ── Profile (seeded; editable in onboarding) ── */
 const profile = {
+  linkedin: true,
   name: 'Ahmed Al Mansoori', email: 'ahmed@example.com',
   role: 'Frontend Developer', location: 'Dubai', remote: true,
-  skills: ['React', 'TypeScript', 'JavaScript'], level: 'mid'
+  // Skills are auto-identified in Stage 1 (mock: from GitHub + LinkedIn). User can add more.
+  skills: ['React', 'TypeScript', 'JavaScript', 'Node.js', 'CSS', 'Git'], level: 'mid'
 };
+const state = { searched: false };
 
 const ROLE_CHIPS = ['Frontend Developer','Backend Engineer','Full Stack','Data Analyst','Product Manager','UX Designer','DevOps','Accountant'];
 const LOC_CHIPS  = ['Dubai','Abu Dhabi','Sharjah','United Arab Emirates','Remote'];
@@ -45,38 +49,47 @@ function showView(id) {
 
 function initials(name) { return (name || '?').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase(); }
 
-$('#loginBtn').onclick = () => { showView('v-onboarding'); setupOnboarding(); };
+/* LinkedIn path → Stage 1: understand profile → assessment (skills auto-built). */
+$('#loginBtn').onclick = () => { profile.linkedin = true; runUnderstandAgent(); };
+/* Guest path: no LinkedIn → manual quick setup (must type skills), then search. */
+$('#skipBtn').onclick = () => {
+  profile.linkedin = false; profile.name = 'Guest'; profile.email = '';
+  profile.skills = [];
+  showSetup();
+};
 
-/* ── Onboarding ── */
+/* Stage 1: agent understands the profile and identifies skills, then assessment. */
+function runUnderstandAgent() {
+  runAgentScreen('Understanding your profile…', 'Reading what the web publicly shows about you',
+    [`Reading your LinkedIn basics`, `Searching "${profile.name}" on the web`,
+     'Scanning GitHub & social', 'Identifying your skills', 'Assessing your profile health'],
+    showAssessment);
+}
+
+/* ── Quick setup (single screen) ── */
 let _skills = [];
-function setupOnboarding() {
-  $('#onbInitials').textContent = initials(profile.name);
-  $('#onbName').textContent     = profile.name.split(' ')[0];
-  $('#onbCName').textContent    = profile.name;
-  $('#onbCEmail').textContent   = profile.email;
+function showSetup() {
+  showView('v-setup');
+  $('#setInitials').textContent = initials(profile.name);
+  $('#setHi').textContent = profile.linkedin
+    ? `Let's find your jobs, ${profile.name.split(' ')[0]}`
+    : "Let's find your UAE jobs";
+  $('#setSkillNote').textContent = profile.linkedin
+    ? '— detected from your profile, edit if needed'
+    : '— add a few to power matching';
 
-  let step = 1;
-  const go = n => {
-    step = n;
-    $$('#v-onboarding .onb-step').forEach(s => s.classList.toggle('active', +s.dataset.step === n));
-    $$('#v-onboarding .onb-dot').forEach((d, i) => d.classList.toggle('active', i < n));
-  };
-  $$('#v-onboarding [data-next]').forEach(b => b.onclick = () => go(Math.min(3, step + 1)));
-  $$('#v-onboarding [data-back]').forEach(b => b.onclick = () => go(Math.max(1, step - 1)));
-
-  chips('#onbRoleChips', ROLE_CHIPS, '#onbRole');
-  chips('#onbLocChips',  LOC_CHIPS,  '#onbLoc');
+  chips('#setRoleChips', ROLE_CHIPS, '#setRole');
+  chips('#setLocChips',  LOC_CHIPS,  '#setLoc');
 
   _skills = [...profile.skills];
-  skillInput();
+  skillInput('#setSkill', '#setSkillTags', '#setSkillSuggest');
 
-  $('#onbFinish').onclick = () => {
-    profile.role     = $('#onbRole').value.trim() || profile.role;
-    profile.location = $('#onbLoc').value.trim() || profile.location;
-    profile.remote   = $('#onbRemote').checked;
+  $('#setGo').onclick = () => {
+    profile.role     = $('#setRole').value.trim() || profile.role;
+    profile.location = $('#setLoc').value.trim() || profile.location;
+    profile.remote   = $('#setRemote').checked;
     profile.skills   = _skills;
-    profile.level    = $('#onbLevel').value;
-    runAgent();
+    runSearchAgent();
   };
 }
 
@@ -92,8 +105,8 @@ function chips(boxSel, list, inputSel) {
   });
 }
 
-function skillInput() {
-  const input = $('#onbSkill'), tags = $('#onbSkillTags');
+function skillInput(inputSel, tagsSel, sugSel) {
+  const input = $(inputSel), tags = $(tagsSel);
   const renderTags = () => {
     tags.innerHTML = '';
     _skills.forEach((s, i) => {
@@ -105,7 +118,7 @@ function skillInput() {
     });
   };
   const renderSug = () => {
-    const box = $('#onbSkillSuggest'); box.innerHTML = '';
+    const box = $(sugSel); box.innerHTML = '';
     SKILL_SUGGESTIONS.filter(s => !_skills.some(x => x.toLowerCase() === s.toLowerCase()))
       .slice(0, 8).forEach(s => {
         const el = document.createElement('span');
@@ -125,13 +138,11 @@ function skillInput() {
   renderTags(); renderSug();
 }
 
-/* ── Agent search ── */
-function runAgent() {
+/* ── Generic agent screen (reused for assessment + job search) ── */
+function runAgentScreen(title, sub, tasks, onDone) {
   showView('v-agent');
-  const tasks = [
-    'Searching Bayt', 'Searching Indeed', 'Searching LinkedIn',
-    'Searching GulfTalent', `Matching ${JOBS.length} jobs to your profile`
-  ];
+  $('#agentTitle').textContent = title;
+  $('#agentSub').textContent = sub;
   const box = $('#agentTasks'); box.innerHTML = '';
   const els = tasks.map(t => {
     const el = document.createElement('div');
@@ -143,9 +154,146 @@ function runAgent() {
   let i = 0;
   const tick = () => {
     if (i < els.length) { els[i].classList.add('done'); i++; setTimeout(tick, 460); }
-    else { $('#agentTitle').textContent = 'Done!'; $('#agentSub').textContent = 'Building your dashboard…'; setTimeout(showDashboard, 600); }
+    else { $('#agentTitle').textContent = 'Done!'; $('#agentSub').textContent = 'One moment…'; setTimeout(onDone, 600); }
   };
   setTimeout(tick, 400);
+}
+
+/* Stage 2: search jobs with the built profile, then dashboard. */
+function runSearchAgent() {
+  runAgentScreen('Searching the UAE job market…', 'Matching live listings to your profile',
+    ['Searching Bayt, Indeed, LinkedIn & GulfTalent', `Matching ${JOBS.length} UAE jobs to your skills`],
+    () => { state.searched = true; showDashboard(); });
+}
+
+/* ── Profile assessment (mock public-presence analysis) ── */
+const ASSESS = {
+  presence: 78,
+  sentiment: { pos: 82, neu: 15, neg: 3 },
+  summary: 'Your professional presence is strong and consistent across platforms. You come across as an experienced frontend developer who is active in the Dubai tech community. Your name and photo are consistent everywhere, which builds trust with recruiters.',
+  footprint: [
+    { ic: '💼', name: 'LinkedIn', desc: 'Complete profile · 850+ connections', tag: 'pos' },
+    { ic: '🐙', name: 'GitHub', desc: '24 public repos · active contributor', tag: 'pos' },
+    { ic: '✍️', name: 'Medium', desc: '2 articles on React performance', tag: 'pos' },
+    { ic: '🎤', name: 'GITEX Tech', desc: 'Listed as a speaker (2024)', tag: 'pos' },
+    { ic: '🐦', name: 'X / Twitter', desc: 'Occasional posts · low activity', tag: 'neu' }
+  ],
+  photo: { score: '9/10', note: 'Professional headshot detected — clear, good lighting, professional attire. Great first impression.' },
+  strengths: ['Consistent name across platforms', 'Active open-source presence', 'Thought leadership (articles)', 'Professional photo'],
+  suggestions: ['Add a profile summary & pinned repos on GitHub', 'Post more regularly on LinkedIn', 'Add your GITEX talk to LinkedIn featured']
+};
+
+function ringGrad(s) {
+  const color = s >= 70 ? '#00c78b' : s >= 50 ? '#2355f5' : '#f5a623';
+  return `conic-gradient(${color} ${s * 3.6}deg, var(--soft) 0deg)`;
+}
+
+function showAssessment() {
+  showView('v-assess');
+  $('#asInitials').textContent = initials(profile.name);
+  $('#asName').textContent = profile.name;
+  $('#asMail').textContent = profile.email;
+
+  const s = ASSESS;
+  $('#assessBody').innerHTML = `
+    <div class="score-row">
+      <div class="score-card">
+        <div class="big-ring" style="background:${ringGrad(s.presence)}">
+          <div class="big-ring" style="width:64px;height:64px;background:var(--card)">
+            <span class="rv">${s.presence}</span>
+          </div>
+        </div>
+        <div class="cl">Profile health</div>
+      </div>
+      <div class="score-card">
+        <div style="font-size:25px;font-weight:900;color:var(--accent-d);margin:8px 0 6px">${s.sentiment.pos}%</div>
+        <div class="sent-bar">
+          <i style="width:${s.sentiment.pos}%;background:var(--accent)"></i>
+          <i style="width:${s.sentiment.neu}%;background:var(--warn)"></i>
+          <i style="width:${s.sentiment.neg}%;background:var(--bad)"></i>
+        </div>
+        <div class="cl">Positive mentions</div>
+      </div>
+    </div>
+
+    <div class="acard" style="display:flex;align-items:center;gap:12px">
+      <span style="font-size:22px">🔗</span>
+      <div style="flex:1"><div class="fp-name">Is this you?</div><div class="fp-desc">Findings matched to ${esc(profile.name)}. Tell us if any aren't you.</div></div>
+      <span class="fp-tag pos">Confirmed</span>
+    </div>
+
+    <div class="acard">
+      <h3>🪞 How you look</h3>
+      <p class="summary-txt">${esc(s.summary)}</p>
+    </div>
+
+    <div class="acard">
+      <h3>⚡ Skills we identified</h3>
+      <p class="fp-desc" style="margin-bottom:10px">Built automatically from your profile — add any we missed.</p>
+      <div class="onb-chips" id="asSkillTags"></div>
+      <input type="text" id="asSkill" class="onb-input" placeholder="+ Add a skill, press Enter" autocomplete="off" style="margin-top:10px"/>
+      <div class="onb-chips" id="asSkillSuggest"></div>
+    </div>
+
+    <div class="acard">
+      <h3>🎯 Your job target</h3>
+      <label class="onb-label">Role</label>
+      <input type="text" id="asRole" class="onb-input" value="${esc(profile.role)}" autocomplete="off"/>
+      <label class="onb-label">Location in the UAE</label>
+      <input type="text" id="asLoc" class="onb-input" value="${esc(profile.location)}" autocomplete="off"/>
+    </div>
+
+    <div class="acard">
+      <h3>🌐 Public footprint</h3>
+      ${s.footprint.map(f => `
+        <div class="fp-item">
+          <span class="fp-ic">${f.ic}</span>
+          <div class="fp-main"><div class="fp-name">${esc(f.name)}</div><div class="fp-desc">${esc(f.desc)}</div></div>
+          <span class="fp-tag ${f.tag}">${f.tag === 'pos' ? 'Positive' : 'Neutral'}</span>
+        </div>`).join('')}
+    </div>
+
+    <div class="acard">
+      <h3>📸 Profile photo</h3>
+      <div class="photo-row">
+        <div class="photo-thumb">${esc(initials(profile.name))}</div>
+        <div class="photo-meta">
+          <div class="photo-score">Score: ${esc(s.photo.score)}</div>
+          <div class="fp-desc" style="margin-top:3px">${esc(s.photo.note)}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="acard">
+      <h3>✅ Strengths</h3>
+      <div class="tagwrap">${s.strengths.map(t => `<span class="gtag">${esc(t)}</span>`).join('')}</div>
+    </div>
+
+    <div class="acard">
+      <h3>💡 Suggestions to stand out</h3>
+      ${s.suggestions.map(t => `<div class="sg-item"><span class="sgi">→</span><span>${esc(t)}</span></div>`).join('')}
+    </div>`;
+
+  // Auto-built skills (editable) + suggestions
+  _skills = [...profile.skills];
+  skillInput('#asSkill', '#asSkillTags', '#asSkillSuggest');
+
+  // Stage-dependent header / nav / CTA
+  $('#assessHeading').textContent = state.searched ? 'Profile health & visibility' : 'We understood your profile';
+  $('#assessSubhead').textContent = state.searched
+    ? 'How your professional presence looks online · public info only'
+    : 'Here’s how you look and the skills we identified · public info only';
+  $('#assessBack').classList.toggle('hide', !state.searched);
+  $('#assessCta').classList.toggle('hide', state.searched);
+
+  $('#assessBack').onclick = () => { saveAssessEdits(); showDashboard(); };
+  $('#assessFind').onclick = () => { saveAssessEdits(); runSearchAgent(); };
+}
+
+function saveAssessEdits() {
+  profile.skills   = _skills;
+  profile.role     = $('#asRole')?.value.trim() || profile.role;
+  profile.location = $('#asLoc')?.value.trim() || profile.location;
 }
 
 /* ── Matching (mirrors backend score()) ── */
@@ -196,9 +344,38 @@ function showDashboard() {
   $('#dashSub').textContent = `${scored.length} ${profile.role} jobs in ${profile.location}`;
 
   renderStats();
+  renderProfileHealth();
   renderTop();
   renderInsights();
   bindNav();
+}
+
+function renderProfileHealth() {
+  const box = $('#profileHealth');
+  if (profile.linkedin) {
+    const s = ASSESS.presence;
+    box.innerHTML = `
+      <div class="ph-card" id="phCard">
+        <div class="ph-ring" style="background:${ringGrad(s)}"><div class="inner">${s}</div></div>
+        <div class="ph-main">
+          <div class="ph-title">Profile health: ${s}/100</div>
+          <div class="ph-desc">${ASSESS.suggestions.length} ways to stand out to recruiters →</div>
+        </div>
+        <span class="ph-arrow">›</span>
+      </div>`;
+    $('#phCard').onclick = showAssessment;
+  } else {
+    box.innerHTML = `
+      <div class="ph-card" id="phCard">
+        <div class="ph-ring" style="background:var(--soft)"><div class="inner">🔒</div></div>
+        <div class="ph-main">
+          <div class="ph-title">Profile health check</div>
+          <div class="ph-desc">Sign in with LinkedIn to see how recruiters find you →</div>
+        </div>
+        <span class="ph-arrow">›</span>
+      </div>`;
+    $('#phCard').onclick = () => showView('v-login');
+  }
 }
 
 function renderStats() {
@@ -327,5 +504,5 @@ function bindNav() {
   $('#viewAllBtn').onclick = () => goTab('jobs');
   $('#qaSearch').onclick = () => goTab('jobs');
   $('#qaSaved').onclick  = () => goTab('jobs');
-  $('#qaProfile').onclick = () => { showView('v-onboarding'); setupOnboarding(); };
+  $('#qaProfile').onclick = () => { profile.linkedin ? showAssessment() : showSetup(); };
 }
