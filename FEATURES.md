@@ -85,8 +85,9 @@
 - ✅ Job feeds: Remotive, Arbeitnow, Himalayas, JSearch (UAE, key-gated)
 - ✅ Rules-based matching, saved jobs + status API
 - ✅ Onboarding wizard, security hardening, Dependabot
-- 🟡 Stage-1 "understand profile" endpoint (web search + GitHub + Claude)
-- 🟡 CV parsing endpoint, cover-letter endpoint
-- 🟡 Wire the demo's two-stage flow into the real frontend
+- 🔵 Stage-1 `POST /api/understand` — GitHub skill extraction (free) + templated assessment; web search (Brave) & Claude summary upgrade with keys
+- 🔵 CV parsing `POST /api/cv` — free regex extraction (phone/email/education/skills); Claude upgrade with key
+- 🟡 Wire the demo's two-stage flow into the real frontend (`public/`) — next chunk
+- 🟡 Cover-letter endpoint
 
 > See also: `job-search/ROADMAP.md` (phased plan) · `job-search/CAPABILITIES.md` (free vs paid).
