@@ -24,6 +24,9 @@ let edu = [], phone = '';      // from CV
 let jobsCache = [], savedCache = [];
 const state = { understood: false, extracted: false, cvParsed: false, searched: false };
 const filters = { sort: 'match', remote: false, fresh: false, salary: false };
+const dismissed = new Set((() => { try { return JSON.parse(localStorage.getItem('js.dismissed') || '[]'); } catch { return []; } })());
+function dismissJob(id) { dismissed.add(id); localStorage.setItem('js.dismissed', JSON.stringify([...dismissed])); }
+const notDismissed = list => list.filter(j => !dismissed.has(j.id));
 
 /* ── API helper ── */
 async function api(path, method = 'GET', body) {
@@ -467,17 +470,20 @@ function openJobDetail(j) {
     <div class="md-actions">
       <a class="j-apply" href="${esc(safeUrl(j.url))}" target="_blank" rel="noopener" style="flex:1">Apply / view posting →</a>
       <button class="j-save ${isSaved ? 'saved' : ''}" id="mdSave">${isSaved ? '★' : '☆'}</button>
-    </div>`;
+    </div>
+    <button class="md-dismiss" id="mdDismiss">🚫 Not interested — hide this job</button>`;
   $('#mdClose').onclick = closeModal;
   $('#mdSave').onclick = e => { toggleSave(j, e.currentTarget); };
+  $('#mdDismiss').onclick = () => { dismissJob(j.id); closeModal(); renderTop(); renderJobList(); };
   $('#jobModal').classList.remove('hide');
 }
 function closeModal() { $('#jobModal').classList.add('hide'); }
 
 function renderTop() {
   const box = $('#topMatches'); box.innerHTML = '';
-  if (!jobsCache.length) { box.innerHTML = '<div class="pending-note">No matches yet — try a broader role on the Profile page.</div>'; return; }
-  jobsCache.slice(0, 3).forEach(j => box.appendChild(jobCard(j)));
+  const list = notDismissed(jobsCache);
+  if (!list.length) { box.innerHTML = '<div class="pending-note">No matches yet — try a broader role on the Profile page.</div>'; return; }
+  list.slice(0, 3).forEach(j => box.appendChild(jobCard(j)));
 }
 
 function renderInsights() {
@@ -501,7 +507,7 @@ function salaryMax(j) { const m = (j.salary || '').match(/[\d,]+/g); return m ? 
 function isFresh(j) { return j.posted && (Date.now() - new Date(j.posted)) / 864e5 <= 7; }
 
 function visibleJobs() {
-  let list = jobsCache.filter(j =>
+  let list = notDismissed(jobsCache).filter(j =>
     (!filters.remote || j.remote) &&
     (!filters.fresh || isFresh(j)) &&
     (!filters.salary || salaryMax(j) > 0)
