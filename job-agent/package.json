@@ -1,0 +1,21 @@
+{
+  "name": "job-agent",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Multi-user job search agent: LinkedIn login, resume-enriched profiles, live job matching, installable PWA.",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=18.17"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "multer": "^2.2.0"
+  },
+  "optionalDependencies": {
+    "pdf-parse": "^1.1.1"
+  }
+}
