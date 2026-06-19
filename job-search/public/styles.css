@@ -353,3 +353,7 @@ h1,h2,h3{margin:0;line-height:1.2}
 .md-sec-t{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:16px 0 8px}
 .md-desc{font-size:14px;line-height:1.6;color:#2a3850;white-space:pre-wrap;word-break:break-word}
 .md-actions{display:flex;gap:9px;margin-top:18px;position:sticky;bottom:0;background:var(--card);padding-top:10px}
+
+/* application funnel */
+.funnel-rate{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);font-weight:700;text-align:center}
+.funnel-rate b{color:var(--accent-d);font-size:15px}
