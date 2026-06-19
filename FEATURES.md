@@ -77,7 +77,7 @@
 2. ✅ **Job detail view** (full description, tags, match breakdown — bottom-sheet modal)
 3. ✅ **Application analytics** (funnel + interview-rate on Saved tab)
 4. ✅ **CV-first onboarding** (build profile from an uploaded CV)
-5. 🔴 **Cover-letter generator** (tailored per job — needs AI key; deferred)
+5. ✅ **Cover-letter generator** — free templated draft now; auto-upgrades to Claude when `ANTHROPIC_API_KEY` is set (`POST /api/cover-letter`, in job detail modal: copy/download/regenerate)
 6. ✅ **Dismiss "not interested"** (localStorage; excluded everywhere)
 7. ✅ **Refresh my profile** (re-run web/GitHub scan; merges skills)
 8. 🔴 **Skill-gap analysis** / **Tailor my CV** / **Interview prep** (AI; deferred)

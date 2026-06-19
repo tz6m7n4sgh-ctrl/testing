@@ -15,5 +15,8 @@
     "express-rate-limit": "^7.1.5",
     "express-session": "^1.17.3",
     "helmet": "^7.1.0"
+  },
+  "optionalDependencies": {
+    "@anthropic-ai/sdk": "^0.40.0"
   }
 }

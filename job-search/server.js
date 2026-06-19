@@ -8,6 +8,7 @@ import * as auth from './src/auth.js';
 import * as store from './src/store.js';
 import * as jobs from './src/jobs.js';
 import * as profileSvc from './src/profile.js';
+import * as ai from './src/ai.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 3000;
@@ -179,6 +180,30 @@ app.post('/api/cv', (req, res) => {
 app.delete('/api/me', requireAuth, (req, res) => {
   store.deleteUser(req.session.userId);
   req.session.destroy(() => res.json({ ok: true }));
+});
+
+// ── Cover letter (free template; upgrades to Claude when ANTHROPIC_API_KEY set) ──
+app.post('/api/cover-letter', requireAuth, async (req, res) => {
+  const user = store.getUser(req.session.userId);
+  const job = req.body?.job || {};
+  if (!job.title || !job.company) return res.status(400).json({ error: 'job_required' });
+  try {
+    const result = await ai.coverLetter({
+      name: user?.name || '',
+      role: user?.prefs?.roles?.[0] || job.title,
+      headline: user?.headline || '',
+      location: user?.prefs?.locations?.[0] || '',
+      skills: user?.skills || [],
+      company: String(job.company).slice(0, 120),
+      jobTitle: String(job.title).slice(0, 160),
+      jobLocation: String(job.location || '').slice(0, 120),
+      jobDescription: String(job.description || '').slice(0, 4000)
+    });
+    res.json(result);
+  } catch (e) {
+    console.error('cover-letter error:', e);
+    res.status(500).json({ error: 'cover_letter_failed' });
+  }
 });
 
 // ── Jobs ───────────────────────────────────────────────────────────────────
