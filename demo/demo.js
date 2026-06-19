@@ -208,7 +208,7 @@ const ASSESS = {
 };
 
 function ringGrad(s) {
-  const color = s >= 70 ? '#00c78b' : s >= 50 ? '#2355f5' : '#f5a623';
+  const color = s >= 70 ? '#15c39a' : s >= 50 ? '#2f6df6' : '#f5a623';
   return `conic-gradient(${color} ${s * 3.6}deg, var(--soft) 0deg)`;
 }
 
@@ -473,8 +473,8 @@ function avgSalary(list) {
 }
 
 function scoreGrad(s) {
-  if (s >= 75) return 'linear-gradient(135deg,#00c78b,#009468)';
-  if (s >= 50) return 'linear-gradient(135deg,#2355f5,#1640d1)';
+  if (s >= 75) return 'linear-gradient(135deg,#15c39a,#0fa07c)';
+  if (s >= 50) return 'linear-gradient(135deg,#2f6df6,#1b4fd6)';
   if (s >= 30) return 'linear-gradient(135deg,#f5a623,#d4851a)';
   return 'linear-gradient(135deg,#8a98ad,#6c7a90)';
 }
