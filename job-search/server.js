@@ -7,6 +7,7 @@ import path from 'path';
 import * as auth from './src/auth.js';
 import * as store from './src/store.js';
 import * as jobs from './src/jobs.js';
+import * as profileSvc from './src/profile.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 3000;
@@ -118,6 +119,39 @@ app.patch('/api/me', requireAuth, (req, res) => {
     };
   }
   res.json(store.upsertUser({ ...user, ...updates }));
+});
+
+// ── Stage 1: understand profile (signed-in uses session name; guest passes name) ──
+app.post('/api/understand', async (req, res) => {
+  let name = '';
+  if (req.session.userId) name = store.getUser(req.session.userId)?.name || '';
+  else name = String(req.body?.name || '').trim().slice(0, 80);
+  if (!name) return res.status(400).json({ error: 'name_required' });
+
+  try {
+    const data = await profileSvc.understand({ name });
+    // Persist extracted skills onto the user when signed in
+    if (req.session.userId) {
+      const u = store.getUser(req.session.userId);
+      if (u && data.skills.length) store.upsertUser({ ...u, skills: [...new Set([...(u.skills || []), ...data.skills])].slice(0, 60) });
+    }
+    res.json(data);
+  } catch (e) {
+    console.error('understand error:', e);
+    res.status(500).json({ error: 'understand_failed' });
+  }
+});
+
+// ── CV parse (free: text in → structured fields out) ──
+app.post('/api/cv', (req, res) => {
+  const text = req.body?.text;
+  if (typeof text !== 'string' || !text.trim()) return res.status(400).json({ error: 'text_required' });
+  try {
+    res.json(profileSvc.parseCVText(text));
+  } catch (e) {
+    console.error('cv parse error:', e);
+    res.status(500).json({ error: 'cv_failed' });
+  }
 });
 
 // ── Jobs ───────────────────────────────────────────────────────────────────
