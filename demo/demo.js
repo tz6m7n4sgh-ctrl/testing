@@ -12,8 +12,10 @@ const profile = {
   linkedin: true,
   name: 'Ahmed Al Mansoori', email: 'ahmed@example.com',
   role: 'Frontend Developer', location: 'Dubai', remote: true,
-  skills: ['React', 'TypeScript', 'JavaScript'], level: 'mid'
+  // Skills are auto-identified in Stage 1 (mock: from GitHub + LinkedIn). User can add more.
+  skills: ['React', 'TypeScript', 'JavaScript', 'Node.js', 'CSS', 'Git'], level: 'mid'
 };
+const state = { searched: false };
 
 const ROLE_CHIPS = ['Frontend Developer','Backend Engineer','Full Stack','Data Analyst','Product Manager','UX Designer','DevOps','Accountant'];
 const LOC_CHIPS  = ['Dubai','Abu Dhabi','Sharjah','United Arab Emirates','Remote'];
@@ -47,14 +49,22 @@ function showView(id) {
 
 function initials(name) { return (name || '?').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase(); }
 
-/* LinkedIn path: keep seeded profile (name + GitHub-detected skills). */
-$('#loginBtn').onclick = () => { profile.linkedin = true; showSetup(); };
-/* Guest path: no LinkedIn data, no detected skills, assessment unavailable. */
+/* LinkedIn path → Stage 1: understand profile → assessment (skills auto-built). */
+$('#loginBtn').onclick = () => { profile.linkedin = true; runUnderstandAgent(); };
+/* Guest path: no LinkedIn → manual quick setup (must type skills), then search. */
 $('#skipBtn').onclick = () => {
   profile.linkedin = false; profile.name = 'Guest'; profile.email = '';
   profile.skills = [];
   showSetup();
 };
+
+/* Stage 1: agent understands the profile and identifies skills, then assessment. */
+function runUnderstandAgent() {
+  runAgentScreen('Understanding your profile…', 'Reading what the web publicly shows about you',
+    [`Reading your LinkedIn basics`, `Searching "${profile.name}" on the web`,
+     'Scanning GitHub & social', 'Identifying your skills', 'Assessing your profile health'],
+    showAssessment);
+}
 
 /* ── Quick setup (single screen) ── */
 let _skills = [];
@@ -79,7 +89,7 @@ function showSetup() {
     profile.location = $('#setLoc').value.trim() || profile.location;
     profile.remote   = $('#setRemote').checked;
     profile.skills   = _skills;
-    runCombinedAgent();
+    runSearchAgent();
   };
 }
 
@@ -149,11 +159,11 @@ function runAgentScreen(title, sub, tasks, onDone) {
   setTimeout(tick, 400);
 }
 
-/* One parallel run: search jobs + (if LinkedIn) assess profile, then dashboard. */
-function runCombinedAgent() {
-  const tasks = ['Searching Bayt, Indeed, LinkedIn & GulfTalent', `Matching ${JOBS.length} UAE jobs to your profile`];
-  if (profile.linkedin) tasks.push('Checking your public profile health');
-  runAgentScreen('Working on it…', 'Finding jobs and building your dashboard', tasks, showDashboard);
+/* Stage 2: search jobs with the built profile, then dashboard. */
+function runSearchAgent() {
+  runAgentScreen('Searching the UAE job market…', 'Matching live listings to your profile',
+    ['Searching Bayt, Indeed, LinkedIn & GulfTalent', `Matching ${JOBS.length} UAE jobs to your skills`],
+    () => { state.searched = true; showDashboard(); });
 }
 
 /* ── Profile assessment (mock public-presence analysis) ── */
@@ -218,6 +228,22 @@ function showAssessment() {
     </div>
 
     <div class="acard">
+      <h3>⚡ Skills we identified</h3>
+      <p class="fp-desc" style="margin-bottom:10px">Built automatically from your profile — add any we missed.</p>
+      <div class="onb-chips" id="asSkillTags"></div>
+      <input type="text" id="asSkill" class="onb-input" placeholder="+ Add a skill, press Enter" autocomplete="off" style="margin-top:10px"/>
+      <div class="onb-chips" id="asSkillSuggest"></div>
+    </div>
+
+    <div class="acard">
+      <h3>🎯 Your job target</h3>
+      <label class="onb-label">Role</label>
+      <input type="text" id="asRole" class="onb-input" value="${esc(profile.role)}" autocomplete="off"/>
+      <label class="onb-label">Location in the UAE</label>
+      <input type="text" id="asLoc" class="onb-input" value="${esc(profile.location)}" autocomplete="off"/>
+    </div>
+
+    <div class="acard">
       <h3>🌐 Public footprint</h3>
       ${s.footprint.map(f => `
         <div class="fp-item">
@@ -248,7 +274,26 @@ function showAssessment() {
       ${s.suggestions.map(t => `<div class="sg-item"><span class="sgi">→</span><span>${esc(t)}</span></div>`).join('')}
     </div>`;
 
-  $('#assessBack').onclick = () => showView('v-dash');
+  // Auto-built skills (editable) + suggestions
+  _skills = [...profile.skills];
+  skillInput('#asSkill', '#asSkillTags', '#asSkillSuggest');
+
+  // Stage-dependent header / nav / CTA
+  $('#assessHeading').textContent = state.searched ? 'Profile health & visibility' : 'We understood your profile';
+  $('#assessSubhead').textContent = state.searched
+    ? 'How your professional presence looks online · public info only'
+    : 'Here’s how you look and the skills we identified · public info only';
+  $('#assessBack').classList.toggle('hide', !state.searched);
+  $('#assessCta').classList.toggle('hide', state.searched);
+
+  $('#assessBack').onclick = () => { saveAssessEdits(); showDashboard(); };
+  $('#assessFind').onclick = () => { saveAssessEdits(); runSearchAgent(); };
+}
+
+function saveAssessEdits() {
+  profile.skills   = _skills;
+  profile.role     = $('#asRole')?.value.trim() || profile.role;
+  profile.location = $('#asLoc')?.value.trim() || profile.location;
 }
 
 /* ── Matching (mirrors backend score()) ── */
