@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#0a1220"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="JobScout"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<link rel="manifest" href="/manifest.webmanifest"/>
+<link rel="icon" href="/icon.svg" type="image/svg+xml"/>
+<link rel="apple-touch-icon" href="/icon.svg"/>
+<link rel="stylesheet" href="/styles.css"/>
+<title>JobScout</title>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════
+     LOGIN VIEW
+════════════════════════════════════════════════════ -->
+<div id="loginView">
+  <div class="login-card">
+    <div class="login-logo">🎯</div>
+    <h1>JobScout</h1>
+    <p>Your personal job-hunting agent — live jobs matched to your profile, tracked in one place.</p>
+
+    <a href="/auth/linkedin" class="btn-linkedin">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff">
+        <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
+      </svg>
+      Sign in with LinkedIn
+    </a>
+
+    <div id="loginErr" class="login-err hide"></div>
+
+    <div class="login-features">
+      <div class="login-feature"><span class="ic">✅</span> Profile auto-filled from LinkedIn</div>
+      <div class="login-feature"><span class="ic">🎯</span> Live jobs matched to your skills</div>
+      <div class="login-feature"><span class="ic">★</span> Save, track &amp; update application status</div>
+      <div class="login-feature"><span class="ic">📱</span> Install as app on your phone</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
+     APP VIEW
+════════════════════════════════════════════════════ -->
+<div id="appView" class="hide">
+
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="topbar-logo">
+      <span class="dot">🎯</span>
+      JobScout
+      <span class="new-badge hide" id="topNewBadge"></span>
+    </div>
+    <button class="avatar-btn" id="avatarBtn">
+      <div class="av-initials" id="topInitials">?</div>
+      <img id="topPhoto" class="hide" alt="avatar"/>
+      <span id="topName" style="max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+    </button>
+  </header>
+
+  <!-- Profile dropdown -->
+  <div class="profile-menu hide" id="profileMenu">
+    <div class="pm-head">
+      <div class="av-initials" id="pmInitials">?</div>
+      <img id="pmPhoto" class="hide" style="width:38px;height:38px;border-radius:50%;object-fit:cover;" alt="avatar"/>
+      <div>
+        <div class="pm-name" id="pmName"></div>
+        <div class="pm-email" id="pmEmail"></div>
+      </div>
+    </div>
+    <button class="pm-item" onclick="goTab('profile')">👤 Edit profile</button>
+    <button class="pm-item danger" id="signOutBtn">↩ Sign out</button>
+  </div>
+
+  <!-- Content -->
+  <div class="scroll-area" id="scrollArea">
+
+    <!-- ── Search ── -->
+    <div class="tab-view active" id="tab-search">
+      <div class="search-hero">
+        <h2 id="searchHeading">Find your next role</h2>
+        <div class="searchbox">
+          <input type="text" id="searchInput" placeholder="Job title or keywords…" autocomplete="off"/>
+          <button class="go" id="searchBtn">🔎 Search</button>
+        </div>
+        <div class="presets" id="presets"></div>
+      </div>
+      <div class="results-bar">
+        <h3 id="resultsTitle">Matches</h3>
+        <span class="results-count" id="resultsCount"></span>
+        <select class="sort-sel" id="sortSel">
+          <option value="match">Best match</option>
+          <option value="date">Newest first</option>
+        </select>
+      </div>
+      <div id="banner"></div>
+      <div class="job-list" id="jobList">
+        <div class="empty">
+          <div class="big">🧭</div>
+          <p>Hit <b>Search</b> to load live job listings matched to your profile.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Saved ── -->
+    <div class="tab-view" id="tab-saved">
+      <div class="saved-head"><h2>★ Saved jobs</h2></div>
+      <div class="saved-list" id="savedList">
+        <div class="empty" style="padding-top:36px">
+          <div class="big">★</div>
+          <p>No saved jobs yet.<br/>Tap ☆ on any match to save it here.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Profile ── -->
+    <div class="tab-view" id="tab-profile">
+      <div class="profile-tab">
+
+        <div class="profile-card">
+          <div class="profile-header">
+            <div class="av-lg" id="profInitials">?</div>
+            <img id="profPhoto" class="hide" alt="avatar"/>
+            <div>
+              <div class="ph-name" id="profName"></div>
+              <div class="ph-email" id="profEmail"></div>
+            </div>
+          </div>
+          <p class="sec-title">Headline</p>
+          <div class="field">
+            <input type="text" id="profHeadline" placeholder="e.g. Senior Frontend Developer" maxlength="200"/>
+            <div class="hint">Shown to recruiters — auto-filled from LinkedIn if set</div>
+          </div>
+        </div>
+
+        <div class="profile-card">
+          <p class="sec-title">My skills</p>
+          <div class="field">
+            <input type="text" id="skillInput" placeholder="Type a skill and press Enter"/>
+          </div>
+          <div class="tags" id="skillTags"></div>
+          <p class="sec-title" style="margin-top:12px">Quick add</p>
+          <div class="tags" id="skillSuggest"></div>
+        </div>
+
+        <div class="profile-card">
+          <p class="sec-title">Job preferences</p>
+          <div class="field">
+            <label class="sec-title" style="margin-bottom:5px">Target roles</label>
+            <input type="text" id="roleInput" placeholder="Add a role and press Enter"/>
+            <div class="tags" id="roleTags"></div>
+          </div>
+          <div class="field">
+            <label class="sec-title" style="margin-bottom:5px">Preferred locations</label>
+            <input type="text" id="locInput" placeholder="e.g. Remote, London — Enter to add"/>
+            <div class="tags" id="locTags"></div>
+          </div>
+          <div class="row field">
+            <div>
+              <p class="sec-title">Seniority</p>
+              <select id="levelSel">
+                <option value="">Any</option>
+                <option value="intern">Intern</option>
+                <option value="junior">Junior</option>
+                <option value="mid">Mid</option>
+                <option value="senior">Senior</option>
+                <option value="lead">Lead / Principal</option>
+              </select>
+            </div>
+          </div>
+          <label class="check-row">
+            <input type="checkbox" id="remoteChk"/> 🌐 Remote only
+          </label>
+        </div>
+
+        <button class="btn btn-primary full" id="saveProfileBtn">💾 Save profile</button>
+        <div class="save-ok hide" id="saveOk">Profile saved!</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom nav -->
+  <nav class="bottom-nav">
+    <button class="bn-tab active" data-tab="search">
+      <span class="bn-ic">🔍</span>Search
+    </button>
+    <button class="bn-tab" data-tab="saved">
+      <span class="bn-ic">★</span>Saved
+      <span class="bn-badge hide" id="savedBadge"></span>
+    </button>
+    <button class="bn-tab" data-tab="profile">
+      <span class="bn-ic">👤</span>Profile
+    </button>
+  </nav>
+
+</div>
+
+<script src="/app.js"></script>
+</body>
+</html>
