@@ -175,6 +175,12 @@ app.post('/api/cv', (req, res) => {
   }
 });
 
+// ── Delete my data (account + saved jobs) ──
+app.delete('/api/me', requireAuth, (req, res) => {
+  store.deleteUser(req.session.userId);
+  req.session.destroy(() => res.json({ ok: true }));
+});
+
 // ── Jobs ───────────────────────────────────────────────────────────────────
 app.get('/api/jobs', requireAuth, async (req, res) => {
   const user  = store.getUser(req.session.userId);

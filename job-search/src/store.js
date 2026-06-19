@@ -91,3 +91,8 @@ export function updateSavedJob(userId, jobId, updates) {
       .run(updates.status, userId, jobId);
   }
 }
+
+export function deleteUser(userId) {
+  db.prepare('DELETE FROM saved_jobs WHERE user_id = ?').run(userId);
+  db.prepare('DELETE FROM users WHERE id = ?').run(userId);
+}
