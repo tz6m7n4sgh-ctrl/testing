@@ -130,7 +130,7 @@ async function doUnderstand(guestName) {
   if (!understood) understood = { sources: [], skills: [], headline: '', location: '', experience: [], assessment: { presence: 0, summary: 'We couldn’t analyze your profile right now.', suggestions: [] } };
 
   me = await api('/api/me').catch(() => me);
-  _skills = [...new Set([...(understood.skills || [])])];
+  _skills = [...new Set([...(_skills || []), ...(understood.skills || [])])];  // merge, don't wipe
   if (understood.location) target.location = understood.location;
   state.understood = true; state.extracted = false;
   showProfile();
@@ -166,6 +166,7 @@ function showProfile() {
     $('#confirmSources').onclick = () => { state.extracted = true; showProfile(); };
   } else {
     skillInput('#asSkill', '#asSkillTags', '#asSkillSuggest');
+    if ($('#refreshProfile')) $('#refreshProfile').onclick = () => { saveEdits(); doUnderstand(); };
     const cvBtn = $('#cvUploadBtn'), cvInput = $('#cvInput'), sample = $('#cvSample');
     if (cvBtn)   cvBtn.onclick = () => cvInput.click();
     if (cvInput) cvInput.onchange = () => { const f = cvInput.files[0]; if (f) readCV(f); };
@@ -211,6 +212,7 @@ function profileHTML() {
       <div class="complete-top"><b>Profile completeness</b><span>${c}%</span></div>
       <div class="complete-track"><div class="complete-fill" style="width:${c}%"></div></div>
     </div>
+    <button class="btn btn-ghost full" id="refreshProfile" style="margin-bottom:14px">↻ Refresh from the web</button>
 
     ${state.cvParsed
       ? `<div class="cv-done">✓ CV parsed — gaps below were filled (tagged CV)</div>`
