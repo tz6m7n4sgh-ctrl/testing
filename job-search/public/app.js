@@ -167,6 +167,9 @@ function showProfile() {
   } else {
     skillInput('#asSkill', '#asSkillTags', '#asSkillSuggest');
     if ($('#refreshProfile')) $('#refreshProfile').onclick = () => { saveEdits(); doUnderstand(); };
+    if ($('#expSaved'))   $('#expSaved').onclick   = exportSavedCSV;
+    if ($('#expProfile')) $('#expProfile').onclick = exportProfileJSON;
+    if ($('#deleteData')) $('#deleteData').onclick = deleteMyData;
     const cvBtn = $('#cvUploadBtn'), cvInput = $('#cvInput'), sample = $('#cvSample');
     if (cvBtn)   cvBtn.onclick = () => cvInput.click();
     if (cvInput) cvInput.onchange = () => { const f = cvInput.files[0]; if (f) readCV(f); };
@@ -261,12 +264,44 @@ function profileHTML() {
     </div>
 
     <div class="acard"><h3>🪞 How you look</h3><p class="summary-txt">${esc(a.summary)}</p></div>
-    ${a.suggestions?.length ? `<div class="acard"><h3>💡 Suggestions</h3>${a.suggestions.map(t => `<div class="sg-item"><span class="sgi">→</span><span>${esc(t)}</span></div>`).join('')}</div>` : ''}`;
+    ${a.suggestions?.length ? `<div class="acard"><h3>💡 Suggestions</h3>${a.suggestions.map(t => `<div class="sg-item"><span class="sgi">→</span><span>${esc(t)}</span></div>`).join('')}</div>` : ''}
+
+    <div class="acard">
+      <h3>🔐 Account &amp; data</h3>
+      <button class="btn btn-ghost full" id="expSaved" style="margin-bottom:8px">⬇ Export saved jobs (CSV)</button>
+      <button class="btn btn-ghost full" id="expProfile" style="margin-bottom:8px">⬇ Export my profile (JSON)</button>
+      <button class="btn btn-ghost full" id="deleteData" style="color:var(--bad);border-color:rgba(232,69,60,.3)">🗑 Delete my data</button>
+    </div>`;
 }
 
 function saveEdits() {
   if ($('#asRole')) target.role = $('#asRole').value.trim() || target.role;
   if ($('#asLoc'))  target.location = $('#asLoc').value.trim() || target.location;
+}
+
+/* ── Data export / delete ── */
+function download(filename, text, type) {
+  const url = URL.createObjectURL(new Blob([text], { type }));
+  const a = document.createElement('a');
+  a.href = url; a.download = filename; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+function exportSavedCSV() {
+  const cols = ['title', 'company', 'location', 'salary', 'savedStatus', 'url'];
+  const csv = [cols.join(',')].concat(savedCache.map(j =>
+    cols.map(c => `"${String(j[c] ?? '').replace(/"/g, '""')}"`).join(','))).join('\n');
+  download('jobscout-saved-jobs.csv', csv, 'text/csv');
+}
+function exportProfileJSON() {
+  const data = { name: me?.name, email: me?.email, headline: understood?.headline, location: target.location,
+    target, skills: _skills, education: edu, phone, assessment: understood?.assessment };
+  download('jobscout-profile.json', JSON.stringify(data, null, 2), 'application/json');
+}
+async function deleteMyData() {
+  if (!confirm('Delete your profile and all saved jobs? This cannot be undone.')) return;
+  await api('/api/me', 'DELETE').catch(() => {});
+  localStorage.removeItem('js.dismissed');
+  location.href = '/';
 }
 
 async function finishProfile() {
