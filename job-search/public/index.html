@@ -133,6 +133,16 @@
 
     <div class="tab-view" id="tab-jobs">
       <div class="jobs-head"><h2>All matches</h2><span class="count" id="jobsCount"></span></div>
+      <div class="filter-bar">
+        <select id="fSort" class="filter-sel">
+          <option value="match">Best match</option>
+          <option value="newest">Newest</option>
+          <option value="salary">Salary (high→low)</option>
+        </select>
+        <button class="filter-chip" id="fRemote">🌐 Remote</button>
+        <button class="filter-chip" id="fFresh">🕒 This week</button>
+        <button class="filter-chip" id="fSalary">💰 Has salary</button>
+      </div>
       <div id="banner"></div>
       <div id="jobList"></div>
     </div>

@@ -72,6 +72,18 @@
 6. **New-match alerts** — "new since last visit" badges; later push/email.
 7. **Resume/skills sync** — keep profile skills in sync with CV + GitHub.
 
+## 🧱 Additional flow candidates (building one by one)
+1. 🟡 **Filters & sort** on jobs (remote, freshness, salary; sort match/newest/salary) — *building now*
+2. ⬜ **Job detail view** (full description, requirements, match breakdown)
+3. ⬜ **Application analytics** (funnel: applied→interview→offer, response rate)
+4. ⬜ **CV-first onboarding** (build profile entirely from an uploaded CV)
+5. ⬜ **Cover-letter generator** (tailored per job — AI)
+6. ⬜ **Dismiss "not interested"** to refine results
+7. ⬜ **Refresh my profile** (re-run web/GitHub scan on demand)
+8. ⬜ **Skill-gap analysis** vs a job (AI) · **Tailor my CV** (AI) · **Interview prep** (AI)
+9. ⬜ **Export** (PDF/CSV) · **Delete my data** (privacy) · **Google/Email login**
+10. ⬜ **New-match alerts** (email/push) · **Weekly digest**
+
 ## 💤 Later / scale
 - Recruiter side (search candidate profiles).
 - Semantic matching (embeddings).
