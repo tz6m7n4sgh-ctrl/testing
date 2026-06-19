@@ -45,7 +45,13 @@ function showView(id) {
 
 function initials(name) { return (name || '?').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase(); }
 
-$('#loginBtn').onclick = () => { showView('v-onboarding'); setupOnboarding(); };
+$('#loginBtn').onclick = () => runAgentScreen(
+  'Assessing your public profile…',
+  'Searching what the web publicly shows about you',
+  [`Searching "${profile.name}" on the web`, 'Checking email & username presence',
+   'Analyzing your profile photo', 'Scanning LinkedIn, GitHub & social', 'Computing presence & sentiment'],
+  showAssessment
+);
 
 /* ── Onboarding ── */
 let _skills = [];
@@ -125,13 +131,11 @@ function skillInput() {
   renderTags(); renderSug();
 }
 
-/* ── Agent search ── */
-function runAgent() {
+/* ── Generic agent screen (reused for assessment + job search) ── */
+function runAgentScreen(title, sub, tasks, onDone) {
   showView('v-agent');
-  const tasks = [
-    'Searching Bayt', 'Searching Indeed', 'Searching LinkedIn',
-    'Searching GulfTalent', `Matching ${JOBS.length} jobs to your profile`
-  ];
+  $('#agentTitle').textContent = title;
+  $('#agentSub').textContent = sub;
   const box = $('#agentTasks'); box.innerHTML = '';
   const els = tasks.map(t => {
     const el = document.createElement('div');
@@ -143,9 +147,104 @@ function runAgent() {
   let i = 0;
   const tick = () => {
     if (i < els.length) { els[i].classList.add('done'); i++; setTimeout(tick, 460); }
-    else { $('#agentTitle').textContent = 'Done!'; $('#agentSub').textContent = 'Building your dashboard…'; setTimeout(showDashboard, 600); }
+    else { $('#agentTitle').textContent = 'Done!'; $('#agentSub').textContent = 'One moment…'; setTimeout(onDone, 600); }
   };
   setTimeout(tick, 400);
+}
+
+function runAgent() {
+  runAgentScreen('Scanning the UAE job market…', 'Searching live listings matched to your profile',
+    ['Searching Bayt', 'Searching Indeed', 'Searching LinkedIn', 'Searching GulfTalent',
+     `Matching ${JOBS.length} jobs to your profile`], showDashboard);
+}
+
+/* ── Profile assessment (mock public-presence analysis) ── */
+const ASSESS = {
+  presence: 78,
+  sentiment: { pos: 82, neu: 15, neg: 3 },
+  summary: 'Your professional presence is strong and consistent across platforms. You come across as an experienced frontend developer who is active in the Dubai tech community. Your name and photo are consistent everywhere, which builds trust with recruiters.',
+  footprint: [
+    { ic: '💼', name: 'LinkedIn', desc: 'Complete profile · 850+ connections', tag: 'pos' },
+    { ic: '🐙', name: 'GitHub', desc: '24 public repos · active contributor', tag: 'pos' },
+    { ic: '✍️', name: 'Medium', desc: '2 articles on React performance', tag: 'pos' },
+    { ic: '🎤', name: 'GITEX Tech', desc: 'Listed as a speaker (2024)', tag: 'pos' },
+    { ic: '🐦', name: 'X / Twitter', desc: 'Occasional posts · low activity', tag: 'neu' }
+  ],
+  photo: { score: '9/10', note: 'Professional headshot detected — clear, good lighting, professional attire. Great first impression.' },
+  strengths: ['Consistent name across platforms', 'Active open-source presence', 'Thought leadership (articles)', 'Professional photo'],
+  suggestions: ['Add a profile summary & pinned repos on GitHub', 'Post more regularly on LinkedIn', 'Add your GITEX talk to LinkedIn featured']
+};
+
+function ringGrad(s) {
+  const color = s >= 70 ? '#00c78b' : s >= 50 ? '#2355f5' : '#f5a623';
+  return `conic-gradient(${color} ${s * 3.6}deg, var(--soft) 0deg)`;
+}
+
+function showAssessment() {
+  showView('v-assess');
+  $('#asInitials').textContent = initials(profile.name);
+  $('#asName').textContent = profile.name;
+  $('#asMail').textContent = profile.email;
+
+  const s = ASSESS;
+  $('#assessBody').innerHTML = `
+    <div class="score-row">
+      <div class="score-card">
+        <div class="big-ring" style="background:${ringGrad(s.presence)}">
+          <div class="big-ring" style="width:64px;height:64px;background:var(--card)">
+            <span class="rv">${s.presence}</span>
+          </div>
+        </div>
+        <div class="cl">Presence score</div>
+      </div>
+      <div class="score-card">
+        <div style="font-size:25px;font-weight:900;color:var(--accent-d);margin:8px 0 6px">${s.sentiment.pos}%</div>
+        <div class="sent-bar">
+          <i style="width:${s.sentiment.pos}%;background:var(--accent)"></i>
+          <i style="width:${s.sentiment.neu}%;background:var(--warn)"></i>
+          <i style="width:${s.sentiment.neg}%;background:var(--bad)"></i>
+        </div>
+        <div class="cl">Positive sentiment</div>
+      </div>
+    </div>
+
+    <div class="acard">
+      <h3>🪞 How you look</h3>
+      <p class="summary-txt">${esc(s.summary)}</p>
+    </div>
+
+    <div class="acard">
+      <h3>🌐 Public footprint</h3>
+      ${s.footprint.map(f => `
+        <div class="fp-item">
+          <span class="fp-ic">${f.ic}</span>
+          <div class="fp-main"><div class="fp-name">${esc(f.name)}</div><div class="fp-desc">${esc(f.desc)}</div></div>
+          <span class="fp-tag ${f.tag}">${f.tag === 'pos' ? 'Positive' : 'Neutral'}</span>
+        </div>`).join('')}
+    </div>
+
+    <div class="acard">
+      <h3>📸 Profile photo</h3>
+      <div class="photo-row">
+        <div class="photo-thumb">${esc(initials(profile.name))}</div>
+        <div class="photo-meta">
+          <div class="photo-score">Score: ${esc(s.photo.score)}</div>
+          <div class="fp-desc" style="margin-top:3px">${esc(s.photo.note)}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="acard">
+      <h3>✅ Strengths</h3>
+      <div class="tagwrap">${s.strengths.map(t => `<span class="gtag">${esc(t)}</span>`).join('')}</div>
+    </div>
+
+    <div class="acard">
+      <h3>💡 Suggestions to stand out</h3>
+      ${s.suggestions.map(t => `<div class="sg-item"><span class="sgi">→</span><span>${esc(t)}</span></div>`).join('')}
+    </div>`;
+
+  $('#assessContinue').onclick = () => { showView('v-onboarding'); setupOnboarding(); };
 }
 
 /* ── Matching (mirrors backend score()) ── */
