@@ -73,16 +73,18 @@
 7. **Resume/skills sync** — keep profile skills in sync with CV + GitHub.
 
 ## 🧱 Additional flow candidates (building one by one)
-1. 🟡 **Filters & sort** on jobs (remote, freshness, salary; sort match/newest/salary) — *building now*
-2. ⬜ **Job detail view** (full description, requirements, match breakdown)
-3. ⬜ **Application analytics** (funnel: applied→interview→offer, response rate)
-4. ⬜ **CV-first onboarding** (build profile entirely from an uploaded CV)
-5. ⬜ **Cover-letter generator** (tailored per job — AI)
-6. ⬜ **Dismiss "not interested"** to refine results
-7. ⬜ **Refresh my profile** (re-run web/GitHub scan on demand)
-8. ⬜ **Skill-gap analysis** vs a job (AI) · **Tailor my CV** (AI) · **Interview prep** (AI)
-9. ⬜ **Export** (PDF/CSV) · **Delete my data** (privacy) · **Google/Email login**
-10. ⬜ **New-match alerts** (email/push) · **Weekly digest**
+1. ✅ **Filters & sort** on jobs (remote, freshness, salary; sort match/newest/salary)
+2. ✅ **Job detail view** (full description, tags, match breakdown — bottom-sheet modal)
+3. ✅ **Application analytics** (funnel + interview-rate on Saved tab)
+4. ✅ **CV-first onboarding** (build profile from an uploaded CV)
+5. 🔴 **Cover-letter generator** (tailored per job — needs AI key; deferred)
+6. ✅ **Dismiss "not interested"** (localStorage; excluded everywhere)
+7. ✅ **Refresh my profile** (re-run web/GitHub scan; merges skills)
+8. 🔴 **Skill-gap analysis** / **Tailor my CV** / **Interview prep** (AI; deferred)
+9. ✅ **Export** (CSV/JSON) + **Delete my data** (`DELETE /api/me`) · 🟡 Google/Email login (deferred)
+10. 🔴 **New-match alerts** / **Weekly digest** (server cron; deferred)
+
+> Free/quick batch complete. Remaining items need an AI key (Claude) or a server cron — deferred per scope.
 
 ## 💤 Later / scale
 - Recruiter side (search candidate profiles).
