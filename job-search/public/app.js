@@ -508,13 +508,40 @@ function openJobDetail(j) {
       <a class="j-apply" href="${esc(safeUrl(j.url))}" target="_blank" rel="noopener" style="flex:1">Apply / view posting →</a>
       <button class="j-save ${isSaved ? 'saved' : ''}" id="mdSave">${isSaved ? '★' : '☆'}</button>
     </div>
+    <button class="md-cover" id="mdCover">✍️ Generate cover letter</button>
+    <div id="mdCoverOut"></div>
     <button class="md-dismiss" id="mdDismiss">🚫 Not interested — hide this job</button>`;
   $('#mdClose').onclick = closeModal;
   $('#mdSave').onclick = e => { toggleSave(j, e.currentTarget); };
   $('#mdDismiss').onclick = () => { dismissJob(j.id); closeModal(); renderTop(); renderJobList(); };
+  $('#mdCover').onclick = () => generateCover(j);
   $('#jobModal').classList.remove('hide');
 }
 function closeModal() { $('#jobModal').classList.add('hide'); }
+
+async function generateCover(j) {
+  const btn = $('#mdCover'), out = $('#mdCoverOut');
+  if (!btn || !out) return;
+  btn.disabled = true; btn.textContent = '⏳ Writing…';
+  try {
+    const r = await api('/api/cover-letter', 'POST', { job: { title: j.title, company: j.company, location: j.location, description: j.description } });
+    out.innerHTML = `
+      <textarea class="md-cover-text" id="mdCoverText" rows="12">${esc(r.text)}</textarea>
+      <div class="md-cover-actions">
+        <button class="btn btn-ghost" id="mdCoverCopy">📋 Copy</button>
+        <button class="btn btn-ghost" id="mdCoverDl">⬇ Download</button>
+        <span class="md-cover-src">${r.source === 'ai' ? '✨ AI-written' : 'template'}</span>
+      </div>`;
+    $('#mdCoverCopy').onclick = () => { navigator.clipboard?.writeText($('#mdCoverText').value); $('#mdCoverCopy').textContent = '✓ Copied'; };
+    $('#mdCoverDl').onclick = () => download(`cover-letter-${(j.company||'job').replace(/\W+/g,'-').toLowerCase()}.txt`, $('#mdCoverText').value, 'text/plain');
+    btn.textContent = '✍️ Regenerate';
+  } catch (e) {
+    out.innerHTML = '<div class="md-cover-err">Couldn\'t generate a cover letter. Try again.</div>';
+    btn.textContent = '✍️ Generate cover letter';
+  } finally {
+    btn.disabled = false;
+  }
+}
 
 function renderTop() {
   const box = $('#topMatches'); box.innerHTML = '';
