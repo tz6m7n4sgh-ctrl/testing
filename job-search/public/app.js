@@ -561,7 +561,11 @@ function renderSaved() {
         <a class="j-apply" href="${esc(safeUrl(j.url))}" target="_blank" rel="noopener">Apply →</a>
         <button class="j-save saved">★</button>
       </div>`;
-    el.querySelector('.status-sel').onchange = e => api('/api/saved/' + encodeURIComponent(j.id), 'PATCH', { status: e.target.value }).catch(() => {});
+    el.querySelector('.status-sel').onchange = e => {
+      j.savedStatus = e.target.value;
+      api('/api/saved/' + encodeURIComponent(j.id), 'PATCH', { status: j.savedStatus }).catch(() => {});
+      renderSaved();  // refresh funnel live
+    };
     el.querySelector('.j-save').onclick = async () => { await api('/api/saved/' + encodeURIComponent(j.id), 'DELETE').catch(() => {}); savedCache = savedCache.filter(s => s.id !== j.id); renderSaved(); };
     box.appendChild(el);
   });
