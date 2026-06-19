@@ -61,6 +61,8 @@ async function init() {
 function wireStatic() {
   $('#skipBtn').onclick = showGuest;
   $('#logoutBtn').onclick = async () => { await fetch('/auth/logout', { method: 'POST' }); location.href = '/'; };
+  $('#modalBackdrop').onclick = closeModal;
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 }
 
 /* ── Guest ── */
@@ -413,8 +415,44 @@ function jobCard(j) {
       <button class="j-save ${isSaved ? 'saved' : ''}">${isSaved ? '★' : '☆'}</button>
     </div>`;
   el.querySelector('.j-save').onclick = e => toggleSave(j, e.currentTarget);
+  el.style.cursor = 'pointer';
+  el.addEventListener('click', e => { if (e.target.closest('.j-apply') || e.target.closest('.j-save')) return; openJobDetail(j); });
   return el;
 }
+
+/* ── Job detail modal ── */
+function openJobDetail(j) {
+  const isSaved = savedCache.some(s => s.id === j.id);
+  const desc = (j.description || '').trim();
+  $('#modalPanel').innerHTML = `
+    <div class="md-grip"></div>
+    <button class="md-close" id="mdClose">✕</button>
+    <div class="md-title">${esc(j.title)}</div>
+    <div class="md-company">${esc(j.company || '—')}</div>
+    <div class="j-chips" style="margin-top:10px">
+      ${j.remote ? '<span class="chip remote">🌐 Remote</span>' : ''}
+      ${j.location ? `<span class="chip">📍 ${esc(j.location)}</span>` : ''}
+      ${j.type ? `<span class="chip">🕒 ${esc(j.type)}</span>` : ''}
+      ${j.salary ? `<span class="chip sal">💰 ${esc(j.salary)}</span>` : ''}
+      ${j.posted ? `<span class="chip">${esc(timeAgo(j.posted))}</span>` : ''}
+      <span class="chip src">${esc(j.source)}</span>
+    </div>
+    <div class="md-score">
+      <div class="score-ring" style="background:${scoreGrad(j.score)}">${j.score}<small>MATCH</small></div>
+      <div class="md-why">${j.reasons?.length ? `<b>Why this fits:</b> ${j.reasons.map(esc).join(' · ')}` : 'Ranked by your skills, role and location.'}</div>
+    </div>
+    ${j.tags?.length ? `<div class="md-sec-t">Skills / tags</div><div class="j-chips">${j.tags.slice(0, 14).map(t => `<span class="chip">${esc(t)}</span>`).join('')}</div>` : ''}
+    <div class="md-sec-t">Description</div>
+    <div class="md-desc">${desc ? esc(desc) : 'No description provided by the source — open the posting to read more.'}</div>
+    <div class="md-actions">
+      <a class="j-apply" href="${esc(safeUrl(j.url))}" target="_blank" rel="noopener" style="flex:1">Apply / view posting →</a>
+      <button class="j-save ${isSaved ? 'saved' : ''}" id="mdSave">${isSaved ? '★' : '☆'}</button>
+    </div>`;
+  $('#mdClose').onclick = closeModal;
+  $('#mdSave').onclick = e => { toggleSave(j, e.currentTarget); };
+  $('#jobModal').classList.remove('hide');
+}
+function closeModal() { $('#jobModal').classList.add('hide'); }
 
 function renderTop() {
   const box = $('#topMatches'); box.innerHTML = '';
