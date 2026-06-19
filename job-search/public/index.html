@@ -44,6 +44,69 @@
 </div>
 
 <!-- ════════════════════════════════════════════════════
+     ONBOARDING VIEW  (after LinkedIn login, for new users)
+════════════════════════════════════════════════════ -->
+<div id="onboardingView" class="hide">
+  <div class="onb">
+    <div class="onb-progress">
+      <span class="onb-dot active"></span><span class="onb-dot"></span><span class="onb-dot"></span>
+    </div>
+
+    <!-- Step 1: confirm LinkedIn info -->
+    <section class="onb-step active" data-step="1">
+      <img id="onbPhoto" class="onb-avatar hide" alt=""/>
+      <div class="onb-avatar onb-initials" id="onbInitials">?</div>
+      <h2>Welcome, <span id="onbName">there</span> 👋</h2>
+      <p class="onb-sub">We pulled your basics from LinkedIn. Let's set up your job search in 3 quick steps.</p>
+      <div class="onb-confirm">
+        <div class="onb-crow"><span>Name</span><b id="onbCName">—</b></div>
+        <div class="onb-crow"><span>Email</span><b id="onbCEmail">—</b></div>
+      </div>
+      <button class="btn btn-primary full" data-next>Let's go →</button>
+    </section>
+
+    <!-- Step 2: role + location -->
+    <section class="onb-step" data-step="2">
+      <h2>What are you looking for?</h2>
+      <p class="onb-sub">Your target role and where you want to work.</p>
+      <label class="onb-label">Target role</label>
+      <input type="text" id="onbRole" class="onb-input" placeholder="e.g. Frontend Developer" autocomplete="off"/>
+      <div class="onb-chips" id="onbRoleChips"></div>
+      <label class="onb-label">Location</label>
+      <input type="text" id="onbLoc" class="onb-input" placeholder="e.g. Dubai" autocomplete="off"/>
+      <div class="onb-chips" id="onbLocChips"></div>
+      <label class="onb-check"><input type="checkbox" id="onbRemote"/> 🌐 Also open to remote roles</label>
+      <div class="onb-nav">
+        <button class="btn btn-ghost" data-back>← Back</button>
+        <button class="btn btn-primary" data-next>Next →</button>
+      </div>
+    </section>
+
+    <!-- Step 3: skills + seniority -->
+    <section class="onb-step" data-step="3">
+      <h2>Your skills</h2>
+      <p class="onb-sub">Add a few — this powers your match scores.</p>
+      <input type="text" id="onbSkill" class="onb-input" placeholder="Type a skill, press Enter" autocomplete="off"/>
+      <div class="onb-chips" id="onbSkillTags"></div>
+      <div class="onb-chips" id="onbSkillSuggest"></div>
+      <label class="onb-label">Seniority</label>
+      <select id="onbLevel" class="onb-input">
+        <option value="">Any</option>
+        <option value="intern">Intern</option>
+        <option value="junior">Junior</option>
+        <option value="mid">Mid</option>
+        <option value="senior">Senior</option>
+        <option value="lead">Lead / Principal</option>
+      </select>
+      <div class="onb-nav">
+        <button class="btn btn-ghost" data-back>← Back</button>
+        <button class="btn btn-primary" id="onbFinish">🚀 Start searching</button>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════
      APP VIEW
 ════════════════════════════════════════════════════ -->
 <div id="appView" class="hide">

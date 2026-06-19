@@ -12,7 +12,7 @@ Browser PWA  ←→  Express (Node.js)  ←→  LinkedIn OIDC
 
 - **No frontend framework** — vanilla JS, fast, installable
 - **LinkedIn OIDC** — `openid profile email` scopes (modern, not deprecated)
-- **3 free job feeds** — Remotive, Arbeitnow, Himalayas (all CORS-enabled, no API key)
+- **Job feeds** — Remotive, Arbeitnow, Himalayas (free, no key) + **JSearch** (RapidAPI, optional key) for **UAE / Gulf / global on-site jobs** via Google for Jobs (Bayt, Indeed, LinkedIn, GulfTalent…)
 - **Hybrid matching** — title words × skills overlap × seniority × location × recency
 - **SQLite** — local user profiles + saved jobs with status tracking
 

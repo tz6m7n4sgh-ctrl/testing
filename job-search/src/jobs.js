@@ -71,15 +71,46 @@ async function fetchHimalayas(query) {
   }));
 }
 
-export async function fetchAll(query) {
-  const results = await Promise.allSettled([
-    fetchRemotive(query),
-    fetchArbeitnow(),
-    fetchHimalayas(query)
-  ]);
+// JSearch (RapidAPI) — aggregates Google for Jobs: Bayt, Indeed, LinkedIn, GulfTalent…
+// Best source for UAE / Gulf on-site jobs. Requires RAPIDAPI_KEY, runs server-side only.
+async function fetchJSearch(query, location) {
+  const key = process.env.RAPIDAPI_KEY;
+  if (!key) return [];
+  const q = location ? `${query || 'jobs'} in ${location}` : (query || 'jobs');
+  const url = `https://jsearch.p.rapidapi.com/search?query=${encodeURIComponent(q)}&page=1&num_pages=1`;
+  const r = await fetch(url, {
+    headers: { 'X-RapidAPI-Key': key, 'X-RapidAPI-Host': 'jsearch.p.rapidapi.com' },
+    signal: AbortSignal.timeout(9_000)
+  });
+  if (!r.ok) throw new Error(`JSearch ${r.status}`);
+  const d = await r.json();
+  return (d.data || []).map(j => ({
+    id:          'jsr-' + j.job_id,
+    title:       j.job_title || '',
+    company:     j.employer_name || '',
+    location:    [j.job_city, j.job_state, j.job_country].filter(Boolean).join(', ') || 'Unspecified',
+    remote:      !!j.job_is_remote,
+    type:        j.job_employment_type || '',
+    salary:      j.job_min_salary ? `${j.job_salary_currency || ''} ${j.job_min_salary.toLocaleString()}–${(j.job_max_salary || j.job_min_salary).toLocaleString()}`.trim() : '',
+    posted:      j.job_posted_at_datetime_utc || null,
+    url:         j.job_apply_link || '',
+    tags:        normTags(j.job_required_skills).concat(j.job_job_title ? [] : []),
+    description: stripHtml(j.job_description || ''),
+    source:      'JSearch'
+  }));
+}
+
+export async function fetchAll(query, location) {
+  const sources = [
+    ['Remotive',  fetchRemotive(query)],
+    ['Arbeitnow', fetchArbeitnow()],
+    ['Himalayas', fetchHimalayas(query)],
+    ['JSearch',   fetchJSearch(query, location)]
+  ];
+  const results = await Promise.allSettled(sources.map(s => s[1]));
 
   results.forEach((r, i) => {
-    if (r.status === 'rejected') console.warn(['Remotive', 'Arbeitnow', 'Himalayas'][i], r.reason?.message);
+    if (r.status === 'rejected') console.warn(sources[i][0], r.reason?.message);
   });
 
   const all = results.flatMap(r => r.status === 'fulfilled' ? r.value : []);

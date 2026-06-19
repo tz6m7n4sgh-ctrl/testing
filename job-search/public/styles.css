@@ -60,6 +60,46 @@ h1,h2,h3 { margin: 0; line-height: 1.2; }
 .login-feature { display: flex; align-items: center; gap: 10px; color: #c5d8f0; font-size: 13.5px; font-weight: 600; }
 .login-feature .ic { font-size: 18px; }
 
+/* ── Onboarding ───────────────────────────────────────── */
+#onboardingView {
+  min-height: 100dvh; display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(140% 140% at 70% -10%, #1a3a8f 0%, #0a1220 70%);
+  padding: 24px 20px;
+}
+.onb {
+  background: var(--card); border-radius: 24px; padding: 28px 24px;
+  max-width: 420px; width: 100%; box-shadow: var(--shadow-lg);
+}
+.onb-progress { display: flex; gap: 8px; justify-content: center; margin-bottom: 22px; }
+.onb-dot { width: 30px; height: 5px; border-radius: 999px; background: var(--line); transition: background .25s; }
+.onb-dot.active { background: var(--brand); }
+.onb-step { display: none; animation: onbIn .3s ease both; }
+.onb-step.active { display: block; }
+@keyframes onbIn { from { opacity: 0; transform: translateX(12px); } }
+.onb-avatar { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; margin: 0 auto 14px; display: block; }
+.onb-initials { display: grid; place-items: center; background: var(--brand); color: #fff; font-size: 26px; font-weight: 900; }
+.onb h2 { font-size: 22px; font-weight: 850; text-align: center; margin-bottom: 8px; letter-spacing: -.01em; }
+.onb-sub { color: var(--muted); font-size: 14.5px; text-align: center; margin: 0 0 22px; }
+.onb-confirm { background: var(--bg); border-radius: var(--r); padding: 4px 14px; margin-bottom: 22px; }
+.onb-crow { display: flex; justify-content: space-between; padding: 12px 0; font-size: 14px; }
+.onb-crow + .onb-crow { border-top: 1px solid var(--line); }
+.onb-crow span { color: var(--muted); font-weight: 600; }
+.onb-crow b { font-weight: 800; max-width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.onb-label { display: block; font-size: 12px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin: 14px 0 7px; }
+.onb-input { width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--bg); color: var(--ink); outline: none; font-size: 16px; transition: border-color .15s, box-shadow .15s; }
+.onb-input:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(35,85,245,.14); }
+.onb-chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 9px; }
+.onb-chip { background: var(--soft); border: 1px solid var(--line); color: #3a4d6c; border-radius: 999px; padding: 7px 13px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background .15s, color .15s; }
+.onb-chip.on { background: var(--brand); color: #fff; border-color: var(--brand); }
+.onb-tag { display: inline-flex; align-items: center; gap: 7px; background: rgba(35,85,245,.1); color: var(--brand-d); border-radius: 999px; padding: 7px 12px; font-size: 13px; font-weight: 700; }
+.onb-tag button { font-size: 15px; line-height: 1; font-weight: 900; opacity: .65; }
+.onb-tag.suggest { background: var(--card); border: 1px dashed var(--line); color: var(--muted); cursor: pointer; }
+.onb-check { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--r-sm); background: var(--bg); cursor: pointer; font-weight: 700; margin-top: 16px; }
+.onb-check input { width: 18px; height: 18px; accent-color: var(--brand); }
+.onb-nav { display: flex; gap: 10px; margin-top: 24px; }
+.onb-nav .btn { flex: 1; }
+.btn-ghost { background: var(--bg); color: var(--ink); border: 1px solid var(--line); }
+
 /* ── App shell ────────────────────────────────────────── */
 #appView { display: flex; flex-direction: column; height: 100dvh; }
 

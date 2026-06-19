@@ -1,5 +1,7 @@
 import express from 'express';
 import session from 'express-session';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
 import { fileURLToPath } from 'url';
 import path from 'path';
 import * as auth from './src/auth.js';
@@ -11,14 +13,43 @@ const PORT = process.env.PORT || 3000;
 const isProd = process.env.NODE_ENV === 'production';
 
 const app = express();
-app.use(express.json());
+if (isProd) app.set('trust proxy', 1); // behind Railway/Heroku TLS proxy → secure cookies
+
+// ── Security headers (CSP, HSTS, X-Frame-Options DENY, etc.) ────────────────
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc:  ["'self'"],
+      scriptSrc:   ["'self'"],
+      styleSrc:    ["'self'"],
+      imgSrc:      ["'self'", 'data:', 'https://media.licdn.com', 'https://*.licdn.com'],
+      connectSrc:  ["'self'"],
+      formAction:  ["'self'", 'https://www.linkedin.com'],
+      frameAncestors: ["'none'"],
+      objectSrc:   ["'none'"],
+      baseUri:     ["'self'"],
+      upgradeInsecureRequests: isProd ? [] : null
+    }
+  },
+  hsts: isProd ? { maxAge: 31536000, includeSubDomains: true } : false,
+  referrerPolicy: { policy: 'same-origin' }
+}));
+
+app.use(express.json({ limit: '64kb' }));
 app.use(session({
+  name: 'js.sid',
   secret: process.env.SESSION_SECRET || 'jobscout-dev-secret-change-in-prod',
   resave: false,
   saveUninitialized: false,
   cookie: { httpOnly: true, secure: isProd, maxAge: 30 * 24 * 60 * 60 * 1000, sameSite: 'lax' }
 }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+// ── Rate limiting ───────────────────────────────────────────────────────────
+const apiLimiter  = rateLimit({ windowMs: 15 * 60 * 1000, max: 300, standardHeaders: true, legacyHeaders: false });
+const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 30,  standardHeaders: true, legacyHeaders: false });
+app.use('/api',  apiLimiter);
+app.use('/auth', authLimiter);
 
 const requireAuth = (req, res, next) => {
   if (!req.session.userId) return res.status(401).json({ error: 'unauthenticated' });
@@ -93,9 +124,11 @@ app.patch('/api/me', requireAuth, (req, res) => {
 app.get('/api/jobs', requireAuth, async (req, res) => {
   const user  = store.getUser(req.session.userId);
   const query = req.query.q?.trim() || user.prefs?.roles?.[0] || user.skills?.[0] || '';
+  // Location for geo-aware sources (JSearch): query param > first preferred location
+  const location = req.query.loc?.trim() || user.prefs?.locations?.[0] || '';
 
   try {
-    const raw       = await jobs.fetchAll(query);
+    const raw       = await jobs.fetchAll(query, location);
     const lastVisit = user.lastVisit ? new Date(user.lastVisit) : null;
 
     const scored = raw
