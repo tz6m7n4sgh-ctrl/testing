@@ -357,3 +357,7 @@ h1,h2,h3{margin:0;line-height:1.2}
 /* application funnel */
 .funnel-rate{margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:13px;color:var(--muted);font-weight:700;text-align:center}
 .funnel-rate b{color:var(--accent-d);font-size:15px}
+
+/* not-interested */
+.md-dismiss{width:100%;margin-top:10px;padding:11px;border-radius:var(--r-sm);background:transparent;color:var(--muted);font-weight:700;font-size:13.5px;border:1px solid var(--line)}
+.md-dismiss:active{background:var(--soft)}
