@@ -152,6 +152,17 @@ app.post('/api/understand', async (req, res) => {
   }
 });
 
+// ── Anonymous guest session (manual-setup path, no understand) ──
+app.post('/api/session/guest', (req, res) => {
+  if (!req.session.userId) {
+    const id = 'guest-' + Math.random().toString(36).slice(2, 12);
+    store.upsertUser({ id, name: 'Guest', email: '', photo: '', headline: '', skills: [],
+      prefs: { roles: [], locations: [], level: '', remote: false } });
+    req.session.userId = id;
+  }
+  res.json(store.getUser(req.session.userId));
+});
+
 // ── CV parse (free: text in → structured fields out) ──
 app.post('/api/cv', (req, res) => {
   const text = req.body?.text;
