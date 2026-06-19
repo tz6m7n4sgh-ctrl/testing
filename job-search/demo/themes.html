@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; script-src 'none'; base-uri 'self'; frame-ancestors 'none'"/>
+<title>JobScout — Theme options</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#eef2f7;color:#0f1929;padding:18px;line-height:1.5}
+  .head{max-width:980px;margin:0 auto 18px;text-align:center}
+  .head h1{font-size:22px;font-weight:850}
+  .head p{color:#5a6a82;font-size:14px;margin-top:6px}
+  .grid{max-width:980px;margin:0 auto;display:grid;gap:18px;grid-template-columns:1fr}
+  @media(min-width:760px){.grid{grid-template-columns:1fr 1fr}}
+
+  .opt{background:#fff;border:1px solid #e3eaf5;border-radius:20px;overflow:hidden;box-shadow:0 6px 24px rgba(15,25,41,.08)}
+  .opt-h{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid #eef1f7}
+  .opt-num{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-weight:900;color:#fff;font-size:15px}
+  .opt-name{font-weight:850;font-size:15px}
+  .opt-vibe{font-size:12.5px;color:#5a6a82;font-weight:600}
+  .swatches{display:flex;gap:6px;margin-left:auto}
+  .sw{width:18px;height:18px;border-radius:6px;border:1px solid rgba(0,0,0,.08)}
+
+  /* phone mockup */
+  .phone{padding:16px;display:flex;justify-content:center}
+  .scr{width:100%;max-width:300px;border-radius:22px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+  .bar{display:flex;align-items:center;gap:8px;padding:12px 14px;color:#fff;font-weight:850;font-size:14px}
+  .bar .logo{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font-size:14px}
+  .body{padding:14px;display:flex;flex-direction:column;gap:12px}
+  .greet{font-weight:850;font-size:15px}
+  .greet small{display:block;font-weight:600;font-size:11.5px;opacity:.7;margin-top:2px}
+  .card{border-radius:14px;padding:12px;display:flex;gap:11px;align-items:flex-start;border:1px solid rgba(0,0,0,.06)}
+  .ring{width:46px;height:46px;border-radius:12px;display:grid;place-content:center;color:#fff;font-weight:900;font-size:16px;flex:none}
+  .ring small{display:block;font-size:7px;font-weight:800;opacity:.9}
+  .ct{flex:1;min-width:0}
+  .ct .t{font-weight:850;font-size:13.5px}
+  .ct .c{font-size:11.5px;opacity:.6;font-weight:700}
+  .chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+  .chip{font-size:9.5px;font-weight:800;border-radius:999px;padding:3px 7px}
+  .btn{padding:11px;border-radius:11px;text-align:center;color:#fff;font-weight:850;font-size:13.5px}
+  .btn2{padding:10px;border-radius:11px;text-align:center;font-weight:800;font-size:13px;border:1px solid}
+</style>
+</head>
+<body>
+<div class="head">
+  <h1>🎨 Pick a theme</h1>
+  <p>Four modern, responsive looks. Tell me the number you like and I'll apply it across the whole app.</p>
+</div>
+
+<div class="grid">
+
+  <!-- OPTION 1 — OCEAN -->
+  <div class="opt">
+    <div class="opt-h">
+      <span class="opt-num" style="background:#2f6df6">1</span>
+      <div><div class="opt-name">Ocean</div><div class="opt-vibe">Clean, professional, techy</div></div>
+      <div class="swatches"><span class="sw" style="background:#0b1220"></span><span class="sw" style="background:#2f6df6"></span><span class="sw" style="background:#15c39a"></span></div>
+    </div>
+    <div class="phone"><div class="scr" style="background:#f0f4ff">
+      <div class="bar" style="background:#0b1220"><span class="logo" style="background:linear-gradient(135deg,#2f6df6,#15c39a)">🎯</span> JobScout</div>
+      <div class="body">
+        <div class="greet" style="color:#0f1929">Good morning, Ahmed 👋<small style="color:#5a6a82">14 Frontend jobs in Dubai</small></div>
+        <div class="card" style="background:#fff">
+          <div class="ring" style="background:linear-gradient(135deg,#15c39a,#0fa07c)">92<small>MATCH</small></div>
+          <div class="ct"><div class="t" style="color:#0f1929">Senior Frontend Dev</div><div class="c">Careem · Dubai</div>
+            <div class="chips"><span class="chip" style="background:rgba(21,195,154,.16);color:#0fa07c">Remote</span><span class="chip" style="background:#eef1fd;color:#2f6df6">AED 30k</span></div></div>
+        </div>
+        <div class="btn" style="background:linear-gradient(135deg,#2f6df6,#1640d1)">🔎 Find my jobs</div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- OPTION 2 — VIOLET -->
+  <div class="opt">
+    <div class="opt-h">
+      <span class="opt-num" style="background:#7c5cff">2</span>
+      <div><div class="opt-name">Violet</div><div class="opt-vibe">Trendy, friendly SaaS</div></div>
+      <div class="swatches"><span class="sw" style="background:#15122b"></span><span class="sw" style="background:#7c5cff"></span><span class="sw" style="background:#ff5d8f"></span></div>
+    </div>
+    <div class="phone"><div class="scr" style="background:#f6f4ff">
+      <div class="bar" style="background:#15122b"><span class="logo" style="background:linear-gradient(135deg,#7c5cff,#ff5d8f)">🎯</span> JobScout</div>
+      <div class="body">
+        <div class="greet" style="color:#1a1530">Good morning, Ahmed 👋<small style="color:#6b6385">14 Frontend jobs in Dubai</small></div>
+        <div class="card" style="background:#fff">
+          <div class="ring" style="background:linear-gradient(135deg,#7c5cff,#5b3df0)">92<small>MATCH</small></div>
+          <div class="ct"><div class="t" style="color:#1a1530">Senior Frontend Dev</div><div class="c">Careem · Dubai</div>
+            <div class="chips"><span class="chip" style="background:rgba(255,93,143,.16);color:#e0356f">Remote</span><span class="chip" style="background:#f0ecff;color:#7c5cff">AED 30k</span></div></div>
+        </div>
+        <div class="btn" style="background:linear-gradient(135deg,#7c5cff,#5b3df0)">🔎 Find my jobs</div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- OPTION 3 — EMERALD -->
+  <div class="opt">
+    <div class="opt-h">
+      <span class="opt-num" style="background:#10b981">3</span>
+      <div><div class="opt-name">Emerald</div><div class="opt-vibe">Premium, calm, career-focused</div></div>
+      <div class="swatches"><span class="sw" style="background:#0e1a16"></span><span class="sw" style="background:#10b981"></span><span class="sw" style="background:#f5c451"></span></div>
+    </div>
+    <div class="phone"><div class="scr" style="background:#f1f7f4">
+      <div class="bar" style="background:#0e1a16"><span class="logo" style="background:linear-gradient(135deg,#10b981,#f5c451)">🎯</span> JobScout</div>
+      <div class="body">
+        <div class="greet" style="color:#0e1a16">Good morning, Ahmed 👋<small style="color:#5c6f67">14 Frontend jobs in Dubai</small></div>
+        <div class="card" style="background:#fff">
+          <div class="ring" style="background:linear-gradient(135deg,#10b981,#0a8f66)">92<small>MATCH</small></div>
+          <div class="ct"><div class="t" style="color:#0e1a16">Senior Frontend Dev</div><div class="c">Careem · Dubai</div>
+            <div class="chips"><span class="chip" style="background:rgba(16,185,129,.16);color:#0a8f66">Remote</span><span class="chip" style="background:rgba(245,196,81,.22);color:#9a7510">AED 30k</span></div></div>
+        </div>
+        <div class="btn" style="background:linear-gradient(135deg,#10b981,#0a8f66)">🔎 Find my jobs</div>
+      </div>
+    </div></div>
+  </div>
+
+  <!-- OPTION 4 — SUNSET -->
+  <div class="opt">
+    <div class="opt-h">
+      <span class="opt-num" style="background:#ff6b35">4</span>
+      <div><div class="opt-name">Sunset</div><div class="opt-vibe">Bold, energetic, modern</div></div>
+      <div class="swatches"><span class="sw" style="background:#1b1020"></span><span class="sw" style="background:#ff6b35"></span><span class="sw" style="background:#ff2d75"></span></div>
+    </div>
+    <div class="phone"><div class="scr" style="background:#fdf1ee">
+      <div class="bar" style="background:#1b1020"><span class="logo" style="background:linear-gradient(135deg,#ff6b35,#ff2d75)">🎯</span> JobScout</div>
+      <div class="body">
+        <div class="greet" style="color:#241326">Good morning, Ahmed 👋<small style="color:#7a6470">14 Frontend jobs in Dubai</small></div>
+        <div class="card" style="background:#fff">
+          <div class="ring" style="background:linear-gradient(135deg,#ff6b35,#ff2d75)">92<small>MATCH</small></div>
+          <div class="ct"><div class="t" style="color:#241326">Senior Frontend Dev</div><div class="c">Careem · Dubai</div>
+            <div class="chips"><span class="chip" style="background:rgba(255,45,117,.14);color:#e01e63">Remote</span><span class="chip" style="background:rgba(255,107,53,.16);color:#d4521f">AED 30k</span></div></div>
+        </div>
+        <div class="btn" style="background:linear-gradient(135deg,#ff6b35,#ff2d75)">🔎 Find my jobs</div>
+      </div>
+    </div></div>
+  </div>
+
+</div>
+</body>
+</html>
