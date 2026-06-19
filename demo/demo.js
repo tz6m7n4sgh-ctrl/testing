@@ -9,13 +9,34 @@ const esc = s => { const d = document.createElement('div'); d.textContent = s ??
 
 /* ── Profile (seeded; editable in onboarding) ── */
 const profile = {
-  linkedin: true,
+  provider: 'LinkedIn', linkedin: true,
   name: 'Ahmed Al Mansoori', email: 'ahmed@example.com',
-  role: 'Frontend Developer', location: 'Dubai', remote: true,
-  // Skills are auto-identified in Stage 1 (mock: from GitHub + LinkedIn). User can add more.
-  skills: ['React', 'TypeScript', 'JavaScript', 'Node.js', 'CSS', 'Git'], level: 'mid'
+  role: 'Frontend Developer', remote: true, level: 'mid',
+  // structured fields with the source they were extracted from
+  headline:  { val: 'Frontend Developer · Dubai', src: 'linkedin' },
+  location:  { val: 'Dubai, UAE', src: 'web' },
+  experience: [
+    { title: 'Frontend Developer', company: 'Property Finder', period: '2021–2024', src: 'linkedin' },
+    { title: 'Junior Web Developer', company: 'Tech Startup', period: '2019–2021', src: 'linkedin' }
+  ],
+  education: [],   // filled from CV
+  phone:     { val: '', src: 'missing' },
+  // Skills auto-identified from GitHub/web; user can add (src 'you'); CV can add (src 'cv')
+  skills: ['React', 'TypeScript', 'JavaScript', 'Node.js', 'CSS', 'Git'],
+  skillSrc: { React: 'github', TypeScript: 'github', JavaScript: 'github', 'Node.js': 'github', CSS: 'web', Git: 'github' }
 };
-const state = { searched: false };
+
+// Public references found by the "understand" agent — user confirms which are them.
+const SOURCES = [
+  { id: 'li', ic: '💼', name: 'LinkedIn', extract: 'Headline, experience, location', on: true },
+  { id: 'gh', ic: '🐙', name: 'GitHub',   extract: 'Skills: React, Node.js, TypeScript', on: true },
+  { id: 'md', ic: '✍️', name: 'Medium',   extract: '2 articles on React performance', on: true },
+  { id: 'gx', ic: '🎤', name: 'GITEX',    extract: 'Speaker — public-speaking experience', on: true },
+  { id: 'x',  ic: '🐦', name: 'X / Twitter', extract: 'Low activity', on: false }
+];
+const state = { extracted: false, cvParsed: false, searched: false };
+
+function get(v) { return v && typeof v === 'object' ? v.val : v; }  // helper for {val,src}
 
 const ROLE_CHIPS = ['Frontend Developer','Backend Engineer','Full Stack','Data Analyst','Product Manager','UX Designer','DevOps','Accountant'];
 const LOC_CHIPS  = ['Dubai','Abu Dhabi','Sharjah','United Arab Emirates','Remote'];
@@ -49,21 +70,24 @@ function showView(id) {
 
 function initials(name) { return (name || '?').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase(); }
 
-/* LinkedIn path → Stage 1: understand profile → assessment (skills auto-built). */
-$('#loginBtn').onclick = () => { profile.linkedin = true; runUnderstandAgent(); };
-/* Guest path: no LinkedIn → manual quick setup (must type skills), then search. */
+/* OAuth paths → Stage 1: agent understands profile → profile page. */
+function signIn(provider) { profile.provider = provider; profile.linkedin = true; runUnderstandAgent(); }
+$('#loginBtn').onclick = () => signIn('LinkedIn');
+$('#googleBtn').onclick = () => signIn('Google');
+$('#otherBtn').onclick  = () => signIn('Email');
+/* Guest path: no sign-in → manual quick setup (type skills), then search. */
 $('#skipBtn').onclick = () => {
-  profile.linkedin = false; profile.name = 'Guest'; profile.email = '';
-  profile.skills = [];
+  profile.linkedin = false; profile.provider = ''; profile.name = 'Guest'; profile.email = '';
+  profile.skills = []; profile.skillSrc = {};
   showSetup();
 };
 
 /* Stage 1: agent understands the profile and identifies skills, then assessment. */
 function runUnderstandAgent() {
   runAgentScreen('Understanding your profile…', 'Reading what the web publicly shows about you',
-    [`Reading your LinkedIn basics`, `Searching "${profile.name}" on the web`,
-     'Scanning GitHub & social', 'Identifying your skills', 'Assessing your profile health'],
-    showAssessment);
+    [`Reading your ${profile.provider} basics`, `Searching "${profile.name}" on the web`,
+     'Scanning GitHub & social', 'Gathering references about you', 'Assessing your profile health'],
+    showProfile);
 }
 
 /* ── Quick setup (single screen) ── */
@@ -86,7 +110,7 @@ function showSetup() {
 
   $('#setGo').onclick = () => {
     profile.role     = $('#setRole').value.trim() || profile.role;
-    profile.location = $('#setLoc').value.trim() || profile.location;
+    profile.location = { val: $('#setLoc').value.trim() || get(profile.location), src: 'you' };
     profile.remote   = $('#setRemote').checked;
     profile.skills   = _skills;
     runSearchAgent();
@@ -188,48 +212,108 @@ function ringGrad(s) {
   return `conic-gradient(${color} ${s * 3.6}deg, var(--soft) 0deg)`;
 }
 
-function showAssessment() {
+function srcTag(src) {
+  const map = { linkedin: ['linkedin', 'LinkedIn'], web: ['web', 'Web'], github: ['github', 'GitHub'],
+                cv: ['cv', 'CV'], you: ['web', 'You'], missing: ['missing', 'Add via CV'] };
+  const [cls, label] = map[src] || ['web', src];
+  return `<span class="src-tag ${cls}">${esc(label)}</span>`;
+}
+
+function completeness() {
+  const checks = [get(profile.headline), get(profile.location), profile.skills.length,
+                  profile.experience.length, profile.education.length, get(profile.phone)];
+  return Math.round(100 * checks.filter(Boolean).length / checks.length);
+}
+
+/* ── Profile page (Stage 1) ── */
+function showProfile() {
   showView('v-assess');
   $('#asInitials').textContent = initials(profile.name);
   $('#asName').textContent = profile.name;
-  $('#asMail').textContent = profile.email;
+  $('#asMail').textContent = profile.email || (profile.provider ? profile.provider + ' account' : '');
+  $('#assessHeading').textContent = state.extracted ? 'Your profile' : 'We found these references';
+  $('#assessSubhead').textContent = state.extracted
+    ? 'Built from your online presence' + (state.cvParsed ? ' + your CV' : '') + ' · public info only'
+    : 'Confirm which are you — we’ll extract your skills, experience & location';
 
-  const s = ASSESS;
-  $('#assessBody').innerHTML = `
-    <div class="score-row">
-      <div class="score-card">
-        <div class="big-ring" style="background:${ringGrad(s.presence)}">
-          <div class="big-ring" style="width:64px;height:64px;background:var(--card)">
-            <span class="rv">${s.presence}</span>
-          </div>
-        </div>
-        <div class="cl">Profile health</div>
-      </div>
-      <div class="score-card">
-        <div style="font-size:25px;font-weight:900;color:var(--accent-d);margin:8px 0 6px">${s.sentiment.pos}%</div>
-        <div class="sent-bar">
-          <i style="width:${s.sentiment.pos}%;background:var(--accent)"></i>
-          <i style="width:${s.sentiment.neu}%;background:var(--warn)"></i>
-          <i style="width:${s.sentiment.neg}%;background:var(--bad)"></i>
-        </div>
-        <div class="cl">Positive mentions</div>
-      </div>
+  $('#assessBody').innerHTML = state.extracted ? profileHTML() : sourcesHTML();
+
+  if (!state.extracted) {
+    $$('#assessBody .src-check').forEach(el => el.onclick = () => {
+      const s = SOURCES.find(x => x.id === el.dataset.id); s.on = !s.on;
+      el.classList.toggle('on', s.on);
+    });
+    $('#confirmSources').onclick = () => { state.extracted = true; showProfile(); };
+  } else {
+    _skills = [...profile.skills];
+    skillInput('#asSkill', '#asSkillTags', '#asSkillSuggest');
+    const cvBtn = $('#cvUploadBtn'), cvInput = $('#cvInput'), sample = $('#cvSample');
+    if (cvBtn)   cvBtn.onclick = () => cvInput.click();
+    if (cvInput) cvInput.onchange = () => { saveProfileEdits(); parseCV(); };
+    if (sample)  sample.onclick = e => { e.preventDefault(); saveProfileEdits(); parseCV(); };
+  }
+
+  $('#assessBack').classList.toggle('hide', !state.searched);
+  $('#assessCta').classList.toggle('hide', state.searched || !state.extracted);
+  $('#assessBack').onclick = () => { saveProfileEdits(); showDashboard(); };
+  $('#assessFind').onclick = () => { saveProfileEdits(); runSearchAgent(); };
+}
+
+function sourcesHTML() {
+  return `
+    <div class="acard">
+      <h3>🔗 Is this you?</h3>
+      <p class="fp-desc" style="margin-bottom:8px">We searched the web for “${esc(profile.name)}”. Tick the references that are you.</p>
+      ${SOURCES.map(s => `
+        <div class="src-item">
+          <span class="src-check ${s.on ? 'on' : ''}" data-id="${s.id}">✓</span>
+          <span class="fp-ic">${s.ic}</span>
+          <div class="src-main"><div class="src-name">${esc(s.name)}</div><div class="src-extract">${esc(s.extract)}</div></div>
+        </div>`).join('')}
+    </div>
+    <button class="btn btn-primary full" id="confirmSources">Confirm &amp; extract my profile →</button>`;
+}
+
+function profileHTML() {
+  const s = ASSESS, c = completeness();
+  const eduRows = profile.education.length
+    ? profile.education.map(e => `<div class="exp-item"><span class="exp-dot" style="background:var(--accent)"></span><div class="exp-main"><div class="exp-role">${esc(e.degree)}</div><div class="exp-co">${esc(e.school)} · ${esc(e.year)}</div></div>${srcTag(e.src)}</div>`).join('')
+    : `<div class="pending-note">No education found online — upload your CV to add it.</div>`;
+  return `
+    <div class="complete-card">
+      <div class="complete-top"><b>Profile completeness</b><span>${c}%</span></div>
+      <div class="complete-track"><div class="complete-fill" style="width:${c}%"></div></div>
     </div>
 
-    <div class="acard" style="display:flex;align-items:center;gap:12px">
-      <span style="font-size:22px">🔗</span>
-      <div style="flex:1"><div class="fp-name">Is this you?</div><div class="fp-desc">Findings matched to ${esc(profile.name)}. Tell us if any aren't you.</div></div>
-      <span class="fp-tag pos">Confirmed</span>
+    ${state.cvParsed
+      ? `<div class="cv-done">✓ CV parsed — gaps below were filled (tagged CV)</div>`
+      : `<div class="cv-card">
+          <h3>📄 Add your CV to complete your profile</h3>
+          <p>We'll parse it and fill anything we couldn't find online.</p>
+          <button class="cv-upload-btn" id="cvUploadBtn">⬆ Upload CV (PDF)</button>
+          <input type="file" id="cvInput" accept=".pdf,.doc,.docx" hidden/>
+          <div style="margin-top:10px"><a href="#" id="cvSample" style="color:#aec4ee;font-size:12.5px;font-weight:700">or use a sample CV</a></div>
+        </div>`}
+
+    <div class="acard">
+      <h3>🧾 Details</h3>
+      <div class="field-line"><div class="field-main"><div class="field-lbl">Headline</div><div class="field-val">${esc(get(profile.headline))}</div></div>${srcTag(profile.headline.src)}</div>
+      <div class="field-line"><div class="field-main"><div class="field-lbl">Location</div><div class="field-val">${esc(get(profile.location))}</div></div>${srcTag(profile.location.src)}</div>
+      <div class="field-line"><div class="field-main"><div class="field-lbl">Phone</div><div class="field-val ${get(profile.phone) ? '' : 'empty'}">${esc(get(profile.phone) || 'Not found — add via CV')}</div></div>${srcTag(profile.phone.src)}</div>
     </div>
 
     <div class="acard">
-      <h3>🪞 How you look</h3>
-      <p class="summary-txt">${esc(s.summary)}</p>
+      <h3>💼 Experience</h3>
+      ${profile.experience.map(e => `<div class="exp-item"><span class="exp-dot"></span><div class="exp-main"><div class="exp-role">${esc(e.title)}</div><div class="exp-co">${esc(e.company)} · ${esc(e.period)}</div></div>${srcTag(e.src)}</div>`).join('')}
     </div>
 
     <div class="acard">
-      <h3>⚡ Skills we identified</h3>
-      <p class="fp-desc" style="margin-bottom:10px">Built automatically from your profile — add any we missed.</p>
+      <h3>🎓 Education</h3>
+      ${eduRows}
+    </div>
+
+    <div class="acard">
+      <h3>⚡ Skills <span class="fp-desc" style="font-weight:600">· from GitHub &amp; web${state.cvParsed ? ' + CV' : ''}</span></h3>
       <div class="onb-chips" id="asSkillTags"></div>
       <input type="text" id="asSkill" class="onb-input" placeholder="+ Add a skill, press Enter" autocomplete="off" style="margin-top:10px"/>
       <div class="onb-chips" id="asSkillSuggest"></div>
@@ -240,60 +324,44 @@ function showAssessment() {
       <label class="onb-label">Role</label>
       <input type="text" id="asRole" class="onb-input" value="${esc(profile.role)}" autocomplete="off"/>
       <label class="onb-label">Location in the UAE</label>
-      <input type="text" id="asLoc" class="onb-input" value="${esc(profile.location)}" autocomplete="off"/>
+      <input type="text" id="asLoc" class="onb-input" value="${esc(get(profile.location))}" autocomplete="off"/>
     </div>
 
-    <div class="acard">
-      <h3>🌐 Public footprint</h3>
-      ${s.footprint.map(f => `
-        <div class="fp-item">
-          <span class="fp-ic">${f.ic}</span>
-          <div class="fp-main"><div class="fp-name">${esc(f.name)}</div><div class="fp-desc">${esc(f.desc)}</div></div>
-          <span class="fp-tag ${f.tag}">${f.tag === 'pos' ? 'Positive' : 'Neutral'}</span>
-        </div>`).join('')}
-    </div>
-
-    <div class="acard">
-      <h3>📸 Profile photo</h3>
-      <div class="photo-row">
-        <div class="photo-thumb">${esc(initials(profile.name))}</div>
-        <div class="photo-meta">
-          <div class="photo-score">Score: ${esc(s.photo.score)}</div>
-          <div class="fp-desc" style="margin-top:3px">${esc(s.photo.note)}</div>
-        </div>
+    <div class="score-row">
+      <div class="score-card">
+        <div class="big-ring" style="background:${ringGrad(s.presence)}"><div class="big-ring" style="width:64px;height:64px;background:var(--card)"><span class="rv">${s.presence}</span></div></div>
+        <div class="cl">Profile health</div>
+      </div>
+      <div class="score-card">
+        <div style="font-size:25px;font-weight:900;color:var(--accent-d);margin:8px 0 6px">${s.sentiment.pos}%</div>
+        <div class="sent-bar"><i style="width:${s.sentiment.pos}%;background:var(--accent)"></i><i style="width:${s.sentiment.neu}%;background:var(--warn)"></i><i style="width:${s.sentiment.neg}%;background:var(--bad)"></i></div>
+        <div class="cl">Positive mentions</div>
       </div>
     </div>
 
-    <div class="acard">
-      <h3>✅ Strengths</h3>
-      <div class="tagwrap">${s.strengths.map(t => `<span class="gtag">${esc(t)}</span>`).join('')}</div>
-    </div>
-
-    <div class="acard">
-      <h3>💡 Suggestions to stand out</h3>
-      ${s.suggestions.map(t => `<div class="sg-item"><span class="sgi">→</span><span>${esc(t)}</span></div>`).join('')}
-    </div>`;
-
-  // Auto-built skills (editable) + suggestions
-  _skills = [...profile.skills];
-  skillInput('#asSkill', '#asSkillTags', '#asSkillSuggest');
-
-  // Stage-dependent header / nav / CTA
-  $('#assessHeading').textContent = state.searched ? 'Profile health & visibility' : 'We understood your profile';
-  $('#assessSubhead').textContent = state.searched
-    ? 'How your professional presence looks online · public info only'
-    : 'Here’s how you look and the skills we identified · public info only';
-  $('#assessBack').classList.toggle('hide', !state.searched);
-  $('#assessCta').classList.toggle('hide', state.searched);
-
-  $('#assessBack').onclick = () => { saveAssessEdits(); showDashboard(); };
-  $('#assessFind').onclick = () => { saveAssessEdits(); runSearchAgent(); };
+    <div class="acard"><h3>🪞 How you look</h3><p class="summary-txt">${esc(s.summary)}</p></div>
+    <div class="acard"><h3>💡 Suggestions to stand out</h3>${s.suggestions.map(t => `<div class="sg-item"><span class="sgi">→</span><span>${esc(t)}</span></div>`).join('')}</div>`;
 }
 
-function saveAssessEdits() {
-  profile.skills   = _skills;
-  profile.role     = $('#asRole')?.value.trim() || profile.role;
-  profile.location = $('#asLoc')?.value.trim() || profile.location;
+function saveProfileEdits() {
+  if ($('#asRole')) profile.role = $('#asRole').value.trim() || profile.role;
+  if ($('#asLoc'))  profile.location = { val: $('#asLoc').value.trim() || get(profile.location), src: profile.location.src };
+  if (_skills.length) profile.skills = _skills;
+}
+
+/* CV upload → parse → fill gaps (tagged 'cv') */
+function parseCV() {
+  runAgentScreen('Parsing your CV…', 'Extracting details and filling the gaps',
+    ['Reading your CV', 'Extracting experience & education', 'Detecting contact details', 'Merging with your profile'],
+    () => {
+      if (!profile.education.length) profile.education = [{ degree: 'BSc Computer Science', school: 'American University of Sharjah', year: '2019', src: 'cv' }];
+      if (!get(profile.phone)) profile.phone = { val: '+971 50 123 4567', src: 'cv' };
+      ['Docker', 'GraphQL'].forEach(sk => {
+        if (!profile.skills.some(x => x.toLowerCase() === sk.toLowerCase())) { profile.skills.push(sk); profile.skillSrc[sk] = 'cv'; }
+      });
+      state.cvParsed = true;
+      showProfile();
+    });
 }
 
 /* ── Matching (mirrors backend score()) ── */
@@ -323,7 +391,8 @@ function scoreJob(job) {
 
   let pct = max > 0 ? Math.round(100 * raw / max) : 0;
   if (profile.remote && job.remote) pct += 6;
-  if (profile.location && job.location.toLowerCase().includes(profile.location.toLowerCase())) { pct += 5; reasons.push('Location fits'); }
+  const locVal = get(profile.location);
+  if (locVal && job.location.toLowerCase().includes(locVal.toLowerCase())) { pct += 5; reasons.push('Location fits'); }
   if (job.days <= 7) { pct += 6; reasons.push('Posted this week'); }
   return { score: Math.max(0, Math.min(100, pct)), reasons, isNew: job.days <= 3 };
 }
@@ -341,7 +410,7 @@ function showDashboard() {
   const hour = new Date().getHours();
   const greet = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
   $('#dashGreet').textContent = `${greet}, ${profile.name.split(' ')[0]} 👋`;
-  $('#dashSub').textContent = `${scored.length} ${profile.role} jobs in ${profile.location}`;
+  $('#dashSub').textContent = `${scored.length} ${profile.role} jobs in ${get(profile.location)}`;
 
   renderStats();
   renderProfileHealth();
@@ -363,7 +432,7 @@ function renderProfileHealth() {
         </div>
         <span class="ph-arrow">›</span>
       </div>`;
-    $('#phCard').onclick = showAssessment;
+    $('#phCard').onclick = showProfile;
   } else {
     box.innerHTML = `
       <div class="ph-card" id="phCard">
@@ -504,5 +573,5 @@ function bindNav() {
   $('#viewAllBtn').onclick = () => goTab('jobs');
   $('#qaSearch').onclick = () => goTab('jobs');
   $('#qaSaved').onclick  = () => goTab('jobs');
-  $('#qaProfile').onclick = () => { profile.linkedin ? showAssessment() : showSetup(); };
+  $('#qaProfile').onclick = () => { profile.linkedin ? showProfile() : showSetup(); };
 }
