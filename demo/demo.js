@@ -1,6 +1,7 @@
 'use strict';
 /* JobScout — static PREVIEW (mock data, no backend). Demonstrates the full flow:
-   login → onboarding → agent search → dashboard. CSP-strict: no inline handlers. */
+   login → quick setup → one parallel agent run → dashboard (with profile-health
+   card → full assessment). CSP-strict: no inline handlers. */
 
 const $  = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -8,6 +9,7 @@ const esc = s => { const d = document.createElement('div'); d.textContent = s ??
 
 /* ── Profile (seeded; editable in onboarding) ── */
 const profile = {
+  linkedin: true,
   name: 'Ahmed Al Mansoori', email: 'ahmed@example.com',
   role: 'Frontend Developer', location: 'Dubai', remote: true,
   skills: ['React', 'TypeScript', 'JavaScript'], level: 'mid'
@@ -45,44 +47,39 @@ function showView(id) {
 
 function initials(name) { return (name || '?').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase(); }
 
-$('#loginBtn').onclick = () => runAgentScreen(
-  'Assessing your public profile…',
-  'Searching what the web publicly shows about you',
-  [`Searching "${profile.name}" on the web`, 'Checking email & username presence',
-   'Analyzing your profile photo', 'Scanning LinkedIn, GitHub & social', 'Computing presence & sentiment'],
-  showAssessment
-);
+/* LinkedIn path: keep seeded profile (name + GitHub-detected skills). */
+$('#loginBtn').onclick = () => { profile.linkedin = true; showSetup(); };
+/* Guest path: no LinkedIn data, no detected skills, assessment unavailable. */
+$('#skipBtn').onclick = () => {
+  profile.linkedin = false; profile.name = 'Guest'; profile.email = '';
+  profile.skills = [];
+  showSetup();
+};
 
-/* ── Onboarding ── */
+/* ── Quick setup (single screen) ── */
 let _skills = [];
-function setupOnboarding() {
-  $('#onbInitials').textContent = initials(profile.name);
-  $('#onbName').textContent     = profile.name.split(' ')[0];
-  $('#onbCName').textContent    = profile.name;
-  $('#onbCEmail').textContent   = profile.email;
+function showSetup() {
+  showView('v-setup');
+  $('#setInitials').textContent = initials(profile.name);
+  $('#setHi').textContent = profile.linkedin
+    ? `Let's find your jobs, ${profile.name.split(' ')[0]}`
+    : "Let's find your UAE jobs";
+  $('#setSkillNote').textContent = profile.linkedin
+    ? '— detected from your profile, edit if needed'
+    : '— add a few to power matching';
 
-  let step = 1;
-  const go = n => {
-    step = n;
-    $$('#v-onboarding .onb-step').forEach(s => s.classList.toggle('active', +s.dataset.step === n));
-    $$('#v-onboarding .onb-dot').forEach((d, i) => d.classList.toggle('active', i < n));
-  };
-  $$('#v-onboarding [data-next]').forEach(b => b.onclick = () => go(Math.min(3, step + 1)));
-  $$('#v-onboarding [data-back]').forEach(b => b.onclick = () => go(Math.max(1, step - 1)));
-
-  chips('#onbRoleChips', ROLE_CHIPS, '#onbRole');
-  chips('#onbLocChips',  LOC_CHIPS,  '#onbLoc');
+  chips('#setRoleChips', ROLE_CHIPS, '#setRole');
+  chips('#setLocChips',  LOC_CHIPS,  '#setLoc');
 
   _skills = [...profile.skills];
-  skillInput();
+  skillInput('#setSkill', '#setSkillTags', '#setSkillSuggest');
 
-  $('#onbFinish').onclick = () => {
-    profile.role     = $('#onbRole').value.trim() || profile.role;
-    profile.location = $('#onbLoc').value.trim() || profile.location;
-    profile.remote   = $('#onbRemote').checked;
+  $('#setGo').onclick = () => {
+    profile.role     = $('#setRole').value.trim() || profile.role;
+    profile.location = $('#setLoc').value.trim() || profile.location;
+    profile.remote   = $('#setRemote').checked;
     profile.skills   = _skills;
-    profile.level    = $('#onbLevel').value;
-    runAgent();
+    runCombinedAgent();
   };
 }
 
@@ -98,8 +95,8 @@ function chips(boxSel, list, inputSel) {
   });
 }
 
-function skillInput() {
-  const input = $('#onbSkill'), tags = $('#onbSkillTags');
+function skillInput(inputSel, tagsSel, sugSel) {
+  const input = $(inputSel), tags = $(tagsSel);
   const renderTags = () => {
     tags.innerHTML = '';
     _skills.forEach((s, i) => {
@@ -111,7 +108,7 @@ function skillInput() {
     });
   };
   const renderSug = () => {
-    const box = $('#onbSkillSuggest'); box.innerHTML = '';
+    const box = $(sugSel); box.innerHTML = '';
     SKILL_SUGGESTIONS.filter(s => !_skills.some(x => x.toLowerCase() === s.toLowerCase()))
       .slice(0, 8).forEach(s => {
         const el = document.createElement('span');
@@ -152,10 +149,11 @@ function runAgentScreen(title, sub, tasks, onDone) {
   setTimeout(tick, 400);
 }
 
-function runAgent() {
-  runAgentScreen('Scanning the UAE job market…', 'Searching live listings matched to your profile',
-    ['Searching Bayt', 'Searching Indeed', 'Searching LinkedIn', 'Searching GulfTalent',
-     `Matching ${JOBS.length} jobs to your profile`], showDashboard);
+/* One parallel run: search jobs + (if LinkedIn) assess profile, then dashboard. */
+function runCombinedAgent() {
+  const tasks = ['Searching Bayt, Indeed, LinkedIn & GulfTalent', `Matching ${JOBS.length} UAE jobs to your profile`];
+  if (profile.linkedin) tasks.push('Checking your public profile health');
+  runAgentScreen('Working on it…', 'Finding jobs and building your dashboard', tasks, showDashboard);
 }
 
 /* ── Profile assessment (mock public-presence analysis) ── */
@@ -195,7 +193,7 @@ function showAssessment() {
             <span class="rv">${s.presence}</span>
           </div>
         </div>
-        <div class="cl">Presence score</div>
+        <div class="cl">Profile health</div>
       </div>
       <div class="score-card">
         <div style="font-size:25px;font-weight:900;color:var(--accent-d);margin:8px 0 6px">${s.sentiment.pos}%</div>
@@ -204,8 +202,14 @@ function showAssessment() {
           <i style="width:${s.sentiment.neu}%;background:var(--warn)"></i>
           <i style="width:${s.sentiment.neg}%;background:var(--bad)"></i>
         </div>
-        <div class="cl">Positive sentiment</div>
+        <div class="cl">Positive mentions</div>
       </div>
+    </div>
+
+    <div class="acard" style="display:flex;align-items:center;gap:12px">
+      <span style="font-size:22px">🔗</span>
+      <div style="flex:1"><div class="fp-name">Is this you?</div><div class="fp-desc">Findings matched to ${esc(profile.name)}. Tell us if any aren't you.</div></div>
+      <span class="fp-tag pos">Confirmed</span>
     </div>
 
     <div class="acard">
@@ -244,7 +248,7 @@ function showAssessment() {
       ${s.suggestions.map(t => `<div class="sg-item"><span class="sgi">→</span><span>${esc(t)}</span></div>`).join('')}
     </div>`;
 
-  $('#assessContinue').onclick = () => { showView('v-onboarding'); setupOnboarding(); };
+  $('#assessBack').onclick = () => showView('v-dash');
 }
 
 /* ── Matching (mirrors backend score()) ── */
@@ -295,9 +299,38 @@ function showDashboard() {
   $('#dashSub').textContent = `${scored.length} ${profile.role} jobs in ${profile.location}`;
 
   renderStats();
+  renderProfileHealth();
   renderTop();
   renderInsights();
   bindNav();
+}
+
+function renderProfileHealth() {
+  const box = $('#profileHealth');
+  if (profile.linkedin) {
+    const s = ASSESS.presence;
+    box.innerHTML = `
+      <div class="ph-card" id="phCard">
+        <div class="ph-ring" style="background:${ringGrad(s)}"><div class="inner">${s}</div></div>
+        <div class="ph-main">
+          <div class="ph-title">Profile health: ${s}/100</div>
+          <div class="ph-desc">${ASSESS.suggestions.length} ways to stand out to recruiters →</div>
+        </div>
+        <span class="ph-arrow">›</span>
+      </div>`;
+    $('#phCard').onclick = showAssessment;
+  } else {
+    box.innerHTML = `
+      <div class="ph-card" id="phCard">
+        <div class="ph-ring" style="background:var(--soft)"><div class="inner">🔒</div></div>
+        <div class="ph-main">
+          <div class="ph-title">Profile health check</div>
+          <div class="ph-desc">Sign in with LinkedIn to see how recruiters find you →</div>
+        </div>
+        <span class="ph-arrow">›</span>
+      </div>`;
+    $('#phCard').onclick = () => showView('v-login');
+  }
 }
 
 function renderStats() {
@@ -426,5 +459,5 @@ function bindNav() {
   $('#viewAllBtn').onclick = () => goTab('jobs');
   $('#qaSearch').onclick = () => goTab('jobs');
   $('#qaSaved').onclick  = () => goTab('jobs');
-  $('#qaProfile').onclick = () => { showView('v-onboarding'); setupOnboarding(); };
+  $('#qaProfile').onclick = () => { profile.linkedin ? showAssessment() : showSetup(); };
 }

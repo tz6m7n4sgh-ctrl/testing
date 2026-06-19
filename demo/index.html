@@ -29,55 +29,37 @@
       Sign in with LinkedIn
     </button>
     <div class="login-features">
-      <div class="lf"><span>🔎</span> Public profile assessment &amp; sentiment</div>
       <div class="lf"><span>🎯</span> UAE jobs matched to your skills</div>
       <div class="lf"><span>📊</span> Personal dashboard &amp; market insights</div>
+      <div class="lf"><span>🔎</span> Optional public-profile health check</div>
     </div>
+    <button class="skip-link" id="skipBtn">Continue without LinkedIn →</button>
   </div>
 </section>
 
-<!-- ═══════════ ONBOARDING ═══════════ -->
-<section id="v-onboarding" class="view">
+<!-- ═══════════ QUICK SETUP (single screen) ═══════════ -->
+<section id="v-setup" class="view setup-view">
   <div class="onb">
-    <div class="onb-progress"><span class="onb-dot active"></span><span class="onb-dot"></span><span class="onb-dot"></span></div>
-
-    <div class="onb-step active" data-step="1">
-      <div class="onb-avatar onb-initials" id="onbInitials">AM</div>
-      <h2>Welcome, <span id="onbName">Ahmed</span> 👋</h2>
-      <p class="onb-sub">We pulled your basics from LinkedIn. Let's set up your UAE job search in 3 quick steps.</p>
-      <div class="onb-confirm">
-        <div class="onb-crow"><span>Name</span><b id="onbCName">Ahmed Al Mansoori</b></div>
-        <div class="onb-crow"><span>Email</span><b id="onbCEmail">ahmed@example.com</b></div>
-      </div>
-      <button class="btn btn-primary full" data-next>Let's go →</button>
+    <div class="setup-head">
+      <span class="onb-avatar onb-initials" id="setInitials">AM</span>
+      <h2 id="setHi">Let's find your UAE jobs</h2>
+      <p class="onb-sub">Two quick things and we'll search. You can refine later.</p>
     </div>
+    <label class="onb-label">Target role</label>
+    <input type="text" id="setRole" class="onb-input" placeholder="e.g. Frontend Developer" value="Frontend Developer" autocomplete="off"/>
+    <div class="onb-chips" id="setRoleChips"></div>
 
-    <div class="onb-step" data-step="2">
-      <h2>What are you looking for?</h2>
-      <p class="onb-sub">Your target role and where in the UAE.</p>
-      <label class="onb-label">Target role</label>
-      <input type="text" id="onbRole" class="onb-input" placeholder="e.g. Frontend Developer" value="Frontend Developer" autocomplete="off"/>
-      <div class="onb-chips" id="onbRoleChips"></div>
-      <label class="onb-label">Location</label>
-      <input type="text" id="onbLoc" class="onb-input" placeholder="e.g. Dubai" value="Dubai" autocomplete="off"/>
-      <div class="onb-chips" id="onbLocChips"></div>
-      <label class="onb-check"><input type="checkbox" id="onbRemote" checked/> 🌐 Also open to remote roles</label>
-      <div class="onb-nav"><button class="btn btn-ghost" data-back>← Back</button><button class="btn btn-primary" data-next>Next →</button></div>
-    </div>
+    <label class="onb-label">Location in the UAE</label>
+    <input type="text" id="setLoc" class="onb-input" placeholder="e.g. Dubai" value="Dubai" autocomplete="off"/>
+    <div class="onb-chips" id="setLocChips"></div>
+    <label class="onb-check"><input type="checkbox" id="setRemote" checked/> 🌐 Also open to remote roles</label>
 
-    <div class="onb-step" data-step="3">
-      <h2>Your skills</h2>
-      <p class="onb-sub">Add a few — this powers your match scores.</p>
-      <input type="text" id="onbSkill" class="onb-input" placeholder="Type a skill, press Enter" autocomplete="off"/>
-      <div class="onb-chips" id="onbSkillTags"></div>
-      <div class="onb-chips" id="onbSkillSuggest"></div>
-      <label class="onb-label">Seniority</label>
-      <select id="onbLevel" class="onb-input">
-        <option value="">Any</option><option value="junior">Junior</option>
-        <option value="mid" selected>Mid</option><option value="senior">Senior</option><option value="lead">Lead / Principal</option>
-      </select>
-      <div class="onb-nav"><button class="btn btn-ghost" data-back>← Back</button><button class="btn btn-primary" id="onbFinish">🚀 Start searching</button></div>
-    </div>
+    <label class="onb-label">Skills <span id="setSkillNote" class="onb-note">— detected from your profile, edit if needed</span></label>
+    <input type="text" id="setSkill" class="onb-input" placeholder="Add a skill, press Enter" autocomplete="off"/>
+    <div class="onb-chips" id="setSkillTags"></div>
+    <div class="onb-chips" id="setSkillSuggest"></div>
+
+    <button class="btn btn-primary full" id="setGo" style="margin-top:22px">🔎 Find my jobs →</button>
   </div>
 </section>
 
@@ -94,15 +76,15 @@
 <!-- ═══════════ PROFILE ASSESSMENT ═══════════ -->
 <section id="v-assess" class="view assess-view">
   <header class="assess-top">
+    <button class="assess-back" id="assessBack">← Dashboard</button>
     <div class="assess-id">
       <span class="av-initials" id="asInitials">AM</span>
       <div><div class="as-name" id="asName">Ahmed Al Mansoori</div><div class="as-mail" id="asMail">ahmed@example.com</div></div>
     </div>
-    <h2>Your public profile assessment</h2>
-    <p class="as-sub">A snapshot of how your professional presence looks online · public info only</p>
+    <h2>Profile health &amp; visibility</h2>
+    <p class="as-sub">How your professional presence looks online · public info only</p>
   </header>
   <div class="assess-body" id="assessBody"></div>
-  <div class="assess-cta"><button class="btn btn-primary full" id="assessContinue">Continue to job search →</button></div>
 </section>
 
 <!-- ═══════════ DASHBOARD ═══════════ -->
@@ -121,6 +103,8 @@
       </div>
 
       <div class="stat-row" id="statRow"></div>
+
+      <div class="sec"><div id="profileHealth"></div></div>
 
       <div class="sec">
         <div class="sec-head"><h3>🎯 Top matches</h3><button class="link-btn" id="viewAllBtn">View all →</button></div>

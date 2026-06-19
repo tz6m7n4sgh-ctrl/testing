@@ -39,6 +39,17 @@ h1,h2,h3{margin:0;line-height:1.2}
 .login-features{display:flex;flex-direction:column;gap:9px;margin-top:28px;text-align:left}
 .lf{display:flex;align-items:center;gap:10px;color:#c5d8f0;font-size:13.5px;font-weight:600}
 
+.skip-link{display:block;width:100%;margin-top:16px;color:#9fb8e8;font-size:13.5px;font-weight:700;text-decoration:underline}
+
+/* ── Quick setup (single screen) ── */
+#v-setup{display:none;align-items:center;justify-content:center;padding:24px 20px;
+  background:radial-gradient(140% 140% at 70% -10%,#1a3a8f 0,#0a1220 70%)}
+#v-setup.active{display:flex}
+.setup-head{text-align:center;margin-bottom:18px}
+.setup-head .onb-avatar{margin:0 auto 12px}
+.setup-head h2{font-size:21px;font-weight:850}
+.onb-note{font-weight:600;text-transform:none;letter-spacing:0;color:var(--accent-d)}
+
 /* ── Onboarding ── */
 #v-onboarding{display:none;align-items:center;justify-content:center;padding:24px 20px;
   background:radial-gradient(140% 140% at 70% -10%,#1a3a8f 0,#0a1220 70%)}
@@ -94,7 +105,19 @@ h1,h2,h3{margin:0;line-height:1.2}
 /* ── Profile assessment ── */
 .assess-view{display:none;min-height:100dvh;flex-direction:column;background:var(--bg)}
 .assess-view.active{display:flex}
-.assess-top{background:linear-gradient(160deg,#0f1d40,#1a3578);color:#fff;padding:22px 18px 24px}
+.assess-top{background:linear-gradient(160deg,#0f1d40,#1a3578);color:#fff;padding:16px 18px 24px}
+.assess-back{color:#aec4ee;font-size:13.5px;font-weight:800;margin-bottom:14px}
+
+/* profile-health card on dashboard */
+.ph-card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:box-shadow .15s,transform .08s}
+.ph-card:active{transform:scale(.99)}
+.ph-card:hover{box-shadow:var(--shadow-lg)}
+.ph-ring{flex:none;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;position:relative}
+.ph-ring .inner{width:42px;height:42px;border-radius:50%;background:var(--card);display:grid;place-items:center;font-size:16px;font-weight:900}
+.ph-main{flex:1;min-width:0}
+.ph-title{font-size:14px;font-weight:850}
+.ph-desc{font-size:12.5px;color:var(--muted);font-weight:600;margin-top:2px}
+.ph-arrow{color:var(--muted);font-size:20px;flex:none}
 .assess-id{display:flex;align-items:center;gap:12px;margin-bottom:16px}
 .assess-id .av-initials{width:48px;height:48px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:17px;font-weight:900}
 .assess-id img{width:48px;height:48px;border-radius:50%;object-fit:cover}
