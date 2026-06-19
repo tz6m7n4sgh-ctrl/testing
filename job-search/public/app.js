@@ -34,26 +34,156 @@ async function init() {
   try {
     const me = await api('/api/me');
     user = me;
-    showApp();
+    route();
   } catch {
     showLogin();
   }
 }
 
+/* New users (no roles AND no skills yet) get the onboarding wizard. */
+function profileComplete() {
+  return (user.prefs?.roles?.length > 0) || (user.skills?.length > 0);
+}
+
+function route() {
+  if (profileComplete()) showApp();
+  else showOnboarding();
+}
+
 /* ── Views ─────────────────────────────────────────── */
-function showLogin() {
-  $('#loginView').classList.remove('hide');
+function hideAllViews() {
+  $('#loginView').classList.add('hide');
+  $('#onboardingView').classList.add('hide');
   $('#appView').classList.add('hide');
 }
 
+function showLogin() {
+  hideAllViews();
+  $('#loginView').classList.remove('hide');
+}
+
 function showApp() {
-  $('#loginView').classList.add('hide');
+  hideAllViews();
   $('#appView').classList.remove('hide');
   fillUserUI();
   setupTabs();
   setupSearch();
   setupProfile();
   loadSaved();
+}
+
+function showOnboarding() {
+  hideAllViews();
+  $('#onboardingView').classList.remove('hide');
+  setupOnboarding();
+}
+
+/* ── Onboarding wizard ─────────────────────────────── */
+const ROLE_CHIPS = ['Frontend Developer','Backend Engineer','Full Stack','Data Analyst','Product Manager','UX Designer','DevOps','Accountant','Sales','Marketing'];
+const LOC_CHIPS  = ['Dubai','Abu Dhabi','Sharjah','United Arab Emirates','Remote'];
+
+function setupOnboarding() {
+  // Step 1 — confirm LinkedIn info
+  $('#onbName').textContent   = (user.name || 'there').split(' ')[0];
+  $('#onbCName').textContent  = user.name || '—';
+  $('#onbCEmail').textContent = user.email || '—';
+  if (user.photo) {
+    const ph = $('#onbPhoto'); ph.src = user.photo; ph.classList.remove('hide');
+    $('#onbInitials').classList.add('hide');
+  } else {
+    $('#onbInitials').textContent = initials(user.name);
+  }
+
+  // Step nav
+  let step = 1;
+  const goStep = n => {
+    step = n;
+    $$('.onb-step').forEach(s => s.classList.toggle('active', +s.dataset.step === n));
+    $$('.onb-dot').forEach((d, i) => d.classList.toggle('active', i < n));
+  };
+  $$('#onboardingView [data-next]').forEach(b => b.onclick = () => goStep(Math.min(3, step + 1)));
+  $$('#onboardingView [data-back]').forEach(b => b.onclick = () => goStep(Math.max(1, step - 1)));
+
+  // Single-select chips for role + location (chip fills the input)
+  bindChips('#onbRoleChips', ROLE_CHIPS, '#onbRole');
+  bindChips('#onbLocChips',  LOC_CHIPS,  '#onbLoc');
+
+  // Skills tag input + suggestions
+  _onbSkills = [];
+  bindOnbSkills();
+
+  $('#onbFinish').onclick = finishOnboarding;
+}
+
+function bindChips(boxSel, chips, inputSel) {
+  const box = $(boxSel), input = $(inputSel);
+  box.innerHTML = '';
+  chips.forEach(c => {
+    const el = document.createElement('button');
+    el.type = 'button'; el.className = 'onb-chip'; el.textContent = c;
+    el.onclick = () => {
+      input.value = c;
+      [...box.children].forEach(x => x.classList.remove('on'));
+      el.classList.add('on');
+    };
+    box.appendChild(el);
+  });
+}
+
+let _onbSkills = [];
+function bindOnbSkills() {
+  const input = $('#onbSkill'), tags = $('#onbSkillTags');
+  const renderTags = () => {
+    tags.innerHTML = '';
+    _onbSkills.forEach((s, i) => {
+      const el = document.createElement('span');
+      el.className = 'onb-tag';
+      el.innerHTML = '<b></b><button>×</button>';
+      el.querySelector('b').textContent = s;
+      el.querySelector('button').onclick = () => { _onbSkills.splice(i, 1); renderTags(); renderSug(); };
+      tags.appendChild(el);
+    });
+  };
+  const renderSug = () => {
+    const box = $('#onbSkillSuggest'); box.innerHTML = '';
+    SKILL_SUGGESTIONS.filter(s => !_onbSkills.some(x => x.toLowerCase() === s.toLowerCase()))
+      .slice(0, 8).forEach(s => {
+        const el = document.createElement('span');
+        el.className = 'onb-tag suggest'; el.textContent = '+ ' + s;
+        el.onclick = () => { _onbSkills.push(s); renderTags(); renderSug(); };
+        box.appendChild(el);
+      });
+  };
+  input.onkeydown = e => {
+    if (e.key === 'Enter' && input.value.trim()) {
+      e.preventDefault();
+      const v = input.value.trim();
+      if (!_onbSkills.some(x => x.toLowerCase() === v.toLowerCase())) _onbSkills.push(v);
+      input.value = ''; renderTags(); renderSug();
+    }
+  };
+  renderTags(); renderSug();
+}
+
+async function finishOnboarding() {
+  const btn = $('#onbFinish');
+  btn.disabled = true; btn.textContent = '⏳ Setting up…';
+  const role = $('#onbRole').value.trim();
+  const loc  = $('#onbLoc').value.trim();
+  try {
+    user = await api('/api/me', 'PATCH', {
+      skills: _onbSkills,
+      prefs: {
+        roles:     role ? [role] : [],
+        locations: loc ? [loc] : [],
+        level:     $('#onbLevel').value,
+        remote:    $('#onbRemote').checked
+      }
+    });
+    showApp();
+  } catch {
+    btn.disabled = false; btn.textContent = '🚀 Start searching';
+  }
 }
 
 function showLoginErr(msg) {
