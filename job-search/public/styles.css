@@ -94,7 +94,7 @@ h1,h2,h3{margin:0;line-height:1.2}
 #v-agent.active{display:flex}
 .agent{max-width:380px;width:100%}
 .agent-orbit{width:120px;height:120px;margin:0 auto 26px;border-radius:50%;position:relative;
-  background:conic-gradient(from 0deg,#2355f5,#00c78b,#2355f5);animation:spin 1.4s linear infinite;
+  background:conic-gradient(from 0deg,#2f6df6,#15c39a,#2f6df6);animation:spin 1.4s linear infinite;
   -webkit-mask:radial-gradient(closest-side,transparent 60%,#000 62%);mask:radial-gradient(closest-side,transparent 60%,#000 62%)}
 .agent-core{position:absolute;inset:0;display:grid;place-items:center;font-size:40px;animation:spin 1.4s linear infinite reverse}
 @keyframes spin{to{transform:rotate(360deg)}}

@@ -37,4 +37,10 @@ We run a **deep QA pass on every major milestone** — and especially after the 
 ## Log
 Each pass appends a dated entry: scope, findings (severity), and fixes.
 
-- _2026-06-19_ — practice established. First full pass scheduled after the actual application is built.
+- _2026-06-19_ — practice established.
+- _2026-06-19_ — **Pass #1 (after actual application built).** Scope: `job-search/` backend + wired frontend.
+  - 🔴 **Security/XSS (fixed):** `esc()` didn't escape quotes; external job `url`s went into `href` unescaped with no scheme check. → `esc()` now escapes `& < > " '`; added `safeUrl()` allowing only http(s). Verified `"><img onerror>` is neutralized.
+  - 🟠 **Functional (fixed):** guest "manual setup" path had no session → `/api/jobs` 401. → added `POST /api/session/guest`; verified jobs endpoint returns 200 with guest cookie.
+  - 🟡 **UX (fixed):** signed-in returning users saw a "sign in" health prompt → now offers "Analyze your public profile"; agent orbit recolored to Ocean.
+  - ✅ Verified: server boots; security headers (CSP/HSTS/XFO/nosniff) present; `/api/me` 401 unauth; `/api/cv` parses; `/api/understand` hits GitHub; graceful empty state when feeds unreachable.
+  - 📋 Backlog (low): cookie-less calls create a guest row each time (bounded by rate limiter) — add periodic cleanup of stale guest rows; add Google/Email login; Claude/Brave upgrades.

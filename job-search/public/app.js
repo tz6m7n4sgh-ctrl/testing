@@ -4,7 +4,10 @@
 
 const $  = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
-const esc = s => { const d = document.createElement('div'); d.textContent = s ?? ''; return d.innerHTML; };
+const ESC_MAP = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ESC_MAP[c]);
+// Only allow http(s) links (blocks javascript:/data: from external feeds)
+const safeUrl = u => { try { const x = new URL(u, location.origin); return (x.protocol === 'http:' || x.protocol === 'https:') ? x.href : '#'; } catch { return '#'; } };
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const initials = n => (n || '?').split(' ').slice(0, 2).map(w => w[0]).join('').toUpperCase();
 
@@ -307,7 +310,8 @@ function showSetup() {
   chips('#setLocChips', LOC_CHIPS, '#setLoc');
   _skills = [...(_skills || [])];
   skillInput('#setSkill', '#setSkillTags', '#setSkillSuggest');
-  $('#setGo').onclick = () => {
+  $('#setGo').onclick = async () => {
+    if (!me) me = await api('/api/session/guest', 'POST').catch(() => null);
     target.role = $('#setRole').value.trim() || target.role;
     target.location = $('#setLoc').value.trim() || target.location;
     target.remote = $('#setRemote').checked;
@@ -379,8 +383,9 @@ function renderHealth() {
     box.innerHTML = `<div class="ph-card" id="phCard"><div class="ph-ring" style="background:${ringGrad(s)}"><div class="inner">${s}</div></div><div class="ph-main"><div class="ph-title">Profile health: ${s}/100</div><div class="ph-desc">${(understood.assessment.suggestions || []).length} ways to stand out →</div></div><span class="ph-arrow">›</span></div>`;
     $('#phCard').onclick = () => showProfile();
   } else {
-    box.innerHTML = `<div class="ph-card" id="phCard"><div class="ph-ring" style="background:var(--soft)"><div class="inner">🔒</div></div><div class="ph-main"><div class="ph-title">Profile health check</div><div class="ph-desc">Sign in or add your name to build your profile →</div></div><span class="ph-arrow">›</span></div>`;
-    $('#phCard').onclick = () => showView('v-login');
+    const signedIn = !!me;
+    box.innerHTML = `<div class="ph-card" id="phCard"><div class="ph-ring" style="background:var(--soft)"><div class="inner">${signedIn ? '🔎' : '🔒'}</div></div><div class="ph-main"><div class="ph-title">Profile health check</div><div class="ph-desc">${signedIn ? 'Analyze your public profile →' : 'Sign in or add your name to build your profile →'}</div></div><span class="ph-arrow">›</span></div>`;
+    $('#phCard').onclick = () => signedIn ? doUnderstand() : showView('v-login');
   }
 }
 
@@ -403,7 +408,7 @@ function jobCard(j) {
     </div>
     ${j.reasons?.length ? `<div class="j-why"><b>Why this fits:</b> ${j.reasons.map(esc).join(' · ')}</div>` : ''}
     <div class="j-actions">
-      <a class="j-apply" href="${esc(j.url)}" target="_blank" rel="noopener">Apply →</a>
+      <a class="j-apply" href="${esc(safeUrl(j.url))}" target="_blank" rel="noopener">Apply →</a>
       <button class="j-save ${isSaved ? 'saved' : ''}">${isSaved ? '★' : '☆'}</button>
     </div>`;
   el.querySelector('.j-save').onclick = e => toggleSave(j, e.currentTarget);
@@ -461,7 +466,7 @@ function renderSaved() {
       <div class="j-top"><div class="j-meta"><div class="j-title">${esc(j.title)}</div><div class="j-company">${esc(j.company || '')}</div></div></div>
       <div class="j-actions" style="align-items:center">
         <select class="status-sel">${Object.entries(STATUS).map(([v, l]) => `<option value="${v}" ${j.savedStatus === v ? 'selected' : ''}>${l}</option>`).join('')}</select>
-        <a class="j-apply" href="${esc(j.url)}" target="_blank" rel="noopener">Apply →</a>
+        <a class="j-apply" href="${esc(safeUrl(j.url))}" target="_blank" rel="noopener">Apply →</a>
         <button class="j-save saved">★</button>
       </div>`;
     el.querySelector('.status-sel').onchange = e => api('/api/saved/' + encodeURIComponent(j.id), 'PATCH', { status: e.target.value }).catch(() => {});
