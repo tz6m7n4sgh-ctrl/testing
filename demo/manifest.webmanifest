@@ -1,0 +1,13 @@
+{
+  "name": "JobScout — Preview",
+  "short_name": "JobScout",
+  "description": "Preview of the JobScout UAE job-search agent.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a1220",
+  "theme_color": "#0a1220",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
