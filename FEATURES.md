@@ -87,7 +87,8 @@
 - ✅ Onboarding wizard, security hardening, Dependabot
 - 🔵 Stage-1 `POST /api/understand` — GitHub skill extraction (free) + templated assessment; web search (Brave) & Claude summary upgrade with keys
 - 🔵 CV parsing `POST /api/cv` — free regex extraction (phone/email/education/skills); Claude upgrade with key
-- 🟡 Wire the demo's two-stage flow into the real frontend (`public/`) — next chunk
-- 🟡 Cover-letter endpoint
+- 🔵 **Real frontend wired** (`public/`): login (LinkedIn) / guest name-search → understand → profile (sources confirm, CV upload) → search → dashboard + saved tab. Ocean theme, responsive. Boots & smoke-tested.
+- 🟡 Google/Email login (only LinkedIn wired so far)
+- 🟡 Cover-letter endpoint; Claude/Brave upgrades
 
 > See also: `job-search/ROADMAP.md` (phased plan) · `job-search/CAPABILITIES.md` (free vs paid).

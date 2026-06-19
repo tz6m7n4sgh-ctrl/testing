@@ -16,252 +16,139 @@
 </head>
 <body>
 
-<!-- ════════════════════════════════════════════════════
-     LOGIN VIEW
-════════════════════════════════════════════════════ -->
-<div id="loginView">
+<!-- ═══════════ LOGIN ═══════════ -->
+<section id="v-login" class="view active">
   <div class="login-card">
     <div class="login-logo">🎯</div>
     <h1>JobScout</h1>
-    <p>Your personal job-hunting agent — live jobs matched to your profile, tracked in one place.</p>
-
-    <a href="/auth/linkedin" class="btn-linkedin">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff">
-        <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/>
-      </svg>
+    <p>Your personal job-hunting agent for the UAE — live jobs matched to your profile.</p>
+    <a class="btn-linkedin" id="loginBtn" href="/auth/linkedin">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
       Sign in with LinkedIn
     </a>
-
-    <div id="loginErr" class="login-err hide"></div>
-
     <div class="login-features">
-      <div class="login-feature"><span class="ic">✅</span> Profile auto-filled from LinkedIn</div>
-      <div class="login-feature"><span class="ic">🎯</span> Live jobs matched to your skills</div>
-      <div class="login-feature"><span class="ic">★</span> Save, track &amp; update application status</div>
-      <div class="login-feature"><span class="ic">📱</span> Install as app on your phone</div>
+      <div class="lf"><span>🎯</span> UAE jobs matched to your skills</div>
+      <div class="lf"><span>📊</span> Personal dashboard &amp; market insights</div>
+      <div class="lf"><span>🔎</span> Public profile health check</div>
     </div>
+    <button class="skip-link" id="skipBtn">Continue without signing in →</button>
   </div>
-</div>
+</section>
 
-<!-- ════════════════════════════════════════════════════
-     ONBOARDING VIEW  (after LinkedIn login, for new users)
-════════════════════════════════════════════════════ -->
-<div id="onboardingView" class="hide">
+<!-- ═══════════ GUEST NAME ENTRY ═══════════ -->
+<section id="v-guest" class="view">
   <div class="onb">
-    <div class="onb-progress">
-      <span class="onb-dot active"></span><span class="onb-dot"></span><span class="onb-dot"></span>
+    <div class="setup-head">
+      <span class="onb-avatar onb-initials">🔎</span>
+      <h2>Let's find you online</h2>
+      <p class="onb-sub">Enter your name and we'll search the web to build your profile — no sign-in needed.</p>
     </div>
-
-    <!-- Step 1: confirm LinkedIn info -->
-    <section class="onb-step active" data-step="1">
-      <img id="onbPhoto" class="onb-avatar hide" alt=""/>
-      <div class="onb-avatar onb-initials" id="onbInitials">?</div>
-      <h2>Welcome, <span id="onbName">there</span> 👋</h2>
-      <p class="onb-sub">We pulled your basics from LinkedIn. Let's set up your job search in 3 quick steps.</p>
-      <div class="onb-confirm">
-        <div class="onb-crow"><span>Name</span><b id="onbCName">—</b></div>
-        <div class="onb-crow"><span>Email</span><b id="onbCEmail">—</b></div>
-      </div>
-      <button class="btn btn-primary full" data-next>Let's go →</button>
-    </section>
-
-    <!-- Step 2: role + location -->
-    <section class="onb-step" data-step="2">
-      <h2>What are you looking for?</h2>
-      <p class="onb-sub">Your target role and where you want to work.</p>
-      <label class="onb-label">Target role</label>
-      <input type="text" id="onbRole" class="onb-input" placeholder="e.g. Frontend Developer" autocomplete="off"/>
-      <div class="onb-chips" id="onbRoleChips"></div>
-      <label class="onb-label">Location</label>
-      <input type="text" id="onbLoc" class="onb-input" placeholder="e.g. Dubai" autocomplete="off"/>
-      <div class="onb-chips" id="onbLocChips"></div>
-      <label class="onb-check"><input type="checkbox" id="onbRemote"/> 🌐 Also open to remote roles</label>
-      <div class="onb-nav">
-        <button class="btn btn-ghost" data-back>← Back</button>
-        <button class="btn btn-primary" data-next>Next →</button>
-      </div>
-    </section>
-
-    <!-- Step 3: skills + seniority -->
-    <section class="onb-step" data-step="3">
-      <h2>Your skills</h2>
-      <p class="onb-sub">Add a few — this powers your match scores.</p>
-      <input type="text" id="onbSkill" class="onb-input" placeholder="Type a skill, press Enter" autocomplete="off"/>
-      <div class="onb-chips" id="onbSkillTags"></div>
-      <div class="onb-chips" id="onbSkillSuggest"></div>
-      <label class="onb-label">Seniority</label>
-      <select id="onbLevel" class="onb-input">
-        <option value="">Any</option>
-        <option value="intern">Intern</option>
-        <option value="junior">Junior</option>
-        <option value="mid">Mid</option>
-        <option value="senior">Senior</option>
-        <option value="lead">Lead / Principal</option>
-      </select>
-      <div class="onb-nav">
-        <button class="btn btn-ghost" data-back>← Back</button>
-        <button class="btn btn-primary" id="onbFinish">🚀 Start searching</button>
-      </div>
-    </section>
+    <label class="onb-label">Your full name</label>
+    <input type="text" id="guestName" class="onb-input" placeholder="e.g. Ahmed Al Mansoori" autocomplete="off"/>
+    <button class="btn btn-primary full" id="guestSearch" style="margin-top:18px">🔎 Search the web for me</button>
+    <button class="skip-link" id="guestManual" style="color:var(--muted)">skip — just set up a search manually</button>
   </div>
-</div>
+</section>
 
-<!-- ════════════════════════════════════════════════════
-     APP VIEW
-════════════════════════════════════════════════════ -->
-<div id="appView" class="hide">
-
-  <!-- Top bar -->
-  <header class="topbar">
-    <div class="topbar-logo">
-      <span class="dot">🎯</span>
-      JobScout
-      <span class="new-badge hide" id="topNewBadge"></span>
+<!-- ═══════════ QUICK SETUP (single screen) ═══════════ -->
+<section id="v-setup" class="view setup-view">
+  <div class="onb">
+    <div class="setup-head">
+      <span class="onb-avatar onb-initials" id="setInitials">JS</span>
+      <h2 id="setHi">Let's find your UAE jobs</h2>
+      <p class="onb-sub">Two quick things and we'll search. You can refine later.</p>
     </div>
-    <button class="avatar-btn" id="avatarBtn">
-      <div class="av-initials" id="topInitials">?</div>
-      <img id="topPhoto" class="hide" alt="avatar"/>
-      <span id="topName" style="max-width:80px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
-    </button>
+    <label class="onb-label">Target role</label>
+    <input type="text" id="setRole" class="onb-input" placeholder="e.g. Frontend Developer" value="Frontend Developer" autocomplete="off"/>
+    <div class="onb-chips" id="setRoleChips"></div>
+
+    <label class="onb-label">Location in the UAE</label>
+    <input type="text" id="setLoc" class="onb-input" placeholder="e.g. Dubai" value="Dubai" autocomplete="off"/>
+    <div class="onb-chips" id="setLocChips"></div>
+    <label class="onb-check"><input type="checkbox" id="setRemote" checked/> 🌐 Also open to remote roles</label>
+
+    <label class="onb-label">Skills <span id="setSkillNote" class="onb-note">— add a few to power matching</span></label>
+    <input type="text" id="setSkill" class="onb-input" placeholder="Add a skill, press Enter" autocomplete="off"/>
+    <div class="onb-chips" id="setSkillTags"></div>
+    <div class="onb-chips" id="setSkillSuggest"></div>
+
+    <button class="btn btn-primary full" id="setGo" style="margin-top:22px">🔎 Find my jobs →</button>
+  </div>
+</section>
+
+<!-- ═══════════ AGENT ═══════════ -->
+<section id="v-agent" class="view">
+  <div class="agent">
+    <div class="agent-orbit"><div class="agent-core">🎯</div></div>
+    <h2 id="agentTitle">Working on it…</h2>
+    <p class="agent-sub" id="agentSub">One moment</p>
+    <div class="agent-tasks" id="agentTasks"></div>
+  </div>
+</section>
+
+<!-- ═══════════ PROFILE ═══════════ -->
+<section id="v-assess" class="view assess-view">
+  <header class="assess-top">
+    <button class="assess-back hide" id="assessBack">← Dashboard</button>
+    <div class="assess-id">
+      <span class="av-initials" id="asInitials">JS</span>
+      <div><div class="as-name" id="asName">—</div><div class="as-mail" id="asMail"></div></div>
+    </div>
+    <h2 id="assessHeading">We found these references</h2>
+    <p class="as-sub" id="assessSubhead">Confirm which are you — we'll extract your skills, experience &amp; location</p>
+  </header>
+  <div class="assess-body" id="assessBody"></div>
+  <div class="assess-cta" id="assessCta"><button class="btn btn-primary full" id="assessFind">🔎 Find my matching jobs →</button></div>
+</section>
+
+<!-- ═══════════ DASHBOARD ═══════════ -->
+<section id="v-dash" class="view app-view">
+  <header class="topbar">
+    <div class="topbar-logo"><span class="dot">🎯</span> JobScout</div>
+    <button class="avatar-btn" id="logoutBtn" title="Sign out"><span class="av-initials" id="dashInitials">JS</span></button>
   </header>
 
-  <!-- Profile dropdown -->
-  <div class="profile-menu hide" id="profileMenu">
-    <div class="pm-head">
-      <div class="av-initials" id="pmInitials">?</div>
-      <img id="pmPhoto" class="hide" style="width:38px;height:38px;border-radius:50%;object-fit:cover;" alt="avatar"/>
-      <div>
-        <div class="pm-name" id="pmName"></div>
-        <div class="pm-email" id="pmEmail"></div>
-      </div>
-    </div>
-    <button class="pm-item" onclick="goTab('profile')">👤 Edit profile</button>
-    <button class="pm-item danger" id="signOutBtn">↩ Sign out</button>
-  </div>
-
-  <!-- Content -->
   <div class="scroll-area" id="scrollArea">
+    <div class="tab-view active" id="tab-dash">
+      <div class="dash-hero">
+        <p class="dash-greet" id="dashGreet">Welcome 👋</p>
+        <p class="dash-sub" id="dashSub">Your job search summary</p>
+      </div>
+      <div class="stat-row" id="statRow"></div>
+      <div class="sec"><div id="profileHealth"></div></div>
+      <div class="sec">
+        <div class="sec-head"><h3>🎯 Top matches</h3><button class="link-btn" id="viewAllBtn">View all →</button></div>
+        <div id="topMatches"></div>
+      </div>
+      <div class="sec">
+        <div class="sec-head"><h3>📊 UAE market insights</h3></div>
+        <div class="insights" id="insights"></div>
+      </div>
+      <div class="sec quick-actions">
+        <button class="qa" id="qaSearch"><span>🔍</span>All jobs</button>
+        <button class="qa" id="qaSaved"><span>★</span>Saved</button>
+        <button class="qa" id="qaProfile"><span>👤</span>Profile</button>
+      </div>
+    </div>
 
-    <!-- ── Search ── -->
-    <div class="tab-view active" id="tab-search">
-      <div class="search-hero">
-        <h2 id="searchHeading">Find your next role</h2>
-        <div class="searchbox">
-          <input type="text" id="searchInput" placeholder="Job title or keywords…" autocomplete="off"/>
-          <button class="go" id="searchBtn">🔎 Search</button>
-        </div>
-        <div class="presets" id="presets"></div>
-      </div>
-      <div class="results-bar">
-        <h3 id="resultsTitle">Matches</h3>
-        <span class="results-count" id="resultsCount"></span>
-        <select class="sort-sel" id="sortSel">
-          <option value="match">Best match</option>
-          <option value="date">Newest first</option>
-        </select>
-      </div>
+    <div class="tab-view" id="tab-jobs">
+      <div class="jobs-head"><h2>All matches</h2><span class="count" id="jobsCount"></span></div>
       <div id="banner"></div>
-      <div class="job-list" id="jobList">
-        <div class="empty">
-          <div class="big">🧭</div>
-          <p>Hit <b>Search</b> to load live job listings matched to your profile.</p>
-        </div>
-      </div>
+      <div id="jobList"></div>
     </div>
 
-    <!-- ── Saved ── -->
     <div class="tab-view" id="tab-saved">
-      <div class="saved-head"><h2>★ Saved jobs</h2></div>
-      <div class="saved-list" id="savedList">
-        <div class="empty" style="padding-top:36px">
-          <div class="big">★</div>
-          <p>No saved jobs yet.<br/>Tap ☆ on any match to save it here.</p>
-        </div>
-      </div>
+      <div class="jobs-head"><h2>★ Saved jobs</h2><span class="count" id="savedCount"></span></div>
+      <div id="savedList"></div>
     </div>
-
-    <!-- ── Profile ── -->
-    <div class="tab-view" id="tab-profile">
-      <div class="profile-tab">
-
-        <div class="profile-card">
-          <div class="profile-header">
-            <div class="av-lg" id="profInitials">?</div>
-            <img id="profPhoto" class="hide" alt="avatar"/>
-            <div>
-              <div class="ph-name" id="profName"></div>
-              <div class="ph-email" id="profEmail"></div>
-            </div>
-          </div>
-          <p class="sec-title">Headline</p>
-          <div class="field">
-            <input type="text" id="profHeadline" placeholder="e.g. Senior Frontend Developer" maxlength="200"/>
-            <div class="hint">Shown to recruiters — auto-filled from LinkedIn if set</div>
-          </div>
-        </div>
-
-        <div class="profile-card">
-          <p class="sec-title">My skills</p>
-          <div class="field">
-            <input type="text" id="skillInput" placeholder="Type a skill and press Enter"/>
-          </div>
-          <div class="tags" id="skillTags"></div>
-          <p class="sec-title" style="margin-top:12px">Quick add</p>
-          <div class="tags" id="skillSuggest"></div>
-        </div>
-
-        <div class="profile-card">
-          <p class="sec-title">Job preferences</p>
-          <div class="field">
-            <label class="sec-title" style="margin-bottom:5px">Target roles</label>
-            <input type="text" id="roleInput" placeholder="Add a role and press Enter"/>
-            <div class="tags" id="roleTags"></div>
-          </div>
-          <div class="field">
-            <label class="sec-title" style="margin-bottom:5px">Preferred locations</label>
-            <input type="text" id="locInput" placeholder="e.g. Remote, London — Enter to add"/>
-            <div class="tags" id="locTags"></div>
-          </div>
-          <div class="row field">
-            <div>
-              <p class="sec-title">Seniority</p>
-              <select id="levelSel">
-                <option value="">Any</option>
-                <option value="intern">Intern</option>
-                <option value="junior">Junior</option>
-                <option value="mid">Mid</option>
-                <option value="senior">Senior</option>
-                <option value="lead">Lead / Principal</option>
-              </select>
-            </div>
-          </div>
-          <label class="check-row">
-            <input type="checkbox" id="remoteChk"/> 🌐 Remote only
-          </label>
-        </div>
-
-        <button class="btn btn-primary full" id="saveProfileBtn">💾 Save profile</button>
-        <div class="save-ok hide" id="saveOk">Profile saved!</div>
-      </div>
-    </div>
-
   </div>
 
-  <!-- Bottom nav -->
   <nav class="bottom-nav">
-    <button class="bn-tab active" data-tab="search">
-      <span class="bn-ic">🔍</span>Search
-    </button>
-    <button class="bn-tab" data-tab="saved">
-      <span class="bn-ic">★</span>Saved
-      <span class="bn-badge hide" id="savedBadge"></span>
-    </button>
-    <button class="bn-tab" data-tab="profile">
-      <span class="bn-ic">👤</span>Profile
-    </button>
+    <button class="bn-tab active" data-tab="dash"><span class="bn-ic">🏠</span>Home</button>
+    <button class="bn-tab" data-tab="jobs"><span class="bn-ic">🔍</span>Jobs</button>
+    <button class="bn-tab" data-tab="saved"><span class="bn-ic">★</span>Saved</button>
   </nav>
-
-</div>
+</section>
 
 <script src="/app.js"></script>
 </body>
