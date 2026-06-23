@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0b1220" />
+  <title>JobScout — UAE job-search assistant</title>
+
+  <!-- React + Babel (no build step). Pinned versions for reliability. -->
+  <script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.24.7/babel.min.js"></script>
+
+  <style>
+    :root {
+      --navy:    #0b1220;
+      --navy-2:  #111a2e;
+      --card:    #16213a;
+      --line:    #243049;
+      --blue:    #2f6df6;
+      --mint:    #15c39a;
+      --text:    #e7ecf5;
+      --muted:   #93a0bb;
+      --radius:  16px;
+      --shadow:  0 10px 30px rgba(0,0,0,.35);
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: radial-gradient(1200px 600px at 70% -10%, #15233f 0%, var(--navy) 55%) fixed;
+      color: var(--text);
+      font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+    }
+    #root { min-height: 100vh; }
+
+    /* ---- layout shell ---- */
+    .shell { max-width: 1040px; margin: 0 auto; padding: 0 20px 80px; }
+    header.top {
+      position: sticky; top: 0; z-index: 10;
+      backdrop-filter: blur(10px);
+      background: rgba(11,18,32,.72);
+      border-bottom: 1px solid var(--line);
+    }
+    .top-inner {
+      max-width: 1040px; margin: 0 auto; padding: 14px 20px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .logo {
+      width: 34px; height: 34px; border-radius: 9px;
+      background: linear-gradient(135deg, var(--blue), var(--mint));
+      display: grid; place-items: center; font-weight: 800; color: #06122a;
+      box-shadow: var(--shadow);
+    }
+    .brand { font-weight: 700; letter-spacing: .2px; }
+    .brand small { display: block; color: var(--muted); font-weight: 500; font-size: 12px; }
+    .top-spacer { flex: 1; }
+    .pill {
+      font-size: 12px; color: var(--mint);
+      border: 1px solid rgba(21,195,154,.35);
+      background: rgba(21,195,154,.08);
+      padding: 4px 10px; border-radius: 999px; white-space: nowrap;
+    }
+
+    /* ---- hero ---- */
+    .hero { padding: 54px 0 18px; }
+    .hero h1 { font-size: clamp(28px, 5vw, 44px); line-height: 1.1; margin: 0 0 12px; }
+    .hero h1 .accent {
+      background: linear-gradient(120deg, var(--blue), var(--mint));
+      -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero p { color: var(--muted); font-size: 18px; max-width: 640px; margin: 0; }
+
+    /* ---- step rail ---- */
+    .rail { display: grid; gap: 12px; margin: 30px 0 0;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); }
+    .step {
+      background: var(--card); border: 1px solid var(--line);
+      border-radius: var(--radius); padding: 16px; box-shadow: var(--shadow);
+      display: flex; gap: 12px; align-items: flex-start;
+    }
+    .step .n {
+      flex: none; width: 30px; height: 30px; border-radius: 8px;
+      display: grid; place-items: center; font-weight: 700; font-size: 14px;
+      background: var(--navy-2); border: 1px solid var(--line); color: var(--muted);
+    }
+    .step.live .n { background: linear-gradient(135deg, var(--blue), var(--mint)); color: #06122a; border: none; }
+    .step h3 { margin: 0 0 3px; font-size: 15px; }
+    .step p { margin: 0; color: var(--muted); font-size: 13px; }
+    .step .tag {
+      display: inline-block; margin-top: 8px; font-size: 11px; padding: 2px 8px;
+      border-radius: 999px; border: 1px solid var(--line); color: var(--muted);
+    }
+    .step.live .tag { color: var(--mint); border-color: rgba(21,195,154,.4); background: rgba(21,195,154,.07); }
+
+    /* ---- empty-state card ---- */
+    .empty {
+      margin-top: 30px; text-align: center;
+      background: linear-gradient(180deg, var(--card), var(--navy-2));
+      border: 1px dashed var(--line); border-radius: var(--radius);
+      padding: 48px 24px;
+    }
+    .empty .ico { font-size: 40px; }
+    .empty h2 { margin: 12px 0 6px; }
+    .empty p { color: var(--muted); margin: 0 auto; max-width: 460px; }
+
+    footer.foot { text-align: center; color: var(--muted); font-size: 13px; padding: 28px 0 0; }
+    footer.foot code { color: var(--text); background: var(--navy-2); padding: 1px 6px; border-radius: 5px; }
+
+    @media (max-width: 560px) {
+      .hero { padding: 36px 0 10px; }
+      .top-inner { padding: 12px 16px; }
+      .shell { padding: 0 16px 60px; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" data-presets="react">
+    const { useState } = React;
+
+    // Build status for the box-by-box plan. Flip `live` as each box ships.
+    const STEPS = [
+      { n: 0, title: "Skeleton",        desc: "App shell + live link.",                live: true  },
+      { n: 1, title: "LinkedIn import", desc: "Drop your data export ZIP.",            live: false },
+      { n: 2, title: "Profile",         desc: "Roles, skills, experience, target.",    live: false },
+      { n: 3, title: "Job search",      desc: "Live feeds, ranked for you.",           live: false },
+      { n: 4, title: "Save jobs",       desc: "Detail view + save.",                   live: false },
+      { n: 5, title: "Tracker",         desc: "Application pipeline + stats.",          live: false },
+    ];
+
+    const VERSION = "box-0";
+
+    function Header() {
+      return (
+        <header className="top">
+          <div className="top-inner">
+            <div className="logo">J</div>
+            <div className="brand">JobScout<small>UAE job-search assistant</small></div>
+            <div className="top-spacer" />
+            <span className="pill">● live · {VERSION}</span>
+          </div>
+        </header>
+      );
+    }
+
+    function Step({ s }) {
+      return (
+        <div className={"step" + (s.live ? " live" : "")}>
+          <div className="n">{s.n}</div>
+          <div>
+            <h3>{s.title}</h3>
+            <p>{s.desc}</p>
+            <span className="tag">{s.live ? "live" : "coming"}</span>
+          </div>
+        </div>
+      );
+    }
+
+    function App() {
+      const [steps] = useState(STEPS);
+      return (
+        <React.Fragment>
+          <Header />
+          <main className="shell">
+            <section className="hero">
+              <h1>Find your next role in the <span className="accent">UAE</span>.</h1>
+              <p>
+                Bring your LinkedIn data, and JobScout builds your profile and ranks
+                jobs that actually fit you — built box by box, the reliable way.
+              </p>
+            </section>
+
+            <section className="rail">
+              {steps.map(s => <Step key={s.n} s={s} />)}
+            </section>
+
+            <section className="empty">
+              <div className="ico">🧭</div>
+              <h2>The shell is live.</h2>
+              <p>
+                This is Box&nbsp;0 — proving the page deploys and loads. Next box adds
+                the LinkedIn import. Each box ships, you test, then we move on.
+              </p>
+            </section>
+
+            <footer className="foot">
+              JobScout · no-build React · <code>{VERSION}</code>
+            </footer>
+          </main>
+        </React.Fragment>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
