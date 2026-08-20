@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { IS_STATIC, approveLaunch, createLaunch as createLaunchRequest, getAudit, getMetrics, listLaunches } from "./api.js";
 
 const initialForm = {
   name: "",
@@ -26,19 +27,14 @@ export default function App() {
     setLoading(true);
     setError("");
     try {
-      const params = new URLSearchParams();
-      if (query.trim()) params.set("q", query.trim());
-      if (stage) params.set("stage", stage);
-      const suffix = params.toString() ? `?${params}` : "";
-      const [metricsResponse, launchesResponse, auditResponse] = await Promise.all([
-        fetch("/api/metrics"),
-        fetch(`/api/launches${suffix}`),
-        fetch("/api/audit")
+      const [metricsData, launchesData, auditData] = await Promise.all([
+        getMetrics(),
+        listLaunches({ q: query, stage }),
+        getAudit()
       ]);
-      if (!metricsResponse.ok || !launchesResponse.ok || !auditResponse.ok) throw new Error("API request failed");
-      setMetrics(await metricsResponse.json());
-      setLaunches(await launchesResponse.json());
-      setAudit(await auditResponse.json());
+      setMetrics(metricsData);
+      setLaunches(launchesData);
+      setAudit(auditData);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -55,33 +51,23 @@ export default function App() {
   async function createLaunch(event) {
     event.preventDefault();
     setError("");
-    const response = await fetch("/api/launches", {
-      method: "POST",
-      headers: { "content-type": "application/json", "x-user-role": role },
-      body: JSON.stringify(form)
-    });
-    if (!response.ok) {
-      const payload = await response.json();
-      setError(payload.error?.message || "Create failed");
-      return;
+    try {
+      await createLaunchRequest(form, role);
+      setForm(initialForm);
+      await load();
+    } catch (err) {
+      setError(err.message);
     }
-    setForm(initialForm);
-    await load();
   }
 
   async function approve(launch, approvalRole) {
     setError("");
-    const response = await fetch(`/api/launches/${launch.id}/approvals`, {
-      method: "POST",
-      headers: { "content-type": "application/json", "x-user-role": role },
-      body: JSON.stringify({ role: approvalRole })
-    });
-    if (!response.ok) {
-      const payload = await response.json();
-      setError(payload.error?.message || "Approval failed");
-      return;
+    try {
+      await approveLaunch(launch.id, role, approvalRole);
+      await load();
+    } catch (err) {
+      setError(err.message);
     }
-    await load();
   }
 
   return (
@@ -100,6 +86,13 @@ export default function App() {
           </select>
         </label>
       </section>
+
+      {IS_STATIC && (
+        <div className="notice">
+          Read-only hosted demo showing seeded portfolio data. Clone the repo and run{" "}
+          <code>npm run dev</code> for live create &amp; approval workflows.
+        </div>
+      )}
 
       {error && <div className="alert">{error}</div>}
 

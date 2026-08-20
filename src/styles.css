@@ -102,6 +102,21 @@ select {
   padding: 14px 16px;
 }
 
+.notice {
+  margin: 18px 0;
+  background: #e8f1fb;
+  border: 1px solid #9cc3ea;
+  color: #1f4d7a;
+  border-radius: 8px;
+  padding: 14px 16px;
+}
+
+.notice code {
+  background: rgba(31, 77, 122, 0.12);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
 .metric-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));

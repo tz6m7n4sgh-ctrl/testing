@@ -11,6 +11,8 @@
     "dev:client": "vite --host 0.0.0.0",
     "test": "node --test test/*.test.js",
     "build": "vite build",
+    "prerender:demo": "node scripts/prerender-demo.js",
+    "build:pages": "npm run prerender:demo && vite build",
     "start": "node server/index.js",
     "health": "node scripts/project-health.js",
     "ops:check": "node scripts/ops-check.js",

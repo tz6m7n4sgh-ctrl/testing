@@ -31,6 +31,19 @@ npm run dev
 
 Open `http://localhost:5173`. The API defaults to `http://localhost:4410`.
 
+## Hosted Demo (GitHub Pages)
+
+GitHub Pages serves static files only, so it cannot run the Express API. The
+`.github/workflows/pages.yml` workflow builds a **read-only** static demo:
+`npm run prerender:demo` snapshots the seeded portfolio into `public/demo/*.json`,
+and the frontend (built with `VITE_STATIC=1`) reads those snapshots instead of
+`/api`. Create and approval actions are disabled in this mode.
+
+Enable it once under **Settings → Pages → Source: GitHub Actions**, then push to
+`main` (or run the workflow manually). The site publishes at
+`https://<owner>.github.io/<repo>/`. For the full read/write experience, run the
+app locally with `npm run dev`.
+
 ## Scripts
 
 ```bash
